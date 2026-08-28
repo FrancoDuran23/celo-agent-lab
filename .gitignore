@@ -29,3 +29,6 @@ npm-debug.log*
 afip-*.key
 afip-*.csr
 afip-*.crt
+
+# Runtime data
+data/

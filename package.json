@@ -1,15 +1,22 @@
 {
-  "name": "celo-agents-hackathon",
-  "version": "1.0.0",
-  "description": "",
+  "name": "celo-agent-lab",
+  "version": "0.1.0",
+  "description": "An allowance for agents: deterministic spending policy over Celo payments.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "mcp": "node src/mcp-server.js",
+    "wallet": "node gen-wallet.mjs"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
+    "@celo/attribution-tags": "^0.3.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "viem": "^2.56.0"
+  },
+  "type": "module",
+  "bin": {
+    "celo-allowance": "./src/mcp-server.js"
   }
 }

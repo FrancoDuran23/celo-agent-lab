@@ -5,22 +5,40 @@ on-chain — built for the **Agents at Work** hackathon (Celo, Aug–Sep 2026).
 
 ## Status
 
-Day 1. The agent identity, wallet and settlement rails are being set up first;
-the product surface is being defined. Commits track the work across the whole
-hackathon window rather than a final-weekend push.
+The allowance core is in place: the policy engine, the ledger, the Celo client,
+and an MCP server that exposes the whole thing to an agent. Not yet wired to a
+browser surface.
+
+```
+src/policy.js       the rules. pure, deterministic, no I/O
+src/ledger.js       append-only log of every request, allowed or refused
+src/celo.js         balances, fee-abstracted transfers, attribution tag
+src/allowance.js    the one path from a request to a transaction
+src/mcp-server.js   four tools an agent can call
+```
+
+Run it as an MCP server with `npm run mcp`. The policy lives in
+`allowance.config.json` and is edited by a person — no tool can raise a limit.
 
 ## Design principle
 
-> The model extracts. The code decides.
+> The agent asks. The code answers.
 
-A small language model is good at reading unstructured input and bad at
-arithmetic, comparison and rule evaluation. So the model only does the first
-part: it turns human input into a structured claim. Every decision that moves
-money — the arithmetic, the rule checks, the settle-or-refund verdict — is
-deterministic code.
+An agent is good at working out what it needs and bad at knowing when to stop.
+So it only does the first part: it turns a goal into a payment request. Every
+decision that moves money — the caps, the allowlist, the budget arithmetic — is
+deterministic code in `src/policy.js`, which has no clock, no network and no
+disk. Same inputs, same verdict, every time.
 
-This is not a style preference. It is the security boundary: a model that cannot
-declare an outcome cannot be talked into declaring the wrong one.
+This is not a style preference. It is the security boundary: an agent that
+cannot declare an outcome cannot be talked into declaring the wrong one. There
+is deliberately no tool that edits the policy.
+
+The rules run in order, and a refusal names the one that stopped it:
+
+```
+live · window · recipient · per_payment_cap · daily_budget
+```
 
 ## Rails
 

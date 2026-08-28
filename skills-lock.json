@@ -1,6 +1,18 @@
 {
   "version": 1,
   "skills": {
+    "banner-design": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/banner-design/SKILL.md",
+      "computedHash": "f859a951ded1109a38bcc7f18faf4581f9adbf0550df7a11c013e77a5b229541"
+    },
+    "brand": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/brand/SKILL.md",
+      "computedHash": "0e773774d46ecea78eff2b36f574e41830417fcc618181215611f336930deac2"
+    },
     "celo-builders": {
       "source": "celobuilders.xyz",
       "sourceUrl": "https://celobuilders.xyz",
@@ -14,11 +26,107 @@
       "skillPath": "skills/celopedia-skill/SKILL.md",
       "computedHash": "ecb350850efefadfb8561aac29d594b78ef2948ebfcb0b303caf1dfb2cb1ffa0"
     },
+    "design": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/design/SKILL.md",
+      "computedHash": "b2c792dd9df5fd8e36d86f34bf3523eb2e451a5c2dc76f8059ce9a277c861834"
+    },
+    "design-system": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/design-system/SKILL.md",
+      "computedHash": "5a3dbae4a3c2ad9f96323d9bfae926b3c21bb1e3b066aa067906f577a2ff2545"
+    },
     "docs-watch": {
       "source": "celo-org/celopedia-skills",
       "sourceType": "github",
       "skillPath": ".claude/skills/docs-watch/SKILL.md",
       "computedHash": "3dc6ad7b5c0420e0ccbf854bcecadc7629050ee4ad366122ccf0f754b6377293"
+    },
+    "humanizer": {
+      "source": "blader/humanizer",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "456120712f3020b0da940d57ca2b7840db0c83c6d2cf6d0dfa31296f3d29b31e"
+    },
+    "impeccable": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/impeccable/SKILL.md",
+      "computedHash": "1843581b293551c4731678a7c9ece079dcaa9b195c72d2101252ea576e234fc6"
+    },
+    "slides": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/slides/SKILL.md",
+      "computedHash": "a2b3559b58afc484548e1eb359e20495d11cf12b90da7c1fbba50efed9a70340"
+    },
+    "ui-styling": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ui-styling/SKILL.md",
+      "computedHash": "e10b225db04fdfd893fdda2b9ed893c315f9dee5693494743d57b02066e96a51"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md",
+      "computedHash": "d1de8ff8d228cd4204bf06eb959ef4317d5b927908d9f42765971e33e80c8a7e"
+    },
+    "understand": {
+      "source": "egonex-ai/understand-anything",
+      "sourceType": "github",
+      "skillPath": "understand-anything-plugin/skills/understand/SKILL.md",
+      "computedHash": "a94d1dc999d6105189aacef5be5417364ad3e47fbf0ba4d6b46572cc62efd942"
+    },
+    "understand-chat": {
+      "source": "egonex-ai/understand-anything",
+      "sourceType": "github",
+      "skillPath": "understand-anything-plugin/skills/understand-chat/SKILL.md",
+      "computedHash": "0d278aa332c0753190f90f87f78b2d68c32d6b2c49fbfa4b0f0a30f646556496"
+    },
+    "understand-dashboard": {
+      "source": "egonex-ai/understand-anything",
+      "sourceType": "github",
+      "skillPath": "understand-anything-plugin/skills/understand-dashboard/SKILL.md",
+      "computedHash": "74ca8636b275307bd69d1f03890f3a37e6688332983ea462f12b90159e28b8f6"
+    },
+    "understand-diff": {
+      "source": "egonex-ai/understand-anything",
+      "sourceType": "github",
+      "skillPath": "understand-anything-plugin/skills/understand-diff/SKILL.md",
+      "computedHash": "89134f9ea476b4b5135ea8b21b9052b25038661d11e3700e49912d781c3caa0f"
+    },
+    "understand-domain": {
+      "source": "egonex-ai/understand-anything",
+      "sourceType": "github",
+      "skillPath": "understand-anything-plugin/skills/understand-domain/SKILL.md",
+      "computedHash": "042afe2c765d807dfb04ab4ba50c314d9a63cf73067250a8d2018f6e572f25a3"
+    },
+    "understand-explain": {
+      "source": "egonex-ai/understand-anything",
+      "sourceType": "github",
+      "skillPath": "understand-anything-plugin/skills/understand-explain/SKILL.md",
+      "computedHash": "26c3ff71816181cecbd1384c8ed1c2b63e4ff5e294762797f041201ce4295bbb"
+    },
+    "understand-figma": {
+      "source": "egonex-ai/understand-anything",
+      "sourceType": "github",
+      "skillPath": "understand-anything-plugin/skills/understand-figma/SKILL.md",
+      "computedHash": "98d381bdb6d511604d84f0af73751e5b413ad8b9fa59ab7ccb8822da660146c3"
+    },
+    "understand-knowledge": {
+      "source": "egonex-ai/understand-anything",
+      "sourceType": "github",
+      "skillPath": "understand-anything-plugin/skills/understand-knowledge/SKILL.md",
+      "computedHash": "0f202b94248c3c87da7a395b2c8f82411fb344176800999e1115e7b9f8a9f7b0"
+    },
+    "understand-onboard": {
+      "source": "egonex-ai/understand-anything",
+      "sourceType": "github",
+      "skillPath": "understand-anything-plugin/skills/understand-onboard/SKILL.md",
+      "computedHash": "88bd79c05c3bbb8ba83125086465da7751741162f3f9b4305538979fac495141"
     }
   }
 }
