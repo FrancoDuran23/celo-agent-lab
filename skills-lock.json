@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "skills": {
+    "celo-builders": {
+      "source": "celobuilders.xyz",
+      "sourceUrl": "https://celobuilders.xyz",
+      "sourceType": "well-known",
+      "computedHash": "193104a562889f4cefa865d8deeff0e1b70caee1ce9cd6d066907baacab8647d",
+      "wellKnownDigest": "sha256:ce68392ea6c4e64bdc5d3e2ad096f278a71e3f99fa216cd88b8d4c21ee82a053"
+    },
+    "celopedia-skill": {
+      "source": "celo-org/celopedia-skills",
+      "sourceType": "github",
+      "skillPath": "skills/celopedia-skill/SKILL.md",
+      "computedHash": "ecb350850efefadfb8561aac29d594b78ef2948ebfcb0b303caf1dfb2cb1ffa0"
+    },
+    "docs-watch": {
+      "source": "celo-org/celopedia-skills",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/docs-watch/SKILL.md",
+      "computedHash": "3dc6ad7b5c0420e0ccbf854bcecadc7629050ee4ad366122ccf0f754b6377293"
+    }
+  }
+}

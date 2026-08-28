@@ -1,0 +1,31 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Node
+node_modules/
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Installed agent skills (dependencies, not source)
+.agents/
+.claude/
+.commandcode/
+.factory/
+.grok/
+.hermes/
+.junie/
+.pi/
+.windsurf/
+
+# AFIP / TLS material
+afip-*.key
+afip-*.csr
+afip-*.crt

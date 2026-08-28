@@ -1,0 +1,17 @@
+{
+  "type": "Agent",
+  "name": "celo-agent-lab",
+  "description": "Autonomous settlement agent on Celo: holds funds, verifies a condition with deterministic rules, and settles or refunds on-chain.",
+  "url": "https://github.com/FrancoDuran23/celo-agent-lab",
+  "endpoints": [
+    {
+      "type": "a2a",
+      "url": "https://raw.githubusercontent.com/FrancoDuran23/celo-agent-lab/main/.well-known/agent.json"
+    }
+  ],
+  "registrations": [
+    {
+      "agentAddress": "eip155:42220:0xfcC0144395337D6C3F108aF42212f4C49Fc3d982"
+    }
+  ]
+}
