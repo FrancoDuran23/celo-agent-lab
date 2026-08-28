@@ -28,9 +28,19 @@ declare an outcome cannot be talked into declaring the wrong one.
 |---|---|
 | Network | Celo mainnet |
 | Agent wallet | `0xfcC0144395337D6C3F108aF42212f4C49Fc3d982` |
-| Identity | ERC-8004 (`0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`) |
-| Attribution | ERC-8021 tag on every transaction |
+| Identity | ERC-8004 Agent **#9789** — [8004scan](https://8004scan.io/agents/celo/9789) |
+| Attribution | ERC-8021 tag `celo_c68db23b8b72` on every transaction |
 | Gas | Paid in a stablecoin via Celo fee abstraction |
+
+## Attribution
+
+Every transaction this project sends carries its assigned ERC-8021 tag:
+
+```ts
+import { toDataSuffix } from '@celo/attribution-tags'
+
+await wallet.sendTransaction({ to, value, data: toDataSuffix('celo_c68db23b8b72') })
+```
 
 ## Hackathon
 
