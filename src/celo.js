@@ -68,24 +68,53 @@ export async function balances(address) {
 }
 
 /**
- * An ERC-20 transfer with the attribution tag appended and gas payable in a
- * stablecoin.
+ * An ERC-20 transfer with an optional commitment anchored in it, the
+ * attribution tag appended, and gas payable in a stablecoin.
  *
- * The tag rides in the data suffix, after the encoded call. Callers that
- * already carry their own code pass an array — the assigned tag has to be in
- * there or the transaction is invisible to the leaderboard.
+ * Layout matters:
+ *
+ *   [ transfer call ] [ 32-byte commitment ] [ ERC-8021 suffix ]
+ *
+ * The attribution suffix has to be last. The leaderboard query matches the
+ * ERC-8021 marker at the END of `tx.data` with no trailing wildcard, so
+ * anything appended after it makes the whole transaction invisible to the
+ * leaderboard. Verified against the published query and against
+ * `fromDataSuffix`, which still decodes the tag with a commitment in front.
+ *
+ * The commitment is the hash of a decision record. Paying for the work and
+ * dating the reasoning are then the same transaction — there is no window in
+ * which the record exists but is not yet anchored.
  */
-function transferData({ to, amount, tag }) {
+function transferData({ to, amount, tag, commitment }) {
   const call = encodeFunctionData({
     abi: erc20Abi,
     functionName: 'transfer',
     args: [to, amount],
   })
-  return concatHex([call, toDataSuffix(tag)])
+  const parts = commitment ? [call, commitment, toDataSuffix(tag)] : [call, toDataSuffix(tag)]
+  return concatHex(parts)
+}
+
+/**
+ * Read a commitment back out of a sent transaction.
+ *
+ * Sits between the end of the 68-byte ERC-20 transfer call and the 35-byte
+ * attribution suffix. Returns null when the transaction carried no commitment,
+ * which is the honest answer for every transaction that was not one of ours.
+ */
+export async function commitmentIn(hash) {
+  const tx = await publicClient.getTransaction({ hash })
+  const data = tx.input
+  const CALL_BYTES = 4 + 32 + 32
+  const SUFFIX_BYTES = 35
+  const start = 2 + CALL_BYTES * 2
+  const end = data.length - SUFFIX_BYTES * 2
+  if (end - start !== 64) return null
+  return `0x${data.slice(start, end)}`
 }
 
 /** @returns {Promise<{ gas: bigint, gasPrice: bigint, feeCurrency: string }>} */
-export async function estimate({ from, to, amountUsd, symbol, feeSymbol, tag }) {
+export async function estimate({ from, to, amountUsd, symbol, feeSymbol, tag, commitment }) {
   const t = token(symbol)
   const fee = token(feeSymbol)
   const amount = parseUnits(String(amountUsd), t.decimals)
@@ -93,7 +122,7 @@ export async function estimate({ from, to, amountUsd, symbol, feeSymbol, tag }) 
   const gas = await publicClient.estimateGas({
     account: from,
     to: t.address,
-    data: transferData({ to, amount, tag }),
+    data: transferData({ to, amount, tag, commitment }),
     feeCurrency: fee.address,
   })
 
@@ -108,7 +137,7 @@ export async function estimate({ from, to, amountUsd, symbol, feeSymbol, tag }) 
  *
  * @returns {Promise<`0x${string}`>} transaction hash
  */
-export async function pay({ privateKey, to, amountUsd, symbol, feeSymbol, tag }) {
+export async function pay({ privateKey, to, amountUsd, symbol, feeSymbol, tag, commitment }) {
   const t = token(symbol)
   const fee = token(feeSymbol)
   const { account, client } = walletFor(privateKey)
@@ -117,7 +146,7 @@ export async function pay({ privateKey, to, amountUsd, symbol, feeSymbol, tag })
   return client.sendTransaction({
     account,
     to: t.address,
-    data: transferData({ to, amount, tag }),
+    data: transferData({ to, amount, tag, commitment }),
     feeCurrency: fee.address,
   })
 }

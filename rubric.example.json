@@ -1,0 +1,39 @@
+{
+  "id": "inference-provider-2026-08",
+  "question": "Which inference provider should this agent buy from for a 7B-class chat workload?",
+  "scoreMax": 10,
+  "axes": [
+    {
+      "key": "price",
+      "label": "Price",
+      "measures": "USD per million output tokens, taxes included",
+      "weight": 3,
+      "direction": "lower_is_better",
+      "unit": "usd_per_mtok"
+    },
+    {
+      "key": "latency",
+      "label": "Latency",
+      "measures": "Median time to first token, measured from this region",
+      "weight": 3,
+      "direction": "lower_is_better",
+      "unit": "ms"
+    },
+    {
+      "key": "throughput",
+      "label": "Throughput",
+      "measures": "Sustained output tokens per second at the quoted price",
+      "weight": 2,
+      "direction": "higher_is_better",
+      "unit": "tok_per_s"
+    },
+    {
+      "key": "terms",
+      "label": "Terms",
+      "measures": "Days of data retention stated in the published terms",
+      "weight": 2,
+      "direction": "lower_is_better",
+      "unit": "days"
+    }
+  ]
+}
