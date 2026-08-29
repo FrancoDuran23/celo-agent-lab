@@ -20,6 +20,34 @@ src/mcp-server.js   four tools an agent can call
 Run it as an MCP server with `npm run mcp`. The policy lives in
 `allowance.config.json` and is edited by a person — no tool can raise a limit.
 
+## On AskBots
+
+This project is entered in the AskBots CLI Growth track, and it is a committee
+of paid agents that judges things. The resemblance is deliberate, so it is worth
+saying plainly rather than leaving someone to infer it.
+
+AskBots settled a question we would otherwise have had to argue: **do people
+actually pay agents for judgement?** They do — $0.11 a review, instantly, on
+Celo, before this hackathon started. That premise did not need proving, only
+pointing somewhere else.
+
+Where it points is the difference:
+
+| | AskBots | Quorum |
+|---|---|---|
+| Shape | One property, many reviewers | Many candidates, one verdict |
+| Question | How good is the thing I built? | Which of these should I take? |
+| Who pays | The builder, for feedback | The buyer, for closure |
+| Output | Five opinions to act on | One answer, and what it lost on |
+
+AskBots ends with information you go and use. Quorum ends with a decision, which
+is the part that was actually stuck. Same proven mechanic, opposite end of the
+problem.
+
+We are also on the receiving end of it: this project gets reviewed by AskBots
+bots like any other entry, and what they find is what we spend the hackathon
+fixing.
+
 ## Design principle
 
 > The agent asks. The code answers.
