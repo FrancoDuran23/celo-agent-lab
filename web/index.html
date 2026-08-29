@@ -393,9 +393,10 @@ h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-s
     p.px(cx-b-1,top+h,b*2+4,2,c);
   }
 
-  function eye(p,x,y,r,squash){
-    if(squash) p.ell(x,y,r,r*squash,INK);
-    else p.disc(x,y,r,INK);
+  function eye(p,x,y,r,dx,dy,pr){
+    dx=dx||0; dy=dy||0; pr=pr||Math.max(2,r*0.48);
+    p.disc(x,y,r,INK); p.disc(x,y,r-1,W);
+    p.disc(x+dx,y+dy,pr,INK); p.px(x+dx-1,y+dy-pr+1,2,2,W);
   }
   function wink(p,x,y,w){
     p.px(x-(w>>1)+1,y+1,w-2,2,INK);
@@ -413,15 +414,7 @@ h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-s
   }
   function grin(p,x,y,w){ curve(p,x,y-2,w,3); }
   function flat(p,x,y,w){ curve(p,x,y,w,0); }
-  function smirk(p,x,y,w){
-    /* Lifts on one side only. A vertical run of dark pixels on a face this size
-       always reads as a scar, so the lift is baked into the curve instead. */
-    var half=w/2;
-    for(var i=0;i<w;i++){
-      var dx=(i-half)/half, lift = 2*(1-dx*dx) + (dx>0.2 ? 1.6 : 0);
-      p.px(x-(half|0)+i, y-Math.round(lift), 1, 2, INK);
-    }
-  }
+  function smirk(p,x,y,w){ curve(p,x,y,w,1); p.px(x+(w>>1)-2,y-2,3,2,INK); }
   function frown(p,x,y,w){ curve(p,x,y+1,w,-2); }
 
   var DRAW = {
@@ -431,8 +424,8 @@ h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-s
       p.disc(41,17,7,'#6b4d0c'); p.disc(41,17,6,'#f5cf5c'); p.disc(41,17,4,'#ffe89b');
       p.px(40,13,2,9,'#a9800f'); p.px(38,15,7,2,'#a9800f'); p.px(38,20,7,2,'#a9800f');
       p.disc(39,15,1.3,'#fffbe8');
-      if(b){ shut(p,15,21,8); shut(p,27,21,7); }
-      else { wink(p,15,21,9); eye(p,27,21,2.6); }
+      if(b){ shut(p,14,21,11); shut(p,28,21,11); }
+      else { wink(p,14,21,11); eye(p,28,21,6,1,-1); }
       grin(p,21,31,16);
       p.px(6,8,2,5,c.base); p.px(2,13,5,2,c.base); p.px(5,3,2,4,c.base);
     },
@@ -441,11 +434,10 @@ h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-s
       body(p,c,19,21,16);
       rr(p,29,30,18,15,'#a8794f','#6b4c2e');
       p.px(29,36,18,2,'#6b4c2e'); p.px(37,30,2,15,'#6b4c2e'); p.px(30,31,16,2,'#c99a6d');
-      p.px(30,29,6,3,c.line); p.px(30,29,6,2,c.dark);
-      p.disc(30,30,3.2,c.dark); p.disc(30,29,3.2,c.base);
-      if(b){ shut(p,15,21,7); shut(p,24,21,7); }
-      else { eye(p,15,21,2.5); eye(p,24,21,2.5); }
-      frown(p,19,31,11);
+      p.px(30,28,7,4,c.line); p.px(30,28,7,3,c.dark); p.px(30,28,7,1,c.base);
+      if(b){ shut(p,13,21,11); shut(p,26,21,11); }
+      else { eye(p,13,21,6,2,-2); eye(p,26,21,6,2,-2); }
+      frown(p,19,32,13);
       p.disc(40,10,8,'#4d5866'); p.disc(40,10,7,'#f4f8fc');
       p.px(39,5,2,6,'#39424e'); p.px(40,9,5,2,'#39424e');
       p.px(8,30,3,4,'#8fdcf5'); p.px(9,34,2,3,'#8fdcf5');
@@ -454,13 +446,13 @@ h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-s
     quality: function(p,c,b){
       body(p,c,22,22,16);
       p.px(7,31,5,4,c.line); p.px(7,31,5,3,c.dark); p.px(7,31,5,1,c.base);
-      if(b){ shut(p,16,21,9); }
+      if(b){ shut(p,16,21,15); }
       else {
         p.disc(16,21,10,'#1c1c26'); p.disc(16,21,8,'#e2f0fb'); p.disc(16,21,7,'#bcd9ee');
-        p.disc(16,21,3.4,INK);
+        p.disc(17,21,4.4,INK); p.px(13,16,3,3,W);
       }
       p.px(9,29,4,4,'#1c1c26'); p.px(6,32,4,4,'#1c1c26'); p.px(3,35,4,4,'#1c1c26');
-      if(b){ shut(p,30,22,6); } else { eye(p,30,22,2.3); }
+      if(b){ shut(p,31,22,10); } else { eye(p,31,22,6,-2,0,2.2); }
       flat(p,25,34,12);
       rr(p,34,3,13,18,'#ddd7ee','#7a7296'); p.px(37,1,7,4,'#4b4560');
       p.px(36,10,2,2,c.dark); p.px(38,12,2,2,c.dark); p.px(40,8,2,4,c.dark);
@@ -473,9 +465,9 @@ h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-s
       p.px(20,33,2,5,c.line);
       p.disc(7,35,3.2,c.dark); p.disc(7,34,3.2,c.base);
       p.disc(35,35,3.2,c.dark); p.disc(35,34,3.2,c.base);
-      if(b){ shut(p,16,21,7); shut(p,26,21,7); }
-      else { eye(p,16,21,2.8,0.66); eye(p,26,21,2.8,0.66); }
-      smirk(p,21,30,14);
+      if(b){ shut(p,14,20,11); shut(p,28,20,11); }
+      else { eye(p,14,20,6,2,1,2.4); eye(p,28,20,6,2,1,2.4); }
+      smirk(p,21,29,13);
       p.px(33,4,15,2,c.line); p.px(32,6,17,12,c.line);
       p.px(34,18,13,3,c.line); p.px(36,21,9,3,c.line); p.px(38,24,5,2,c.line);
       p.px(34,6,13,11,'#3a3a49'); p.px(35,17,11,3,'#3a3a49');
@@ -486,12 +478,12 @@ h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-s
 
     risk: function(p,c,b){
       body(p,c,21,22,16);
-      p.px(5,26,5,5,c.line); p.px(5,26,5,4,c.dark);
-      p.disc(3,23,4.4,c.line); p.disc(3,23,3.6,c.dark); p.disc(2,22,1.6,c.base);
-      p.px(32,26,5,5,c.line); p.px(32,26,5,4,c.dark);
-      p.disc(39,23,4.4,c.line); p.disc(39,23,3.6,c.dark); p.disc(38,22,1.6,c.base);
-      if(b){ shut(p,16,21,8); shut(p,26,21,8); }
-      else { eye(p,16,21,3.4); eye(p,26,21,3.4); }
+      p.px(6,26,4,6,c.line); p.px(6,26,4,5,c.dark);
+      p.disc(6,24,4.2,c.line); p.disc(6,24,3.4,c.dark); p.disc(5,23,1.6,c.base);
+      p.px(32,26,4,6,c.line); p.px(32,26,4,5,c.dark);
+      p.disc(36,24,4.2,c.line); p.disc(36,24,3.4,c.dark); p.disc(35,23,1.6,c.base);
+      if(b){ shut(p,14,21,13); shut(p,28,21,13); }
+      else { eye(p,14,21,7,0,1,2.4); eye(p,28,21,7,0,1,2.4); }
       p.ell(21,33,3.4,4,INK);
       tri(p,39,2,15,c.base,'#180a10');
       p.px(38,8,2,6,c.base); p.px(38,15,2,2,c.base);
