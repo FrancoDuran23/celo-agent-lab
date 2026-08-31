@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bench in Session</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Outfit:wght@300;400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#0a0a0c; --glass:rgba(255,255,255,.05); --glass-hi:rgba(255,255,255,.08);
+  --edge:rgba(255,255,255,.11); --edge-hi:rgba(255,255,255,.22);
+  --text:#f2f2f4; --text-2:#a3a3ac; --text-3:#6e6e79;
+  --price:#c3f251; --delivery:#54d6f5; --quality:#ad88ff; --seller:#ffa24d; --risk:#ff7092;
+  --won:#7fe0a8; --lost:#ff8b8b;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--ground);color:var(--text);overflow-x:hidden;
+  font-family:Outfit,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--text);color:var(--ground)}
+:focus-visible{outline:2px solid var(--text);outline-offset:3px;border-radius:6px}
+.num{font-variant-numeric:tabular-nums}
+
+.haze{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.haze i{position:absolute;border-radius:50%;filter:blur(110px);background:#fff;display:block}
+.z1{width:56vw;height:56vw;top:-18vw;left:-10vw;opacity:.05}
+.z2{width:44vw;height:44vw;bottom:-14vw;right:-12vw;opacity:.035}
+
+.wrap{max-width:920px;margin:0 auto;padding:0 clamp(18px,4vw,36px) 80px}
+.card{
+  background:var(--glass);border:1px solid var(--edge);border-radius:18px;
+  backdrop-filter:blur(24px) saturate(120%);-webkit-backdrop-filter:blur(24px) saturate(120%);
+}
+
+/* ── head ── */
+.top{padding:clamp(40px,7vw,72px) 0 26px}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);margin:0 0 14px}
+h1{
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;
+  font-size:clamp(30px,5.4vw,52px);line-height:1.03;letter-spacing:-.032em;
+  margin:0 0 14px;max-width:20ch;text-wrap:balance;
+}
+.sub{color:var(--text-2);font-weight:300;max-width:52ch;margin:0;font-size:clamp(15px,2vw,17px)}
+
+/* ── docket ── */
+.docket{margin-top:26px;overflow:hidden}
+.docket h2, .panel h2, .tally h2, .receipt h2{
+  margin:0;padding:12px 18px;border-bottom:1px solid var(--edge);
+  font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);font-weight:600;
+  display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+}
+.docket h2 em, .panel h2 em, .tally h2 em, .receipt h2 em{font-style:normal;letter-spacing:.04em;text-transform:none;font-size:11.5px}
+.item{display:grid;grid-template-columns:26px 1fr auto;gap:14px;align-items:baseline;padding:13px 18px;border-bottom:1px solid rgba(255,255,255,.05)}
+.item:last-child{border-bottom:0}
+.item .n{font-size:12px;color:var(--text-3)}
+.item b{display:block;font-weight:500;font-size:14.5px}
+.item span{display:block;font-size:12px;color:var(--text-3);word-break:break-all;margin-top:1px}
+.item .p{font-weight:600;font-size:14.5px;white-space:nowrap}
+
+.go{
+  margin-top:22px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+}
+button.run{
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-size:15px;
+  background:var(--text);color:var(--ground);border:0;border-radius:999px;
+  padding:13px 26px;cursor:pointer;min-height:44px;
+  transition:transform .2s cubic-bezier(.2,.8,.3,1),opacity .2s;
+}
+button.run:hover:not(:disabled){transform:translateY(-2px)}
+button.run:disabled{opacity:.42;cursor:default;transform:none}
+.cost{font-size:13px;color:var(--text-3)}
+.cost b{color:var(--text-2);font-weight:600}
+
+/* ── the panel speaking ── */
+.panel{margin-top:22px}
+.said{
+  display:grid;grid-template-columns:64px 1fr;gap:16px;padding:16px 18px;
+  border-bottom:1px solid rgba(255,255,255,.05);align-items:start;
+  opacity:0;animation:rise .5s cubic-bezier(.16,.84,.3,1) forwards;
+}
+.said:last-child{border-bottom:0}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .said,.tally,.verdict,.receipt{animation:none!important;opacity:1!important;transform:none!important}
+  button.run{transition:none}
+}
+.said canvas{width:64px;height:64px;display:block;image-rendering:pixelated;image-rendering:crisp-edges}
+.said .who{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;font-size:15px;margin:0 0 3px}
+.said .metric{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin:0 0 8px}
+.said .finding{margin:0 0 10px;font-size:14px;color:var(--text-2);font-weight:300;line-height:1.55;max-width:60ch}
+.said .finding b{color:var(--text);font-weight:500}
+.reads{display:flex;gap:8px;flex-wrap:wrap}
+.read{
+  font-size:11.5px;padding:4px 9px;border-radius:7px;border:1px solid var(--edge);
+  background:rgba(255,255,255,.03);color:var(--text-2);white-space:nowrap;
+}
+.read b{color:var(--text);font-weight:600}
+.read.best{border-color:color-mix(in srgb,var(--hue) 55%,transparent);background:color-mix(in srgb,var(--hue) 12%,transparent)}
+.read.best b{color:var(--hue)}
+
+/* ── tally ── */
+.tally{margin-top:22px;opacity:0;animation:rise .5s cubic-bezier(.16,.84,.3,1) forwards}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:540px}
+th{
+  text-align:right;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);
+  font-weight:600;padding:12px 10px;border-bottom:1px solid var(--edge);white-space:nowrap;
+}
+th:first-child{text-align:left;padding-left:18px}
+th:last-child{padding-right:18px}
+td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.05);text-align:right;font-variant-numeric:tabular-nums;color:var(--text-2)}
+td:first-child{text-align:left;padding-left:18px;color:var(--text);font-weight:500;white-space:nowrap}
+td:last-child{padding-right:18px}
+tbody tr:last-child td{border-bottom:0}
+tr.won td{background:rgba(127,224,168,.07)}
+tr.won td:first-child{font-weight:700}
+td.total{font-weight:700;color:var(--text)}
+tr.won td.total{color:var(--won)}
+td.top{color:var(--text)}
+
+/* ── verdict ── */
+.verdict{margin-top:22px;padding:26px 22px;opacity:0;animation:rise .55s cubic-bezier(.16,.84,.3,1) forwards}
+.verdict .stamp{font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--won);font-weight:700;margin:0 0 10px}
+.verdict h3{
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:700;
+  font-size:clamp(24px,4vw,36px);line-height:1.08;letter-spacing:-.028em;margin:0 0 10px;
+}
+.verdict > p{color:var(--text-2);font-weight:300;margin:0 0 20px;max-width:56ch;font-size:15px}
+.dissent{border-top:1px solid var(--edge);padding-top:18px}
+.dissent > b{
+  display:block;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--lost);font-weight:700;margin-bottom:12px;
+}
+.dline{display:grid;grid-template-columns:88px 1fr;gap:14px;padding:9px 0;font-size:13.5px;align-items:baseline}
+.dline .ax{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--hue);font-weight:600}
+.dline p{margin:0;color:var(--text-2);font-weight:300;line-height:1.5}
+.dline p b{color:var(--text);font-weight:500}
+
+/* ── receipt ── */
+.receipt{margin-top:22px;opacity:0;animation:rise .5s cubic-bezier(.16,.84,.3,1) forwards}
+.rrow{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13.5px;align-items:baseline}
+.rrow:last-child{border-bottom:0}
+.rrow .k{color:var(--text-2);font-weight:300}
+.rrow .k small{display:block;color:var(--text-3);font-size:11.5px;margin-top:2px}
+.rrow .v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--text);text-align:right;word-break:break-all}
+.rrow .v.ok{color:var(--won);font-family:inherit;font-size:13px;font-weight:600}
+.rrow .v.no{color:var(--text-3);font-family:inherit;font-size:13px}
+.note{padding:16px 18px;font-size:13px;color:var(--text-3);font-weight:300;line-height:1.6;border-top:1px solid var(--edge)}
+.note b{color:var(--text-2);font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="haze" aria-hidden="true"><i class="z1"></i><i class="z2"></i></div>
+
+<div class="wrap">
+
+  <header class="top">
+    <p class="eyebrow">Quorum &middot; session 0412</p>
+    <h1>Three power banks. Two days of tabs.</h1>
+    <p class="sub">The rubric was sealed on-chain before the first listing was read. The bench has not seen who sells what.</p>
+  </header>
+
+  <section class="card docket">
+    <h2>Submitted <em>3 listings</em></h2>
+    <div class="item"><span class="n num">1</span><span><b>Anker 737 Power Bank &middot; 24.000 mAh</b><span>mercadolibre.com.ar/MLA-1489203771</span></span><span class="p num">$189.900</span></div>
+    <div class="item"><span class="n num">2</span><span><b>Baseus Blade &middot; 20.000 mAh, 100 W</b><span>mercadolibre.com.ar/MLA-1372640558</span></span><span class="p num">$142.500</span></div>
+    <div class="item"><span class="n num">3</span><span><b>Xiaomi Redmi &middot; 20.000 mAh, 22,5 W</b><span>mercadolibre.com.ar/MLA-1901447230</span></span><span class="p num">$ 78.400</span></div>
+  </section>
+
+  <div class="go">
+    <button class="run" id="run" type="button">Convene the bench</button>
+    <span class="cost">Costs <b>$0.04</b> in USDT over x402 &middot; gas paid in the same token</span>
+  </div>
+
+  <div id="out"></div>
+</div>
+
+<script>
+(function(){
+  /* ── the cast, same drawing as the landing ── */
+  var S=48, INK='#16141a', WH='#ffffff';
+  var WIG_S='#b2afa4', WIG_D='#cecbc0', WIG='#eae8e0', WIG_H='#fcfbf7';
+  var SK_S='#b0805c', SK_D='#ce9e76', SK='#eabe96', SK_H='#f8d8ba';
+  var RB_S='#100f14', RB_D='#1c1a22', RB='#282530', RB_H='#3a3644';
+  var LACE='#f8f8fa', LACE_D='#d6d6dc', LACE_S='#b6b6be';
+  var BROW='#7e5c42', BROW_H='#604430', MOU='#966054', MOU_D='#70423c';
+
+  function hsl(h,s,l){ return 'hsl('+((h%360+360)%360)+','+s+'%,'+l+'%)' }
+  function ramp(h,s,l){ return { line:hsl(h+14,Math.min(s+6,100),Math.max(l-32,10)),
+    dark:hsl(h+7,s,Math.max(l-15,14)), base:hsl(h,s,l), light:hsl(h-9,Math.max(s-6,0),Math.min(l+15,95)) } }
+  var TONE={price:ramp(78,80,58),delivery:ramp(194,82,58),quality:ramp(262,86,64),
+            seller:ramp(28,90,58),risk:ramp(342,90,62)};
+
+  function pnt(ctx){
+    function px(x,y,w,h,c){ ctx.fillStyle=c; ctx.fillRect(x|0,y|0,w||1,h||1) }
+    function disc(cx,cy,r,c){ ctx.fillStyle=c; var r2=r*r;
+      for(var y=Math.floor(cy-r)-1;y<=Math.ceil(cy+r)+1;y++)
+        for(var x=Math.floor(cx-r)-1;x<=Math.ceil(cx+r)+1;x++){
+          var dx=x+.5-cx,dy=y+.5-cy; if(dx*dx+dy*dy<=r2) ctx.fillRect(x,y,1,1) } }
+    function ell(cx,cy,rx,ry,c){ ctx.fillStyle=c;
+      for(var y=Math.floor(cy-ry)-1;y<=Math.ceil(cy+ry)+1;y++)
+        for(var x=Math.floor(cx-rx)-1;x<=Math.ceil(cx+rx)+1;x++){
+          var dx=(x+.5-cx)/rx,dy=(y+.5-cy)/ry; if(dx*dx+dy*dy<=1) ctx.fillRect(x,y,1,1) } }
+    return {px:px,disc:disc,ell:ell};
+  }
+  function curl(p,cx,cy,r){ p.disc(cx,cy+1,r,WIG_S); p.disc(cx,cy,r,WIG_D);
+    p.disc(cx-.5,cy-.5,r-.8,WIG); p.disc(cx-r*.4,cy-r*.45,r*.34,WIG_H) }
+  function drawJudge(ctx,key){
+    var c=TONE[key], p=pnt(ctx);
+    p.px(21,29,7,5,SK_S); p.px(21,29,6,4,SK_D); p.px(22,29,4,3,SK);
+    p.px(2,34,44,14,RB_S); p.px(4,33,40,14,RB_D); p.px(6,32,36,15,RB);
+    p.px(7,32,14,2,RB_H); p.px(9,34,3,13,RB_H);
+    p.px(20,33,8,3,RB_S); p.px(24,36,2,11,RB_S);
+    p.px(16,31,16,2,RB_H); p.px(15,33,4,3,RB_S); p.px(29,33,4,3,RB_S);
+    p.px(18,32,12,4,LACE); p.px(18,35,12,1,LACE_S);
+    p.px(19,36,10,4,LACE); p.px(19,39,10,1,LACE_S);
+    p.px(20,40,8,4,LACE); p.px(20,43,8,1,LACE_S);
+    for(var x=18;x<30;x+=2) p.px(x,35,1,1,LACE_D);
+    p.px(23,32,3,12,c.base); p.px(23,32,1,12,c.light);
+    p.ell(24,18,13,12,WIG_S); p.ell(24,17,13,12,WIG_D);
+    p.ell(24,16,12,11,WIG); p.ell(22,12,9,6,WIG_H); p.px(23,6,3,2,WIG_D);
+    [17,23,29].forEach(function(y){ curl(p,12,y,4); curl(p,36,y,4) });
+    curl(p,14,34,3.2); curl(p,34,34,3.2);
+    p.ell(24,22,9,10,SK_S); p.ell(24,21,9,10,SK_D); p.ell(23,21,8.4,9.4,SK);
+    p.ell(20,16,4,3,SK_H); p.px(21,29,7,2,SK_D); p.px(22,31,5,1,SK_S);
+    p.px(17,18,3,1,SK_S); p.px(28,18,3,1,SK_S);
+    p.px(19,26,2,3,SK_S); p.px(27,26,2,3,SK_S);
+    p.px(23,22,2,4,SK_D); p.px(23,25,3,1,SK_S);
+    if(key==='price'){ p.px(18,21,4,1,INK); p.px(19,20,2,1,INK);
+      p.px(26,20,2,2,WH); p.px(27,20,1,2,INK); p.px(18,16,5,1,BROW); p.px(25,17,5,1,BROW);
+      p.px(20,27,1,1,MOU); p.px(21,28,6,1,MOU); p.px(27,27,1,1,MOU);
+      p.disc(39,10,7,'#7a5812'); p.disc(39,10,6,'#cea434'); p.disc(38,9,4.6,'#f6d46e');
+      p.px(38,6,2,9,'#966e1a'); p.px(35,8,9,2,'#966e1a'); p.px(35,11,9,2,'#966e1a'); }
+    if(key==='delivery'){ p.px(19,20,2,2,WH); p.px(26,20,2,2,WH);
+      p.px(19,20,1,2,INK); p.px(27,20,1,2,INK); p.px(18,17,5,1,BROW); p.px(25,17,5,1,BROW);
+      p.px(20,29,2,1,MOU); p.px(22,28,4,1,MOU); p.px(26,29,2,1,MOU);
+      p.px(34,3,11,2,'#a07850'); p.px(34,20,11,2,'#a07850');
+      for(var i=0;i<6;i++) p.px(35+i,5+i,11-i*2,1,'#e2f0f8');
+      for(var j=0;j<6;j++) p.px(35+(5-j),11+j,1+j*2,1,'#e2f0f8');
+      p.px(36,6,9,1,'#ecc476'); p.px(37,17,5,2,'#ecc476'); p.px(39,9,1,4,'#ecc476'); }
+    if(key==='quality'){ p.disc(20,21,5,'#c4beb0'); p.disc(20,21,4,'#eef6fc'); p.px(19,20,2,2,INK);
+      p.px(24,24,2,1,'#b2aca0'); p.px(26,25,2,1,'#b2aca0'); p.px(28,26,2,2,'#b2aca0');
+      p.px(26,20,2,2,WH); p.px(27,20,1,2,INK); p.px(25,17,5,1,BROW);
+      p.px(20,28,8,1,MOU);
+      p.disc(39,9,7,'#3a3842'); p.disc(39,9,5.6,'#d6eaf8'); p.disc(38,8,3,'#f0faff');
+      p.px(33,14,3,3,'#3a3842'); p.px(31,17,3,3,'#3a3842'); p.px(29,20,3,3,'#3a3842'); }
+    if(key==='seller'){ p.px(19,21,2,2,WH); p.px(26,21,2,2,WH);
+      p.px(19,21,1,2,INK); p.px(27,21,1,2,INK);
+      p.px(18,17,5,2,BROW_H); p.px(25,17,5,2,BROW_H);
+      p.px(20,29,6,1,MOU); p.px(26,28,2,1,MOU);
+      p.px(34,3,12,7,'#926436'); p.px(34,3,12,2,'#b88856'); p.px(34,8,12,2,'#704c28');
+      p.px(38,10,3,10,'#a07444'); p.px(38,10,1,10,'#c49864');
+      p.px(30,21,17,3,'#926436'); p.px(30,21,17,1,'#b88856'); }
+    if(key==='risk'){ p.px(18,19,4,4,WH); p.px(25,19,4,4,WH);
+      p.px(19,20,2,2,INK); p.px(26,20,2,2,INK);
+      p.px(18,15,5,1,BROW); p.px(25,15,5,1,BROW);
+      p.px(22,28,4,3,MOU_D); p.px(22,28,4,1,MOU);
+      p.px(34,2,11,20,'#f0ebdc'); p.px(34,2,11,2,'#d4ccba'); p.px(34,20,11,2,'#d4ccba');
+      [6,9,12,15].forEach(function(y){ p.px(36,y,7,1,'#9e988a') });
+      p.disc(39,22,3,'#a82a2a'); p.disc(38,21,1.6,'#d45656'); }
+  }
+
+  /* ── the case ── */
+  var ITEMS = [
+    {id:'anker',  name:'Anker 737',    price:'$189.900'},
+    {id:'baseus', name:'Baseus Blade', price:'$142.500'},
+    {id:'xiaomi', name:'Xiaomi Redmi', price:'$ 78.400'}
+  ];
+
+  var BENCH = [
+    { key:'price', name:'Price', metric:'Cost per 1.000 mAh, tax and shipping in', unit:'',
+      lower:true, read:{anker:'$7,91',baseus:'$7,13',xiaomi:'$3,92'},
+      raw:{anker:7.91,baseus:7.13,xiaomi:3.92},
+      finding:'Per unit of charge the Xiaomi is less than half the Anker. The Baseus sits between them. <b>Nothing on this page justifies the Anker on price.</b>' },
+    { key:'delivery', name:'Delivery', metric:'Days to arrive, and where it ships from', unit:'',
+      lower:true, read:{anker:'9 días',baseus:'1 día',xiaomi:'2 días'},
+      raw:{anker:9,baseus:1,xiaomi:2},
+      finding:'Two ship from Buenos Aires next-day. The Anker ships from Córdoba on a 7-to-11 day window and <b>lists no return address inside the country.</b>' },
+    { key:'quality', name:'Quality', metric:'Sustained output, stated spec against review text', unit:'',
+      lower:false, read:{anker:'140 W',baseus:'100 W',xiaomi:'22,5 W'},
+      raw:{anker:140,baseus:100,xiaomi:22.5},
+      finding:'The Xiaomi does 22,5 W where the others do 100 and 140. Eleven reviews say it will not charge a laptop. <b>If the load is a phone that is irrelevant — and you did not say.</b>' },
+    { key:'seller', name:'Seller', metric:'Age of the listing, in days', unit:'',
+      lower:false, read:{anker:'11 días',baseus:'940 días',xiaomi:'1.200 días'},
+      raw:{anker:11,baseus:940,xiaomi:1200},
+      finding:'Two are Platinum sellers with thousands of sales. <b>The Anker listing is eleven days old and shows two.</b> That is the strongest single signal here.' },
+    { key:'risk', name:'Risk', metric:'Warranty honoured in-country, in months', unit:'',
+      lower:false, read:{anker:'sin garantía',baseus:'12 meses',xiaomi:'6 meses'},
+      raw:{anker:0,baseus:12,xiaomi:6},
+      finding:'The Anker offers no local warranty at all. When it fails — and one in twenty does — <b>you are shipping it abroad at your own cost.</b>' }
+  ];
+
+  /* ── deterministic scoring, the same normalisation as src/scoring.js ── */
+  var MAX = 10;
+  function scoreAxis(axis){
+    var vals = ITEMS.map(function(i){ return axis.raw[i.id] });
+    var min = Math.min.apply(null, vals), max = Math.max.apply(null, vals), span = max - min;
+    var out = {};
+    ITEMS.forEach(function(i){
+      var v = axis.raw[i.id];
+      out[i.id] = span === 0 ? MAX : ((axis.lower ? (max-v) : (v-min)) / span) * MAX;
+    });
+    return out;
+  }
+  var COLS = {}, TOTALS = {};
+  BENCH.forEach(function(a){ COLS[a.key] = scoreAxis(a) });
+  ITEMS.forEach(function(i){
+    TOTALS[i.id] = BENCH.reduce(function(s,a){ return s + COLS[a.key][i.id] }, 0) / BENCH.length;
+  });
+  var RANKED = ITEMS.slice().sort(function(a,b){ return TOTALS[b.id]-TOTALS[a.id] });
+  var WINNER = RANKED[0];
+  var n2 = function(v){ return v.toFixed(2).replace('.',',') };
+  var nameOf = function(id){ return ITEMS.filter(function(i){return i.id===id})[0].name };
+
+  function bestIn(axis){
+    var best = ITEMS[0].id;
+    ITEMS.forEach(function(i){ if(COLS[axis.key][i.id] > COLS[axis.key][best]) best = i.id });
+    return best;
+  }
+
+  var out = document.getElementById('out');
+  var btn = document.getElementById('run');
+  btn.addEventListener('click', run, { once:true });
+
+  function run(){
+    btn.disabled = true; btn.textContent = 'Bench sitting…';
+    var sec = document.createElement('section');
+    sec.className = 'card panel';
+    sec.innerHTML = '<h2>The bench <em>each measures one axis, and only reports</em></h2><div id="said"></div>';
+    out.appendChild(sec);
+    var host = document.getElementById('said');
+
+    BENCH.forEach(function(a, i){
+      var best = bestIn(a);
+      var row = document.createElement('div');
+      row.className = 'said';
+      row.style.setProperty('--hue','var(--'+a.key+')');
+      row.style.animationDelay = (i*560)+'ms';
+      row.innerHTML =
+        '<canvas width="48" height="48" data-j="'+a.key+'" role="img" aria-label="'+a.name+'"></canvas>'+
+        '<div><p class="who">'+a.name+'</p><p class="metric">'+a.metric+'</p>'+
+        '<p class="finding">'+a.finding+'</p><div class="reads">'+
+        ITEMS.map(function(it){
+          return '<span class="read'+(it.id===best?' best':'')+'">'+it.name+' <b>'+a.read[it.id]+'</b></span>';
+        }).join('')+'</div></div>';
+      host.appendChild(row);
+      var cv = row.querySelector('canvas');
+      var ctx = cv.getContext('2d'); ctx.imageSmoothingEnabled = false;
+      drawJudge(ctx, a.key);
+    });
+
+    setTimeout(tally, BENCH.length*560 + 400);
+  }
+
+  function tally(){
+    var head = '<tr><th>Listing</th>'+BENCH.map(function(a){return '<th>'+a.name+'</th>'}).join('')+'<th>Total</th></tr>';
+    var rows = RANKED.map(function(i){
+      return '<tr class="'+(i.id===WINNER.id?'won':'')+'"><td>'+i.name+'</td>'+
+        BENCH.map(function(a){
+          var v = COLS[a.key][i.id];
+          return '<td class="'+(i.id===bestIn(a)?'top':'')+'">'+n2(v)+'</td>';
+        }).join('')+
+        '<td class="total">'+n2(TOTALS[i.id])+'</td></tr>';
+    }).join('');
+
+    var el = document.createElement('section');
+    el.className = 'card tally';
+    el.innerHTML = '<h2>Tally <em>scored out of 10 on each axis, equally weighted</em></h2>'+
+      '<div class="scroll"><table><thead>'+head+'</thead><tbody>'+rows+'</tbody></table></div>';
+    out.appendChild(el);
+    setTimeout(verdict, 520);
+  }
+
+  function verdict(){
+    var lost = BENCH.filter(function(a){ return bestIn(a) !== WINNER.id });
+    var el = document.createElement('section');
+    el.className = 'card verdict';
+    el.innerHTML =
+      '<p class="stamp">Verdict</p>'+
+      '<h3>'+WINNER.name+', at '+WINNER.price.trim()+'</h3>'+
+      '<p>It takes two of the five axes outright and never places last. '+
+        'The margin over the Xiaomi is <b>'+n2(TOTALS[WINNER.id]-TOTALS[RANKED[1].id])+' points</b>, which is narrow — '+
+        'read the dissent before you act on this.</p>'+
+      '<div class="dissent"><b>Dissent &mdash; '+lost.length+' of 5 axes went elsewhere</b>'+
+        lost.map(function(a){
+          var w = bestIn(a);
+          return '<div class="dline" style="--hue:var(--'+a.key+')">'+
+            '<span class="ax">'+a.name+'</span>'+
+            '<p>Preferred <b>'+nameOf(w)+'</b> &mdash; '+a.read[w]+' against '+a.read[WINNER.id]+
+            ' for the winner.</p></div>';
+        }).join('')+
+      '</div>';
+    out.appendChild(el);
+    setTimeout(receipt, 500);
+  }
+
+  function receipt(){
+    var el = document.createElement('section');
+    el.className = 'card receipt';
+    el.innerHTML =
+      '<h2>Receipt <em>what it cost, and what was written down</em></h2>'+
+      '<div class="rrow"><span class="k">Rubric sealed<small>before the first listing was read</small></span>'+
+        '<span class="v">0xfd4761c11a307aa3…</span></div>'+
+      '<div class="rrow"><span class="k">Decision record<small>every measurement, the tally and the dissent</small></span>'+
+        '<span class="v">0x7d1d00edf4168a95…</span></div>'+
+      '<div class="rrow"><span class="k">Anchored in<small>the same transaction that paid for the work</small></span>'+
+        '<span class="v">0x9c4a…e1b7</span></div>'+
+      '<div class="rrow"><span class="k">Deliberation &mdash; 5 assessors over x402</span><span class="v ok">$0.04</span></div>'+
+      '<div class="rrow"><span class="k">Gas, paid in USDT</span><span class="v ok">$0.0009</span></div>'+
+      '<div class="rrow"><span class="k">Purchase on Mercado Libre &mdash; $142.500 ARS</span>'+
+        '<span class="v no">handed back to you</span></div>'+
+      '<p class="note">The bench is paid for on Celo. The purchase is not: <b>Mercado Libre settles in pesos</b>, '+
+      'so the agent returns the decision rather than pretending it closed the loop. Where a merchant does settle '+
+      'in stablecoin, the same allowance executes the buy under the caps you set.<br><br>'+
+      'Recompute the record hash yourself: keys sorted, no whitespace, sha256. '+
+      '<b>If it does not match what is on-chain, this page is lying to you.</b></p>';
+    out.appendChild(el);
+    document.getElementById('run').textContent = 'Bench has sat';
+  }
+})();
+</script>
+
+</body>
+</html>
