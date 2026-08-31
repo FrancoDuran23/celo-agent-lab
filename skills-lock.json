@@ -56,11 +56,23 @@
       "skillPath": ".agents/skills/impeccable/SKILL.md",
       "computedHash": "1843581b293551c4731678a7c9ece079dcaa9b195c72d2101252ea576e234fc6"
     },
+    "pixel-art-sprites": {
+      "source": "omer-metin/skills-for-antigravity",
+      "sourceType": "github",
+      "skillPath": "skills/pixel-art-sprites/SKILL.md",
+      "computedHash": "6d7f3d45af2fa94e0fe9abe08575e859aa0f24297305ee8b89ac64a7534c9825"
+    },
     "slides": {
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",
       "sourceType": "github",
       "skillPath": ".claude/skills/slides/SKILL.md",
       "computedHash": "a2b3559b58afc484548e1eb359e20495d11cf12b90da7c1fbba50efed9a70340"
+    },
+    "spritecook-generate-sprites": {
+      "source": "spritecook/skills",
+      "sourceType": "github",
+      "skillPath": "skills/spritecook-generate-sprites/SKILL.md",
+      "computedHash": "2d92ea5d70a75a188a0f1083340734770e9c63bd0140a3b5c6f217767eff11c6"
     },
     "ui-styling": {
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",
