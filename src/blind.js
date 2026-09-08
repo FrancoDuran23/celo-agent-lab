@@ -15,10 +15,15 @@ import { createHash } from 'node:crypto'
 /** Fields that name who a candidate is, rather than what it offers. */
 const IDENTIFYING = ['supplier', 'brand', 'seller', 'vendor', 'name', 'url', 'domain', 'logo']
 
-/** Stable per-round alias, so the same supplier is not always "A". */
-function alias(id, salt, index) {
-  const h = createHash('sha256').update(`${salt}:${id}`).digest('hex')
-  return `candidate_${h.slice(0, 6)}_${index}`
+/**
+ * Stable per-round alias, so the same supplier is not always "A".
+ *
+ * The index used to be appended, which made the alias positional and undid the
+ * salt sitting next to it: candidate_xxxxxx_0 was always the first one
+ * submitted, so anyone holding the input list de-anonymised it instantly.
+ */
+function alias(id, salt) {
+  return `candidate_${createHash('sha256').update(`${salt}:${id}`).digest('hex').slice(0, 10)}`
 }
 
 /**
@@ -44,8 +49,8 @@ function scrubText(text, names) {
 export function blind(candidates, salt) {
   const reveal = {}
 
-  const blinded = candidates.map((candidate, index) => {
-    const key = alias(candidate.id, salt, index)
+  const blinded = candidates.map((candidate) => {
+    const key = alias(candidate.id, salt)
     reveal[key] = candidate.id
 
     const names = IDENTIFYING.map((f) => candidate[f]).filter((v) => typeof v === 'string')

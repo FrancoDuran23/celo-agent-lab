@@ -8,11 +8,12 @@
  * is what Cloudflare Workers, Deno and Vercel Edge all want, and what the MCP
  * Streamable HTTP transport speaks.
  *
- * Statelessness is deliberate. A new transport and a new server per request
- * means no session survives between calls, which costs a round trip and buys
- * the ability to run on an edge runtime with no shared memory. The committee
- * itself is unaffected — a Session is created, used and closed inside one call
- * chain, and the record it produces is the durable thing, not the process.
+ * Statelessness is real, not aspirational. Every tool takes what it needs as an
+ * argument and stores nothing, so a caller can be answered by a different
+ * isolate on every call and never notice. An earlier version claimed this while
+ * keeping sessions in a module-level Map, which worked in one process and
+ * failed across isolates with an error telling the caller to open a session
+ * they had already opened.
  */
 
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
@@ -42,7 +43,8 @@ function landing(url) {
         'and never scores; the dissent ships with the verdict.',
       transport: 'streamable-http',
       endpoint: new URL('/mcp', url).toString(),
-      tools: ['open_session', 'admit_candidates', 'assessor_brief', 'close_session', 'audit_record'],
+      tools: ['seal_rubric', 'prepare_candidates', 'assessor_brief', 'deliberate', 'audit_record'],
+      stateless: true,
       source: 'https://github.com/FrancoDuran23/celo-agent-lab',
       note: 'POST JSON-RPC to /mcp with accept: application/json, text/event-stream.',
     }, null, 2),
@@ -59,6 +61,16 @@ export async function handle(request) {
     return new Response(JSON.stringify({ error: 'Not found. The MCP endpoint is /mcp' }), {
       status: 404, headers: { 'content-type': 'application/json', ...CORS },
     })
+  }
+
+  // Stateless: there is no server-initiated message to deliver, so the SSE
+  // stream a client opens with GET would be held open forever on a transport
+  // nothing can ever write to — a billed connection per client, for nothing.
+  if (request.method === 'GET') {
+    return new Response(
+      JSON.stringify({ error: 'This server is stateless. POST JSON-RPC to /mcp; there is no server-initiated stream.' }),
+      { status: 405, headers: { 'content-type': 'application/json', allow: 'POST, OPTIONS', ...CORS } },
+    )
   }
 
   const transport = new WebStandardStreamableHTTPServerTransport({
