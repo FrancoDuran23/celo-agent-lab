@@ -62,11 +62,25 @@ export function scanCandidate(candidate) {
   const findings = []
   const out = { ...candidate }
 
+  // Recurses, because a payload one level down was reaching the assessor with
+  // clean: true — nesting bypassed the scan entirely.
+  const walk = (value, path) => {
+    if (typeof value === 'string') {
+      const r = scan(value)
+      for (const f of r.findings) findings.push({ ...f, field: path })
+      return r.text
+    }
+    if (Array.isArray(value)) return value.map((v, i) => walk(v, `${path}[${i}]`))
+    if (value && typeof value === 'object') {
+      const o = {}
+      for (const [k, v] of Object.entries(value)) o[k] = walk(v, `${path}.${k}`)
+      return o
+    }
+    return value
+  }
+
   for (const [field, value] of Object.entries(candidate)) {
-    if (typeof value !== 'string') continue
-    const result = scan(value)
-    out[field] = result.text
-    for (const f of result.findings) findings.push({ ...f, field })
+    out[field] = walk(value, field)
   }
 
   return { candidate: out, findings, clean: findings.length === 0 }

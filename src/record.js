@@ -56,19 +56,17 @@ export function buildRecord({
     // On whose behalf, and under what authority.
     actor: { agentId, requestedBy },
 
-    // The criteria, and proof they predate the candidates.
+    // The criteria, verbatim, and the commitment they were sealed under.
+    //
+    // `sealed` is the exact object that was hashed — not a summary of it. An
+    // earlier version stored a reshaped copy (no scoreMax, no axis labels) and
+    // a commitment string beside it, which made the seal unverifiable by
+    // anyone: there was nothing to recompute the hash from, so the only
+    // available check was to compare the record's own claim against itself.
+    // Whoever rewrote the weights controlled both sides of that comparison.
     rubric: {
-      id: rubric.id,
-      question: rubric.question,
-      sealedAt: rubric.sealedAt,
+      sealed: rubric,
       commitment: rubricCommitment,
-      axes: rubric.axes.map((a) => ({
-        key: a.key,
-        measures: a.measures,
-        weight: a.weight,
-        direction: a.direction,
-        unit: a.unit,
-      })),
     },
 
     // What was judged, and who each alias turned out to be.
@@ -96,15 +94,30 @@ export function commitRecord(record) {
 }
 
 /**
- * Verify a record against what was anchored.
+ * Verify a record against what was anchored on chain.
  *
- * Two questions, and both have to hold: was this record the one anchored, and
- * was the rubric inside it the one sealed beforehand? A record that passes the
- * first and fails the second means the criteria were rewritten after the fact.
+ * Both commitments are arguments because both must come from the chain. Nothing
+ * the record says about itself is evidence: a rewritten rubric can carry a
+ * matching commitment string, so the hash is recomputed from the sealed rubric
+ * and compared against the value that was anchored before any candidate existed.
+ *
+ * Two questions, and both have to hold:
+ *
+ *   recordMatches  — is this the record that was anchored?
+ *   rubricMatches  — does the rubric inside it still hash to what was sealed?
+ *
+ * A record that passes the first and fails the second means the criteria were
+ * rewritten and the record re-hashed around them. That is the whole attack the
+ * seal exists to catch, and catching it requires deriving, not comparing.
  */
 export function verifyRecord(record, { recordCommitment, rubricCommitment }) {
+  const sealed = record?.rubric?.sealed
+  const recomputed = sealed ? commitmentOf(sealed) : null
+  const anchored = String(rubricCommitment).toLowerCase()
+
   return {
     recordMatches: verifyCommitment(record, recordCommitment),
-    rubricMatches: record.rubric?.commitment?.toLowerCase() === String(rubricCommitment).toLowerCase(),
+    rubricMatches: recomputed !== null && recomputed.toLowerCase() === anchored,
+    recomputedRubricCommitment: recomputed,
   }
 }

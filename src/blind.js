@@ -50,10 +50,27 @@ export function blind(candidates, salt) {
 
     const names = IDENTIFYING.map((f) => candidate[f]).filter((v) => typeof v === 'string')
 
+    // Walks into objects and arrays. Only touching top-level strings meant one
+    // level of nesting carried the supplier's name straight through to the
+    // assessor — { specs: { maker: "Acme" } } arrived intact.
+    const walk = (value) => {
+      if (typeof value === 'string') return scrubText(value, names)
+      if (Array.isArray(value)) return value.map(walk)
+      if (value && typeof value === 'object') {
+        const o = {}
+        for (const [k, v] of Object.entries(value)) {
+          if (IDENTIFYING.includes(k)) continue
+          o[k] = walk(v)
+        }
+        return o
+      }
+      return value
+    }
+
     const out = { alias: key }
     for (const [field, value] of Object.entries(candidate)) {
       if (field === 'id' || IDENTIFYING.includes(field)) continue
-      out[field] = typeof value === 'string' ? scrubText(value, names) : value
+      out[field] = walk(value)
     }
     return out
   })

@@ -13,7 +13,7 @@
  */
 
 import { randomBytes } from 'node:crypto'
-import { seal, matchesCommitment } from './rubric.js'
+import { seal } from './rubric.js'
 import { blind } from './blind.js'
 import { scanCandidate } from './injection.js'
 import { score, dissent } from './scoring.js'
@@ -42,6 +42,7 @@ export class Session {
     this.candidates = null
     this.reveal = null
     this.integrity = null
+    this.closedAt = null
   }
 
   /**
@@ -52,6 +53,16 @@ export class Session {
    * @param {Array<object>} candidates each needs an `id`
    */
   admit(candidates) {
+    // A session admits once. Sealing the rubric buys nothing if the candidate
+    // set can be swapped underneath it: admit, close, admit again, close again,
+    // and every record produced carries the same anchored commitment. An
+    // operator would just re-roll until the answer was the one they wanted, and
+    // all of the contradictory verdicts would audit clean.
+    if (this.candidates) {
+      throw new CommitteeError(
+        'This session already admitted candidates. Open a new session — which seals a new rubric — rather than re-running this one.',
+      )
+    }
     if (!Array.isArray(candidates) || candidates.length < 2) {
       throw new CommitteeError('A committee needs at least two candidates to compare')
     }
@@ -94,6 +105,13 @@ export class Session {
    */
   close(reports, { agentId, requestedBy, at = new Date() } = {}) {
     if (!this.candidates) throw new CommitteeError('No candidates admitted yet')
+    // Closing twice would mint a second record under the same seal, and both
+    // would audit clean. One seal, one verdict.
+    if (this.closedAt) {
+      throw new CommitteeError(
+        `This session was already closed at ${this.closedAt}. A sealed rubric produces one verdict; open a new session to deliberate again.`,
+      )
+    }
 
     const known = new Set(this.candidates.map((c) => c.alias))
     for (const r of reports) {
@@ -120,6 +138,7 @@ export class Session {
       at,
     })
 
+    this.closedAt = at.toISOString()
     return { record, commitment: commitRecord(record), ranking, byAxis, dissent: objections }
   }
 }
@@ -133,11 +152,21 @@ export class Session {
  * to make visible.
  */
 export function audit(record, { recordCommitment, rubricCommitment }) {
-  const { recordMatches, rubricMatches } = verifyRecord(record, { recordCommitment, rubricCommitment })
+  const { recordMatches, rubricMatches, recomputedRubricCommitment } = verifyRecord(record, {
+    recordCommitment,
+    rubricCommitment,
+  })
+
+  const why = []
+  if (!recordMatches) why.push('the record does not hash to the anchored value — it was edited after anchoring')
+  if (!rubricMatches) why.push('the rubric inside the record does not hash to the sealed commitment — the criteria were rewritten')
+
   return {
     recordMatches,
     rubricMatches,
-    sealedBeforeCandidates: matchesCommitment(record.rubric ? { ...record.rubric } : {}, rubricCommitment) || rubricMatches,
+    recomputedRubricCommitment,
+    anchoredRubricCommitment: rubricCommitment,
     verdict: recordMatches && rubricMatches ? 'intact' : 'do not trust this record',
+    why,
   }
 }

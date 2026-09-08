@@ -8,7 +8,8 @@
     "wallet": "node gen-wallet.mjs",
     "committee": "node src/mcp-committee.js",
     "mcp:http": "node serve-local.mjs",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "test": "node --test test/"
   },
   "keywords": [],
   "author": "",
@@ -22,5 +23,6 @@
   "bin": {
     "celo-allowance": "./src/mcp-server.js",
     "quorum-committee": "./src/mcp-committee.js"
-  }
+  },
+  "devDependencies": {}
 }

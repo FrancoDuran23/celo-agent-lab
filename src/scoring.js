@@ -23,7 +23,13 @@ import { normalisedWeights } from './rubric.js'
  */
 function normalise(values, direction, scoreMax) {
   const present = values.filter((v) => typeof v === 'number' && Number.isFinite(v))
-  if (present.length === 0) return values.map(() => null)
+
+  // Fewer than two values cannot rank anything. Scoring a lone reporter against
+  // an empty field gave it full marks for having no competition — so omitting
+  // one measurement handed the win to the worst candidate, and an omission is
+  // not checkable against the listing the way a wrong number is. An axis only
+  // one candidate reported on does not separate them; it is silent.
+  if (present.length < 2) return values.map(() => null)
 
   const min = Math.min(...present)
   const max = Math.max(...present)
