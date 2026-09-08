@@ -17,6 +17,24 @@ src/allowance.js    the one path from a request to a transaction
 src/mcp-server.js   four tools an agent can call
 ```
 
+## Connect to it
+
+The committee is deployed and reachable. Point any MCP client at:
+
+```
+https://quorum-committee.celo-agent-lab.workers.dev/mcp
+```
+
+Streamable HTTP, and stateless — every tool takes what it needs as an argument
+and the server stores nothing between calls. A client can be answered by a
+different edge isolate on every request and never notice, which is the only way
+a multi-call flow survives on an edge runtime. `GET /mcp` returns 405 on
+purpose: there is no server-initiated stream to hold open.
+
+The caller carries the sealed rubric between calls. That is the trade, and it is
+the right one: a document they can read, hash and anchor, rather than a handle to
+memory on our side that they cannot inspect.
+
 Run it as an MCP server with `npm run mcp`. The policy lives in
 `allowance.config.json` and is edited by a person — no tool can raise a limit.
 
@@ -72,6 +90,7 @@ live · window · recipient · per_payment_cap · daily_budget
 
 | | |
 |---|---|
+| Live MCP endpoint | `https://quorum-committee.celo-agent-lab.workers.dev/mcp` |
 | Network | Celo mainnet |
 | Agent wallet | `0xfcC0144395337D6C3F108aF42212f4C49Fc3d982` |
 | Identity | ERC-8004 Agent **#9789** — [8004scan](https://8004scan.io/agents/celo/9789) |
