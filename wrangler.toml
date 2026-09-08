@@ -1,0 +1,14 @@
+# Cloudflare Workers. The handler in src/mcp-http.js is already a plain
+# fetch(Request) -> Response, so there is nothing to adapt here.
+#
+# nodejs_compat is required: canonical.js and blind.js hash with node:crypto,
+# and a hash is the whole basis of the sealed rubric — swapping it for something
+# else would change every commitment this project has ever produced.
+
+name = "quorum-committee"
+main = "src/mcp-http.js"
+compatibility_date = "2026-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true

@@ -6,7 +6,9 @@
   "scripts": {
     "mcp": "node src/mcp-server.js",
     "wallet": "node gen-wallet.mjs",
-    "committee": "node src/mcp-committee.js"
+    "committee": "node src/mcp-committee.js",
+    "mcp:http": "node serve-local.mjs",
+    "deploy": "wrangler deploy"
   },
   "keywords": [],
   "author": "",
