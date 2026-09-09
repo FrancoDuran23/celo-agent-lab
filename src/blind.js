@@ -12,8 +12,51 @@
 
 import { createHash } from 'node:crypto'
 
-/** Fields that name who a candidate is, rather than what it offers. */
-const IDENTIFYING = ['supplier', 'brand', 'seller', 'vendor', 'name', 'url', 'domain', 'logo']
+/**
+ * Substrings that name who a candidate is, rather than what it offers.
+ * Matched case-insensitively against the whole key, so `provider`,
+ * `supplierName`, `vendor_id`, `meta.contact` and `Brand` all match. `id` is
+ * deliberately absent — it is handled separately, removed and aliased as
+ * before, not folded into this pattern.
+ *
+ * Substring matching over-strips on purpose: "name" inside "filename" still
+ * strips the field. Losing an oddly-named field is cheap; a supplier's name
+ * surviving because it sat under a key nobody anticipated is not.
+ */
+const IDENTITY_PATTERNS = [
+  'supplier', 'brand', 'seller', 'vendor', 'provider', 'company', 'org',
+  'organization', 'organisation', 'manufacturer', 'maker', 'contact', 'email',
+  'phone', 'website', 'site', 'url', 'domain', 'logo', 'owner', 'author', 'name',
+]
+
+function isIdentifyingKey(key) {
+  const k = key.toLowerCase()
+  return IDENTITY_PATTERNS.some((p) => k.includes(p))
+}
+
+/** Every string at any depth under `value`, flattened into `out`. */
+function collectStrings(value, out) {
+  if (typeof value === 'string') out.push(value)
+  else if (Array.isArray(value)) value.forEach((v) => collectStrings(v, out))
+  else if (value && typeof value === 'object') Object.values(value).forEach((v) => collectStrings(v, out))
+}
+
+/**
+ * Every value that sat under an identifying key, at any depth, collected from
+ * the whole candidate before anything is stripped — so `meta.org` feeds the
+ * name list for `specs.note` even though the two live nowhere near each other.
+ */
+function collectIdentifyingNames(value, out) {
+  if (Array.isArray(value)) {
+    value.forEach((v) => collectIdentifyingNames(v, out))
+  } else if (value && typeof value === 'object') {
+    for (const [k, v] of Object.entries(value)) {
+      if (k === 'identity') continue // caller-supplied names, folded in separately
+      if (isIdentifyingKey(k)) collectStrings(v, out)
+      else collectIdentifyingNames(v, out)
+    }
+  }
+}
 
 /**
  * Stable per-round alias, so the same supplier is not always "A".
@@ -26,23 +69,45 @@ function alias(id, salt) {
   return `candidate_${createHash('sha256').update(`${salt}:${id}`).digest('hex').slice(0, 10)}`
 }
 
+const EMAIL_RE = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g
+const URL_RE = /\b(?:https?:\/\/|www\.)\S+/gi
+const DOMAIN_RE = /\b[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.(?:com|io|ar|net|org|co|dev|app|ai|xyz|info|biz)\b/gi
+const HANDLE_RE = /@[a-zA-Z0-9_]+/g
+
+/**
+ * Scrub the kinds of contact detail a supplier could hide behind a key this
+ * tool never anticipated: an email, a link, a bare domain, an @handle. Order
+ * matters — URLs and emails are matched first so a domain or handle inside
+ * one of them is not left half-redacted by a narrower pattern running first.
+ */
+function scrubContacts(text) {
+  return text
+    .replace(URL_RE, '[redacted]')
+    .replace(EMAIL_RE, '[redacted]')
+    .replace(DOMAIN_RE, '[redacted]')
+    .replace(HANDLE_RE, '[redacted]')
+}
+
 /**
  * Strip identity from a listing's free text. A supplier that repeats its own
  * name in the description would otherwise leak straight through the redaction.
  */
 function scrubText(text, names) {
   if (!text) return text
-  return names.reduce(
+  const named = names.reduce(
     (out, name) =>
       name && name.length > 2
         ? out.replace(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), '[redacted]')
         : out,
     String(text),
   )
+  return scrubContacts(named)
 }
 
 /**
- * @param {Array<object>} candidates raw listings, each with an `id`
+ * @param {Array<object>} candidates raw listings, each with an `id` and an
+ *   optional `identity` array of extra strings the caller knows are
+ *   identifying (trade names, a founder's name) that no key names.
  * @param {string} salt              per-round salt; changes the aliases
  * @returns {{ blinded: object[], reveal: Record<string, string> }}
  */
@@ -53,7 +118,11 @@ export function blind(candidates, salt) {
     const key = alias(candidate.id, salt)
     reveal[key] = candidate.id
 
-    const names = IDENTIFYING.map((f) => candidate[f]).filter((v) => typeof v === 'string')
+    const names = []
+    collectIdentifyingNames(candidate, names)
+    if (Array.isArray(candidate.identity)) {
+      for (const s of candidate.identity) if (typeof s === 'string') names.push(s)
+    }
 
     // Walks into objects and arrays. Only touching top-level strings meant one
     // level of nesting carried the supplier's name straight through to the
@@ -64,7 +133,7 @@ export function blind(candidates, salt) {
       if (value && typeof value === 'object') {
         const o = {}
         for (const [k, v] of Object.entries(value)) {
-          if (IDENTIFYING.includes(k)) continue
+          if (k === 'identity' || isIdentifyingKey(k)) continue
           o[k] = walk(v)
         }
         return o
@@ -74,7 +143,7 @@ export function blind(candidates, salt) {
 
     const out = { alias: key }
     for (const [field, value] of Object.entries(candidate)) {
-      if (field === 'id' || IDENTIFYING.includes(field)) continue
+      if (field === 'id' || field === 'identity' || isIdentifyingKey(field)) continue
       out[field] = walk(value)
     }
     return out

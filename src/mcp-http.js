@@ -37,6 +37,16 @@ function withCors(res) {
   return new Response(res.body, { status: res.status, statusText: res.statusText, headers })
 }
 
+/** Shared between the landing page and the GET /mcp 405 body, so the two never drift apart. */
+const QUICKSTART = [
+  '1. seal_rubric — send criteria and weights; keep sealedRubric and commitment.',
+  '2. prepare_candidates — send the sealedRubric and your candidates; keep candidates, integrity, reveal.',
+  '3. assessor_brief — one axis at a time; assessors answer with measurements, never scores.',
+  '4. deliberate — send everything back with the measurements; get the verdict, the dissent, the record and its hash.',
+  '5. audit_record — anyone checks the record against the two anchored hashes. Then prepare_settlement pays the winner.',
+  'Stateless: every call carries what it needs. Full JSON-RPC bodies for all steps: GET /mcp.',
+]
+
 /**
  * A complete deliberation as JSON-RPC, for a reader who has not connected an
  * MCP client yet: initialize, list the tools, then the five calls in order.
@@ -128,14 +138,7 @@ function landing(url) {
       transport: 'streamable-http',
       endpoint: new URL('/mcp', url).toString(),
       tools: TOOL_CATALOG.map((t) => ({ name: t.name, description: t.description })),
-      quickstart: [
-        '1. seal_rubric — send criteria and weights; keep sealedRubric and commitment.',
-        '2. prepare_candidates — send the sealedRubric and your candidates; keep candidates, integrity, reveal.',
-        '3. assessor_brief — one axis at a time; assessors answer with measurements, never scores.',
-        '4. deliberate — send everything back with the measurements; get the verdict, the dissent, the record and its hash.',
-        '5. audit_record — anyone checks the record against the two anchored hashes. Then prepare_settlement pays the winner.',
-        'Stateless: every call carries what it needs. Full JSON-RPC bodies for all steps: GET /mcp.',
-      ],
+      quickstart: QUICKSTART,
       stateless: true,
       source: 'https://github.com/FrancoDuran23/celo-agent-lab',
       note: 'POST JSON-RPC to /mcp with accept: application/json, text/event-stream. GET /mcp returns the full tool schemas and a pasteable seven-step example.',
@@ -162,8 +165,11 @@ export async function handle(request) {
     return new Response(
       JSON.stringify({
         error: 'This server is stateless. POST JSON-RPC to /mcp; there is no server-initiated stream.',
-        tools: TOOL_CATALOG,
+        note: 'Full JSON schemas are at the end of this body under `schemas`, and always available via tools/list.',
+        quickstart: QUICKSTART,
         example: example(),
+        tools: TOOL_CATALOG.map((t) => ({ name: t.name, description: t.description })),
+        schemas: TOOL_CATALOG,
       }, null, 2),
       { status: 405, headers: { 'content-type': 'application/json', allow: 'POST, OPTIONS', ...CORS } },
     )

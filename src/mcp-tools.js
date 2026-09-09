@@ -208,16 +208,20 @@ const TOOLS = [
     name: 'prepare_candidates',
     title: 'Blind the candidates',
     description:
-      'Strip supplier identity from the things being compared, at every depth, and scan their text for attempts to ' +
-      'instruct an assessor. Injection attempts are recorded against the candidate rather than removed — an attempted ' +
-      'bribe is the strongest signal a supplier gives you. Returns three fields: `candidates` (the blinded set) and ' +
-      '`integrity` (the injection findings, one entry per candidate), both of which must be passed on to deliberate ' +
-      'unchanged; and `reveal` (alias to real id), which must be kept to yourself — handing it to an assessor defeats ' +
-      'the blinding entirely, and that is on you, not on this tool.',
+      'Strip supplier identity at every depth: keys matching supplier, brand, vendor, provider, contact, name and ' +
+      'similar patterns are removed, their values scrubbed from every string, and every string is also scrubbed of ' +
+      "emails, URLs, domains and @handles. A name never told to this tool cannot be recognised — put trade names in " +
+      '`identity`. Also scans for injected instructions, recorded against the candidate, not removed — the strongest ' +
+      'signal a supplier gives you. Returns `candidates`/`integrity` for deliberate and `reveal` (alias to id); keep ' +
+      'reveal to yourself, or the blinding is defeated.',
     inputSchema: {
       sealedRubric: SEALED,
       candidates: z.array(z.record(z.any())).min(2)
-        .describe('Each needs an "id". Every other field is passed through, blinded at any depth.'),
+        .describe(
+          'Each needs an "id". Every other field is passed through, blinded at any depth. Optional `identity`: ' +
+          "string[] of extra identifying strings (trade names, a founder's name) to strip and scrub even though no " +
+          'key names them.',
+        ),
       salt: z.string().optional().describe('Per-round salt for the aliases. Omit for a random one.'),
     },
     outputSchema: {
@@ -262,7 +266,7 @@ const TOOLS = [
     inputSchema: {
       sealedRubric: SEALED,
       candidates: BLINDED,
-      axis: z.string().describe('The axis key from the rubric'),
+      axis: z.string().describe('One of the `key` values in sealedRubric.axes, exactly as written (case-sensitive).'),
     },
     outputSchema: {
       axis: z.object({
@@ -298,7 +302,10 @@ const TOOLS = [
       'dating the reasoning are one act.',
     inputSchema: {
       sealedRubric: SEALED,
-      commitment: z.string().describe('The exact `commitment` string seal_rubric returned, the value you anchored on chain.'),
+      commitment: z.string().describe(
+        'The exact `commitment` string seal_rubric returned. Pass it as is; anchoring it on chain is recommended and ' +
+        'is what audit_record checks against later, but this tool does not require a transaction.',
+      ),
       candidates: BLINDED,
       integrity: z.array(z.record(z.any())).describe('As prepare_candidates returned it'),
       reveal: z.record(z.string()).describe('alias to real id, so the verdict can name a winner'),
