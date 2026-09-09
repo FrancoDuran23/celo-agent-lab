@@ -37,7 +37,9 @@ inside its cap and still chose badly.
 
 Anchor. The record is hashed and the hash rides in the payment transaction.
 This is what dates the reasoning: one transaction pays for the work and puts
-the commitment on-chain.
+the commitment on-chain. The committee now prepares that transaction itself —
+`prepare_settlement` builds the unsigned transfer carrying the hash, and the
+buyer's own wallet signs and sends it, because the committee never holds a key.
 
 ## Files
 
@@ -81,6 +83,10 @@ purpose: there is no server-initiated stream to hold open.
 The caller carries the sealed rubric between calls. That is the trade, and it is
 the right one: a document they can read, hash and anchor, rather than a handle to
 memory on our side that they cannot inspect.
+
+The six tools: `seal_rubric`, `prepare_candidates`, `assessor_brief`,
+`deliberate`, `audit_record`, and `prepare_settlement` — which turns an audited
+verdict into an unsigned payment for the buyer's own wallet to sign.
 
 Run it as an MCP server with `npm run mcp`. The policy lives in
 `allowance.config.json` and is edited by a person — no tool can raise a limit.

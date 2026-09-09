@@ -33,6 +33,7 @@ import { score, dissent, applyInjectionPolicy } from './scoring.js'
 import { buildRecord, commitRecord } from './record.js'
 import { audit } from './committee.js'
 import { commitmentOf } from './canonical.js'
+import { buildSettlement, USDT, ATTRIBUTION_TAG } from './settlement.js'
 
 /**
  * A tool with an outputSchema must return `structuredContent` (the object
@@ -148,6 +149,26 @@ const RECORD = z.object({
   verdict: VERDICT.nullable(),
   why: z.array(z.string()).optional().describe('Set only when no candidate could be chosen under the sealed policy'),
 }).describe('The decision record: who asked, under which sealed rubric, what was measured, what won, and what the losing argument was.')
+
+const SETTLEMENT_VERDICT = z.object({
+  alias: z.string(),
+  id: z.string().nullable(),
+})
+
+const SETTLEMENT_TRANSACTION = z.object({
+  chainId: z.number(),
+  to: z.string(),
+  value: z.string(),
+  data: z.string(),
+}).describe('Unsigned transaction. Sign and send this from the buyer wallet — this server holds no keys.')
+
+const SETTLEMENT_SUMMARY = z.object({
+  payTo: z.string(),
+  amount: z.string(),
+  symbol: z.string(),
+  commitment: z.string().describe('The record hash riding in the calldata'),
+  attributionTag: z.string(),
+})
 
 const TOOLS = [
   {
@@ -272,8 +293,9 @@ const TOOLS = [
     description:
       'Submit every assessor measurement and receive the verdict, the arithmetic behind it, the dissent — every axis ' +
       'the winner lost — and a record hash to anchor. Scoring is deterministic: the same measurements always produce ' +
-      'the same ranking, and no prose you write can change it. Anchor the record hash in the transaction that pays for ' +
-      'the deliberation, so paying for the work and dating the reasoning are one act.',
+      'the same ranking, and no prose you write can change it. Pass the record to audit_record before ever paying on ' +
+      'it, then to prepare_settlement, which anchors this hash in the payment calldata — so paying for the work and ' +
+      'dating the reasoning are one act.',
     inputSchema: {
       sealedRubric: SEALED,
       commitment: z.string().describe('The exact `commitment` string seal_rubric returned, the value you anchored on chain.'),
@@ -379,6 +401,60 @@ const TOOLS = [
     },
     handler: async ({ record, recordCommitment, rubricCommitment }) =>
       json(audit(record, { recordCommitment, rubricCommitment })),
+  },
+
+  {
+    name: 'prepare_settlement',
+    title: 'Prepare the payment to the winner',
+    description:
+      "Given an audited verdict, prepare the payment to its winner: an unsigned ERC-20 transfer whose calldata " +
+      "carries the record's hash immediately after the transfer call, followed by the ERC-8021 attribution suffix. " +
+      "This tool never signs or sends anything — it hands back a transaction for the buyer's own wallet to sign, " +
+      "because this server is public and stateless and must never hold or receive a private key. It re-runs the " +
+      "audit itself and refuses to build a transaction for a record that does not hash to the anchored commitments, " +
+      "so a tampered or fabricated record cannot be turned into a payment; it also refuses a record with no winner. " +
+      "The committee blinds candidate identity during deliberation, so it never learns who the winner actually is — " +
+      "the caller supplies `payTo` from their own candidate list, and should check it against `verdict.id` before " +
+      "ever signing.",
+    inputSchema: {
+      record: z.record(z.any()).describe('The decision record exactly as deliberate returned it in `record`.'),
+      recordCommitment: z.string().describe(
+        'Read this from the anchoring transaction or wherever you published it, never from the record itself: a tampered record can carry a matching string.',
+      ),
+      rubricCommitment: z.string().describe(
+        'Read this from the anchoring transaction or wherever you published it, never from the record itself: a tampered record can carry a matching string.',
+      ),
+      payTo: z.string().describe(
+        "The winner's payout address. The committee blinds identity, so it does not know this; you do, from your own candidate list. Check it against verdict.id before signing.",
+      ),
+      amount: z.string().describe('Decimal amount in the token\'s units, e.g. "48000" or "12.50". A string, so no float rounding.'),
+      symbol: z.enum(['USDT']).optional().describe('The settlement token. Only USDT for now.'),
+    },
+    outputSchema: {
+      verdict: SETTLEMENT_VERDICT,
+      transaction: SETTLEMENT_TRANSACTION,
+      summary: SETTLEMENT_SUMMARY,
+      next: z.string(),
+    },
+    handler: async ({ record, recordCommitment, rubricCommitment, payTo, amount, symbol }) => {
+      const { verdict, why } = audit(record, { recordCommitment, rubricCommitment })
+      if (verdict !== 'intact') {
+        throw new Error(`Refusing to settle: ${why.join('; ')}`)
+      }
+      if (!record.verdict) {
+        throw new Error('Refusing to settle: this record has no winner (every candidate was disqualified or nothing was ranked).')
+      }
+
+      const tokenSymbol = symbol ?? USDT.symbol
+      const transaction = buildSettlement({ payTo, amount, commitment: recordCommitment, token: USDT })
+
+      return json({
+        verdict: { alias: record.verdict.alias, id: record.verdict.id },
+        transaction,
+        summary: { payTo, amount, symbol: tokenSymbol, commitment: recordCommitment, attributionTag: ATTRIBUTION_TAG },
+        next: 'Sign and send this from the buyer wallet. The committee holds no keys; the record hash rides in the calldata so paying and dating the reasoning are one act.',
+      })
+    },
   },
 ]
 

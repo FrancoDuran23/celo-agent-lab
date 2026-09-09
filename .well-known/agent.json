@@ -1,12 +1,16 @@
 {
   "type": "Agent",
-  "name": "celo-agent-lab",
-  "description": "Autonomous settlement agent on Celo: holds funds, verifies a condition with deterministic rules, and settles or refunds on-chain.",
+  "name": "Quorum",
+  "description": "A committee of assessors that seals a rubric, blinds candidates, and turns a deliberation into a hashed decision record — then prepares the on-chain payment to the winner for the buyer's own wallet to sign.",
   "url": "https://github.com/FrancoDuran23/celo-agent-lab",
   "endpoints": [
     {
       "type": "a2a",
       "url": "https://raw.githubusercontent.com/FrancoDuran23/celo-agent-lab/main/.well-known/agent.json"
+    },
+    {
+      "type": "mcp",
+      "url": "https://quorum-committee.celo-agent-lab.workers.dev/mcp"
     }
   ],
   "registrations": [
