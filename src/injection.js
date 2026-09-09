@@ -9,14 +9,19 @@
  *
  * Detection is heuristic and will never be complete. That is why it is one of
  * five defences and not the only one: the assessor also cannot score, only
- * report facts, and the arithmetic happens in `scoring.js`.
+ * report facts, and the arithmetic happens in `scoring.js`. A false positive
+ * is the more expensive error of the two, because a sealed 'disqualify'
+ * policy acts on a finding automatically and removes an honest candidate from
+ * the field.
  */
 
 const PATTERNS = [
   { id: 'override', re: /\b(ignore|disregard|forget|override)\b[^.]{0,40}\b(previous|prior|above|earlier|all)\b[^.]{0,20}\b(instruction|rule|prompt|direction)/i },
   { id: 'role_claim', re: /\b(you are now|act as|pretend to be|from now on you)\b/i },
-  { id: 'score_demand', re: /\b(score|rate|rank|grade)\b[^.]{0,30}\b(10|ten|highest|first|best|top|maximum)\b/i },
+  { id: 'score_demand', re: /\b(score|rate|rank|grade|give|award|assign)\s+(this|it|me|us|them|the\s+\w+|our\s+\w+|my\s+\w+)\b[^.]{0,25}\b(10|ten|10\/10|highest|first|best|top|maximum|max|full marks|perfect)\b/i },
   { id: 'winner_claim', re: /\b(this is the|choose|select|pick)\b[^.]{0,25}\b(winner|best option|correct answer)\b/i },
+  { id: 'directive', re: /\b(you (must|should|need to|have to)|the (assessor|reviewer|evaluator|judge) (must|should))\s+(choose|select|pick|prefer|favou?r|recommend|rank|score|rate)\b/i },
+  { id: 'verdict_claim', re: /\b(the (correct|right|only|obvious) (choice|answer|option|pick) is|treat this as the winner|this (is|should be) (the|your) (winner|top choice|first choice))\b/i },
   { id: 'system_spoof', re: /(<\|.*?\|>|\[\/?(system|assistant|inst)\]|^\s*system\s*:)/im },
   { id: 'hidden_channel', re: /\b(do not (tell|mention|reveal)|without telling the (user|buyer))\b/i },
 ]

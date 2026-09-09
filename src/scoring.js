@@ -137,6 +137,9 @@ export function applyInjectionPolicy(rubric, candidates, reports, integrity, rev
  * Published with the verdict, always. A verdict that only reports the case for
  * the winner is advertising, and the losing argument is the part a buyer needs
  * in order to disagree with us on purpose.
+ *
+ * A tie is not a loss: an axis counts as dissent only when some candidate has
+ * strictly more points than the winner on it, never when they are merely equal.
  */
 export function dissent(rubric, ranking, byAxis) {
   if (ranking.length < 2) return []
@@ -145,16 +148,19 @@ export function dissent(rubric, ranking, byAxis) {
   return rubric.axes
     .map((axis) => {
       const column = byAxis[axis.key].filter((c) => c.points !== null)
-      if (column.length === 0) return null
-      const best = column.reduce((a, b) => (b.points > a.points ? b : a))
-      if (best.alias === winner) return null
-      const winnerCell = byAxis[axis.key].find((c) => c.alias === winner)
+      const winnerCell = column.find((c) => c.alias === winner)
+      if (!winnerCell) return null
+      const ahead = column.filter((c) => c.points > winnerCell.points)
+      if (ahead.length === 0) return null
+      const best = ahead.reduce((a, b) =>
+        b.points > a.points || (b.points === a.points && b.alias.localeCompare(a.alias) < 0) ? b : a,
+      )
       return {
         axis: axis.key,
         measures: axis.measures,
         preferred: best.alias,
         preferredMeasured: best.measured,
-        winnerMeasured: winnerCell?.measured ?? null,
+        winnerMeasured: winnerCell.measured,
         unit: axis.unit,
       }
     })
