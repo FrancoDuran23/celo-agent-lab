@@ -31,9 +31,14 @@ import { commitmentOf, verifyCommitment } from './canonical.js'
  * @property {string} question     what is being decided
  * @property {Axis[]} axes
  * @property {number} scoreMax     top of the per-axis scale
+ * @property {'flag'|'disqualify'} [onInjection]  what deliberate does with a
+ *   candidate whose text tried to instruct an assessor; defaults to 'flag'
  */
 
 export class RubricError extends Error {}
+
+/** The only values the sealed rubric's injection policy may take. */
+export const ON_INJECTION_POLICIES = ['flag', 'disqualify']
 
 /**
  * Reject a rubric that cannot produce a defensible score. Every failure here
@@ -67,6 +72,15 @@ export function validate(rubric) {
     throw new RubricError('Rubric needs a scoreMax above zero')
   }
 
+  // What happens to a candidate that tried to instruct an assessor is a policy
+  // choice, not a fact discovered mid-deliberation — so it is sealed with the
+  // rest of the rubric, and cannot take a value invented after the fact.
+  if (rubric.onInjection !== undefined && !ON_INJECTION_POLICIES.includes(rubric.onInjection)) {
+    throw new RubricError(
+      `Rubric has an unknown onInjection policy "${rubric.onInjection}" — must be one of ${ON_INJECTION_POLICIES.join(', ')}`,
+    )
+  }
+
   return rubric
 }
 
@@ -84,7 +98,10 @@ export function normalisedWeights(rubric) {
  */
 export function seal(rubric, sealedAt = new Date()) {
   validate(rubric)
-  const sealed = { ...rubric, sealedAt: sealedAt.toISOString() }
+  // Stamp the default explicitly, so "nobody set a policy" and "the policy is
+  // 'flag'" are the same committed value, not a gap a client can read either
+  // way after the fact.
+  const sealed = { ...rubric, onInjection: rubric.onInjection ?? 'flag', sealedAt: sealedAt.toISOString() }
   return { rubric: sealed, commitment: commitmentOf(sealed) }
 }
 

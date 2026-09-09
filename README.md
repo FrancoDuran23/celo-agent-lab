@@ -1,20 +1,67 @@
 # celo-agent-lab
 
-An autonomous agent on Celo that holds funds, verifies a condition, and settles
-on-chain — built for the **Agents at Work** hackathon (Celo, Aug–Sep 2026).
+A committee of assessors that ends a deliberation and leaves a reason —
+built for the **Agents at Work** hackathon (Celo, Aug–Sep 2026).
 
-## Status
+The product is the record, not the verdict — the verdict is one field in it.
+The rubric is sealed before any candidate is seen; assessors report
+measurements and never scores; the dissent ships with the verdict. The record
+carries who asked, under which sealed rubric, what was measured, what won, and
+what the losing argument was. It is hashed, and the hash rides in the payment
+transaction — one transaction pays for the work and dates the reasoning.
 
-The allowance core is in place: the policy engine, the ledger, the Celo client,
-and an MCP server that exposes the whole thing to an agent. Not yet wired to a
-browser surface.
+## How it works
+
+Seal. The rubric is committed before a single candidate is read. This is what
+stops the weights being retuned to fit a winner.
+
+Blind. Identity is stripped before an assessor sees a candidate. This is what
+stops an assessor favouring the supplier who paid without anyone writing an
+instruction to do so.
+
+Measure. Assessors report a measured value per axis and do not score. This is
+what stops a bought assessor moving the ranking with persuasive prose.
+
+Score. Those measurements become a ranking under the rubric that was already
+sealed. This is the defence that survives a corrupted assessor: a lie about a
+number is checkable against the listing; prose is not an input.
+
+Dissent. The axes on which the winner did not win ship with the verdict,
+always. This is what stops a verdict that only reports the case for the winner
+from burying the losing argument a buyer needs in order to disagree on purpose.
+
+Record. The decision is assembled into one document: who asked, under which
+sealed rubric, what was measured, what won, and what the losing argument was.
+This is what answers the case no spending limit covers — an agent that stayed
+inside its cap and still chose badly.
+
+Anchor. The record is hashed and the hash rides in the payment transaction.
+This is what dates the reasoning: one transaction pays for the work and puts
+the commitment on-chain.
+
+## Files
 
 ```
-src/policy.js       the rules. pure, deterministic, no I/O
-src/ledger.js       append-only log of every request, allowed or refused
-src/celo.js         balances, fee-abstracted transfers, attribution tag
-src/allowance.js    the one path from a request to a transaction
-src/mcp-server.js   four tools an agent can call
+src/blind.js            blind the candidates before an assessor sees them
+src/canonical.js        canonical serialisation and hashing
+src/celo.js             everything that touches the chain
+src/committee.js        the one path from a set of candidates to a signed verdict
+src/injection.js        listing text is data; it is never an instruction
+src/mcp-committee.js    the committee over stdio, for a local agent
+src/mcp-http.js         the committee over HTTP, so a reviewer not on this machine can connect
+src/mcp-tools.js        the committee's tools, shared by the stdio and HTTP entries
+src/record.js           the decision record
+src/rubric.js           what is being measured, and how much each axis is worth
+src/scoring.js          scoring; deterministic, and deliberately dull
+```
+
+Earlier iteration, kept for history:
+
+```
+src/allowance.js        policy, ledger and chain wired together
+src/ledger.js           append-only spending log
+src/mcp-server.js       the allowance, exposed to an agent over MCP
+src/policy.js           the policy engine
 ```
 
 ## Connect to it
@@ -65,6 +112,21 @@ problem.
 We are also on the receiving end of it: this project gets reviewed by AskBots
 bots like any other entry, and what they find is what we spend the hackathon
 fixing.
+
+### Round 1
+
+Baseline, n=10: Q2 (ease of connection) 7.3, Q7 (does what it sets out to do)
+6.2.
+
+Reviewers found:
+
+- no output schemas
+- `audit_record.record` undescribed
+- a GET-only client sees a wall
+- `deliberate` did not act on injection findings
+- README described a different project
+
+Round 2 addresses each of these.
 
 ## Design principle
 

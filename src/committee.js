@@ -16,7 +16,7 @@ import { randomBytes } from 'node:crypto'
 import { seal } from './rubric.js'
 import { blind } from './blind.js'
 import { scanCandidate } from './injection.js'
-import { score, dissent } from './scoring.js'
+import { score, dissent, applyInjectionPolicy } from './scoring.js'
 import { buildRecord, commitRecord, verifyRecord } from './record.js'
 
 export class CommitteeError extends Error {}
@@ -121,19 +121,33 @@ export class Session {
       throw new CommitteeError('Every candidate needs a report, even an empty one')
     }
 
-    const { ranking, byAxis } = score(this.rubric, reports)
+    // The injection policy is sealed into the rubric, so it runs before
+    // score() ever sees a measurement — 'disqualify' has to remove a
+    // candidate from the field, not just from the story told about it after.
+    const { candidates, reports: scoredReports, flagged, disqualified } =
+      applyInjectionPolicy(this.rubric, this.candidates, reports, this.integrity, this.reveal)
+
+    const { ranking, byAxis } = score(this.rubric, scoredReports)
     const objections = dissent(this.rubric, ranking, byAxis)
+
+    const integrityVerdict = {
+      policy: this.rubric.onInjection ?? 'flag',
+      flagged: flagged.map((f) => f.alias),
+      winnerFlagged: Boolean(ranking[0] && flagged.some((f) => f.alias === ranking[0].alias)),
+    }
 
     const record = buildRecord({
       agentId,
       requestedBy,
       rubric: this.rubric,
       rubricCommitment: this.rubricCommitment,
-      candidates: this.candidates,
-      reports,
+      candidates,
+      reports: scoredReports,
       ranking,
       dissent: objections,
       integrity: this.integrity,
+      integrityVerdict,
+      disqualified,
       reveal: this.reveal,
       at,
     })

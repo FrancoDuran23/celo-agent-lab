@@ -28,9 +28,11 @@ import { commitmentOf, verifyCommitment } from './canonical.js'
  * @param {string} args.rubricCommitment   what was anchored before evaluating
  * @param {object[]} args.candidates       blinded candidates as assessed
  * @param {object[]} args.reports          per-assessor measurements
- * @param {object[]} args.ranking          from scoring.score
+ * @param {object[]} args.ranking          from scoring.score, on candidates that survived the injection policy
  * @param {object[]} args.dissent          from scoring.dissent
- * @param {object[]} args.integrity        injection findings, per candidate
+ * @param {object[]} args.integrity        injection findings, per candidate, unfiltered
+ * @param {object} args.integrityVerdict   the sealed policy applied: { policy, flagged, winnerFlagged }
+ * @param {object[]} [args.disqualified]   candidates removed under the 'disqualify' policy: { alias, id, findings }
  * @param {Record<string,string>} args.reveal alias to real identity
  * @param {Date} args.at
  */
@@ -44,13 +46,34 @@ export function buildRecord({
   ranking,
   dissent,
   integrity,
+  integrityVerdict,
+  disqualified = [],
   reveal,
   at = new Date(),
 }) {
   const winner = ranking[0] ?? null
 
-  return {
-    version: 1,
+  // A flagged winner still wins — the sealed policy said 'flag', not
+  // 'disqualify' — but the attempt does not go unmentioned just because it
+  // did not change the outcome. The rule ids come from the same scan that
+  // produced `integrity`, so the warning cannot claim more than was found.
+  let verdict = winner
+    ? { alias: winner.alias, id: reveal[winner.alias] ?? null, total: winner.total }
+    : null
+
+  if (verdict && integrityVerdict?.winnerFlagged) {
+    const winnerFindings = integrity.find((i) => i.alias === winner.alias)?.findings ?? []
+    const rules = [...new Set(winnerFindings.map((f) => f.rule))].join(', ')
+    verdict = {
+      ...verdict,
+      warning:
+        `This candidate attempted to instruct the assessors (${rules}). ` +
+        "Under the sealed policy 'flag' the score is unchanged; the attempt is on the record.",
+    }
+  }
+
+  const record = {
+    version: 2,
     decidedAt: at.toISOString(),
 
     // On whose behalf, and under what authority.
@@ -69,23 +92,45 @@ export function buildRecord({
       commitment: rubricCommitment,
     },
 
-    // What was judged, and who each alias turned out to be.
+    // What was judged, and who each alias turned out to be. A disqualified
+    // candidate was never judged, so it is not here — it is in `disqualified`.
     candidates: candidates.map((c) => ({ alias: c.alias, id: reveal[c.alias] ?? null })),
 
-    // Every measurement, so the arithmetic can be redone by hand.
+    // Every measurement behind the ranking, so the arithmetic can be redone
+    // by hand. Excludes a disqualified candidate's report for the same reason
+    // it excludes it from `candidates`.
     reports,
     ranking,
 
     // What the winner lost on. Always present, even when empty.
     dissent,
 
-    // Suppliers who tried to instruct the assessors, named.
+    // Every candidate's injection scan, unfiltered — including a disqualified
+    // one. The scan that got a candidate excluded is exactly what a verifier
+    // needs to check the exclusion was earned.
     integrity,
 
-    verdict: winner
-      ? { alias: winner.alias, id: reveal[winner.alias] ?? null, total: winner.total }
-      : null,
+    // The sealed policy, and what it found. Computed once; nothing downstream
+    // re-argues it.
+    integrityVerdict,
+
+    // Removed from the field under the 'disqualify' policy, named, with the
+    // findings that triggered it.
+    disqualified,
+
+    verdict,
   }
+
+  // Every candidate can be disqualified at once, or all but one. Either way
+  // the survivors cannot support a ranking, so the record says why instead of
+  // leaving a hollow verdict that looks like a scoring bug.
+  if (integrityVerdict?.policy === 'disqualify' && disqualified.length > 0 && candidates.length < 2) {
+    record.why = winner
+      ? ['one candidate remained after disqualification; no axis can be scored against a single candidate, so the verdict is a walkover, not a measurement']
+      : ['every candidate attempted to instruct the assessors; none can be chosen under the sealed policy']
+  }
+
+  return record
 }
 
 /** The 32-byte commitment that goes on-chain. */

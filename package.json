@@ -9,7 +9,7 @@
     "committee": "node src/mcp-committee.js",
     "mcp:http": "node serve-local.mjs",
     "deploy": "wrangler deploy",
-    "test": "node --test test/"
+    "test": "node --test \"test/**/*.test.js\""
   },
   "keywords": [],
   "author": "",

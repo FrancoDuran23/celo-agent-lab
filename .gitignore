@@ -36,3 +36,6 @@ data/
 # wrangler build output
 .wrangler/
 .wrangler-dry/
+
+# gentle-ai skill registry cache, written by agent hooks
+.atl/

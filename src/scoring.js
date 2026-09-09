@@ -94,6 +94,44 @@ export function score(rubric, reports) {
 }
 
 /**
+ * Apply the sealed injection policy before scoring runs.
+ *
+ * The policy travels inside the rubric, so it was fixed before anyone knew
+ * which candidate it would hit. "flag" leaves the field untouched — the
+ * finding is recorded, not acted on. "disqualify" removes a flagged candidate
+ * from the field entirely, so score() never sees its numbers and cannot be
+ * swayed by a candidate that will not survive the record anyway.
+ *
+ * @param {object} rubric        sealed rubric, carries onInjection
+ * @param {object[]} candidates  blinded candidates, each with an alias
+ * @param {object[]} reports     per-candidate measurements, each with an alias
+ * @param {object[]} integrity   injection findings, one entry per candidate
+ * @param {Record<string,string>} reveal alias to real id
+ * @returns {{ candidates: object[], reports: object[], flagged: object[], disqualified: object[] }}
+ */
+export function applyInjectionPolicy(rubric, candidates, reports, integrity, reveal) {
+  const flagged = integrity.filter((i) => !i.clean)
+
+  if (rubric.onInjection !== 'disqualify' || flagged.length === 0) {
+    return { candidates, reports, flagged, disqualified: [] }
+  }
+
+  const flaggedAliases = new Set(flagged.map((f) => f.alias))
+  const disqualified = flagged.map((f) => ({
+    alias: f.alias,
+    id: reveal?.[f.alias] ?? null,
+    findings: f.findings,
+  }))
+
+  return {
+    candidates: candidates.filter((c) => !flaggedAliases.has(c.alias)),
+    reports: reports.filter((r) => !flaggedAliases.has(r.alias)),
+    flagged,
+    disqualified,
+  }
+}
+
+/**
  * The dissent: axes on which the winner did not win.
  *
  * Published with the verdict, always. A verdict that only reports the case for
