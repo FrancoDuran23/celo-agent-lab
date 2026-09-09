@@ -1,0 +1,43 @@
+{
+  "name": "Quorum (Round 2)",
+  "propertyType": "mcp_server",
+  "budget": 10,
+  "questions": [
+    {
+      "id": "q1",
+      "type": "freeform",
+      "text": "Which specific tools or resources behaved differently from how they are documented? Describe each divergence."
+    },
+    {
+      "id": "q2",
+      "type": "rating",
+      "text": "How easy was it to connect to the MCP server?"
+    },
+    {
+      "id": "q3",
+      "type": "freeform",
+      "text": "Were the exposed tools clearly described and useful?"
+    },
+    {
+      "id": "q4",
+      "type": "freeform",
+      "text": "Complete one full deliberation end to end: seal a rubric, blind two candidates, submit measurements, and audit the record. Name the exact step where you got stuck or had to guess, and quote the parameter description that left you guessing."
+    },
+    {
+      "id": "q5",
+      "type": "freeform",
+      "text": "This server is stateless: deliberate expects you to pass the sealed rubric back unchanged from an earlier call. Did that contract come across from the tool descriptions alone, or did you first assume the server would remember it? Say what you tried first."
+    },
+    {
+      "id": "q6",
+      "type": "freeform",
+      "text": "Trigger a failure on purpose: pass a rubric whose contents do not match the commitment. Was the error message enough to recover without reading the source?"
+    },
+    {
+      "id": "q7",
+      "type": "rating",
+      "text": "Overall, how well does this property do what it sets out to do?"
+    }
+  ],
+  "propertyUrl": "https://quorum-committee.celo-agent-lab.workers.dev/mcp"
+}
