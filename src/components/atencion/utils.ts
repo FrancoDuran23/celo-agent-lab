@@ -1,14 +1,14 @@
-import type { Oficina, PaletteColor, Region } from "../../data/types";
+import type { Oficina, Region } from "../../data/types";
 
 /** Orden de las regiones en filtros y listados: primero la capital, CABA al final. */
 export const REGION_ORDER: Region[] = ["Valles", "Quebrada", "Puna", "Ramal", "CABA"];
 
-export const REGION_META: Record<Region, { label: string; color: PaletteColor; dot: string }> = {
-  Valles: { label: "Valles", color: "ocre", dot: "bg-ocre-500" },
-  Quebrada: { label: "Quebrada", color: "terracota", dot: "bg-terracota-500" },
-  Puna: { label: "Puna", color: "violeta", dot: "bg-violeta-500" },
-  Ramal: { label: "Ramal", color: "salvia", dot: "bg-salvia-500" },
-  CABA: { label: "CABA", color: "night", dot: "bg-[var(--t-night)]" },
+export const REGION_META: Record<Region, { label: string }> = {
+  Valles: { label: "Valles" },
+  Quebrada: { label: "Quebrada" },
+  Puna: { label: "Puna" },
+  Ramal: { label: "Ramal" },
+  CABA: { label: "CABA" },
 };
 
 /**

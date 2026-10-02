@@ -1,4 +1,3 @@
-import { ArrowDown } from "lucide-react";
 import { PageIntro } from "../components/ui/primitives";
 import { Canales } from "../components/atencion/Canales";
 import { Turnos } from "../components/atencion/Turnos";
@@ -22,28 +21,19 @@ export function AtencionPage() {
   return (
     <>
       <PageIntro
-        eyebrow="Atención al contribuyente"
-        title={
-          <>
-            Estamos para{" "}
-            <span className="font-serif font-normal tracking-normal text-brand italic">ayudarte.</span>
-          </>
-        }
-        description="Consultanos por teléfono, WhatsApp, chat o correo, sin moverte de tu casa. Y si tenés que venir a una oficina, sacá turno antes."
+        title="Atención al contribuyente"
+        breadcrumbs={[{ label: "Atención" }]}
+        description="Consultanos por teléfono, WhatsApp, chat o correo, sin moverte de tu casa. Si tenés que ir a una oficina, sacá turno antes."
       >
-        <nav aria-label="En esta página">
-          <ul className="flex flex-wrap gap-2">
+        <nav aria-labelledby="en-esta-pagina" className="flex flex-wrap items-baseline gap-x-5 gap-y-2 text-[0.95rem]">
+          <span id="en-esta-pagina" className="text-ink-3">
+            En esta página:
+          </span>
+          <ul className="contents">
             {EN_ESTA_PAGINA.map((s) => (
               <li key={s.id}>
-                <a
-                  href={`#${s.id}`}
-                  className="group inline-flex h-10 items-center gap-2 rounded-full bg-surface px-4 text-sm font-medium text-ink-2 ring-1 ring-line transition-colors hover:text-ink hover:ring-line-strong"
-                >
+                <a href={`#${s.id}`} className="link font-semibold">
                   {s.label}
-                  <ArrowDown
-                    className="size-3.5 text-ink-3 transition-transform group-hover:translate-y-0.5"
-                    aria-hidden="true"
-                  />
                 </a>
               </li>
             ))}
