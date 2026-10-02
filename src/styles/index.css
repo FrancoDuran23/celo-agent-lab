@@ -107,6 +107,9 @@
   }
 }
 
+/* Pantallas táctiles: objetivos de toque de 44px sin agrandar el escritorio. */
+@custom-variant coarse (@media (pointer: coarse));
+
 @custom-variant dark {
   &:where([data-theme="dark"], [data-theme="dark"] *) {
     @slot;
