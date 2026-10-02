@@ -2,7 +2,7 @@
 
 Nuevo front para el sitio de la Dirección Provincial de Rentas de Jujuy ([rentasjujuy.gob.ar](https://www.rentasjujuy.gob.ar)). Es sólo front: no procesa trámites ni pagos; cada acción deriva al portal oficial (sitio informativo y sistema de Clave Fiscal en rentasjujuyonline.gob.ar).
 
-Publicado en GitHub Pages: https://francoduran23.github.io/celo-agent-lab/
+Publicado en GitHub Pages: https://francoduran23.github.io/rentas/
 
 ## Correrlo
 
@@ -18,7 +18,7 @@ Es una SPA (Vite + React 19 + TypeScript + Tailwind CSS 4 + react-router). Para 
 ### GitHub Pages
 
 ```bash
-npm run build:pages   # build con base /celo-agent-lab/, 404.html (fallback de rutas) y .nojekyll
+npm run build:pages   # build con base /rentas/, 404.html (fallback de rutas) y .nojekyll
 ```
 
 El contenido de `dist/` se publica en la rama `gh-pages` (Settings → Pages → Deploy from a branch → `gh-pages` / root). Para otro subdirectorio, usá `VITE_BASE=/otro/ npx vite build`.
