@@ -42,9 +42,12 @@ export function AddToCalendarButton({
   srContext,
   variant = "secondary",
   size = "sm",
+  appearance = "button",
   className,
 }: {
   items: readonly Vencimiento[];
+  /** "link": acción liviana para listas largas (evita una fila de botones repetidos). */
+  appearance?: "button" | "link";
   label?: string;
   /** Texto extra solo para lectores (qué se agrega). */
   srContext?: string;
@@ -79,15 +82,23 @@ export function AddToCalendarButton({
       type="button"
       onClick={onClick}
       disabled={!items.length}
-      className={buttonClass({
-        variant,
-        size,
-        className: clsx(
-          status === "done" && variant !== "primary" && "!text-ok",
-          status === "done" && variant === "secondary" && "!ring-ok/50",
-          className,
-        ),
-      })}
+      className={
+        appearance === "link"
+          ? clsx(
+              "inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-brand underline-offset-[0.18em] hover:underline disabled:opacity-50 [&_svg]:size-4",
+              status === "done" && "!text-ok",
+              className,
+            )
+          : buttonClass({
+              variant,
+              size,
+              className: clsx(
+                status === "done" && variant !== "primary" && "!text-ok",
+                status === "done" && variant === "secondary" && "!ring-ok/50",
+                className,
+              ),
+            })
+      }
     >
       <Icon aria-hidden="true" />
       <span>{status === "done" ? "Archivo descargado" : status === "error" ? "No se pudo descargar" : label}</span>

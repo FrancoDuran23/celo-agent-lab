@@ -55,8 +55,9 @@ export function DayPanel({ selected, view, hoy, byDate, filtro, onSelect }: Prop
                 {dias >= 0 ? (
                   <AddToCalendarButton
                     items={[v]}
+                    appearance="link"
+                    label="Agregar al calendario"
                     srContext={`${v.titulo}${v.detalle ? `, ${v.detalle}` : ""}, ${formatLong(v.fecha)}`}
-                    className="w-full @min-[20rem]:w-auto"
                   />
                 ) : (
                   <CountdownChip text="Ya venció" tone="past" />

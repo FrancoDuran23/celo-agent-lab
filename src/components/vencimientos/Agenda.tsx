@@ -124,7 +124,8 @@ function MonthGroup({
                       {!past ? (
                         <AddToCalendarButton
                           items={[v]}
-                          variant="subtle"
+                          appearance="link"
+                          label="Agregar"
                           srContext={`${v.titulo}${v.detalle ? `, ${v.detalle}` : ""}, ${formatLong(v.fecha)}`}
                           className="self-start sm:self-center"
                         />

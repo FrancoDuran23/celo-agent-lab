@@ -38,17 +38,17 @@ export function SiteHeader() {
       </a>
 
       {SHOW_PROTOTYPE_NOTICE ? (
-        <div className="border-b border-line bg-brand-soft px-4 py-1.5 text-center text-xs text-ink-2">
+        <aside aria-label="Aviso de prototipo" className="border-b border-line bg-brand-soft px-4 py-1.5 text-center text-xs text-ink-2">
           Propuesta de rediseño, prototipo no oficial. Los trámites se hacen en el{" "}
           <a href={PORTAL.sitioOficial} className="font-semibold underline underline-offset-2">
             sitio oficial
           </a>
           .
-        </div>
+        </aside>
       ) : null}
 
       {/* Barra institucional */}
-      <div className="border-b border-line bg-surface-2 text-[0.8rem] text-ink-2">
+      <section aria-label="Barra institucional" className="border-b border-line bg-surface-2 text-[0.8rem] text-ink-2">
         <div className="container-page flex min-h-9 items-center justify-between gap-4 py-1.5">
           <p className="truncate">Gobierno de Jujuy · Ministerio de Hacienda y Finanzas</p>
           <ul className="hidden items-center gap-5 md:flex">
@@ -69,7 +69,7 @@ export function SiteHeader() {
             </li>
           </ul>
         </div>
-      </div>
+      </section>
 
       <header className="sticky top-0 z-40 border-b border-line bg-bg/95 backdrop-blur-sm supports-[backdrop-filter]:bg-bg/85">
         <div className="container-page flex h-16 items-center gap-3 sm:gap-6 lg:h-[4.5rem]">
@@ -193,7 +193,7 @@ function NavDropdown({ item }: { item: (typeof NAV)[number] }) {
       </button>
       {open ? (
         <div id="menu-impuestos" className="animate-pop absolute top-full left-0 z-50 w-[22rem] pt-px">
-          <div className="rounded-b-xl border border-t-0 border-line bg-surface p-2 shadow-pop">
+          <div className="rounded-b-xl bg-surface p-2 shadow-pop dark:ring-1 dark:ring-line">
             <ul>
               {item.children?.map((c) => (
                 <li key={c.to}>
