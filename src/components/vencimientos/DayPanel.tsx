@@ -51,17 +51,20 @@ export function DayPanel({ selected, view, hoy, byDate, filtro, onSelect }: Prop
           {items.map((v) => {
             const m = impuestoMeta(v.impuesto);
             return (
-              <li key={vencKey(v)} className="relative overflow-hidden rounded-2xl bg-surface-2/70 p-4 pl-5 ring-1 ring-line">
+              <li
+                key={vencKey(v)}
+                className="@container relative overflow-hidden rounded-2xl bg-surface-2/70 p-4 pl-5 ring-1 ring-line"
+              >
                 <span aria-hidden="true" className={clsx("absolute inset-y-3 left-0 w-1 rounded-r-full", DOT[m.color])} />
                 <p className="font-semibold text-ink">{v.titulo}</p>
                 {v.detalle ? <p className="mt-0.5 text-sm text-ink-3">{v.detalle}</p> : null}
-                <div className="mt-3 flex flex-wrap items-center gap-2">
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                   <ImpuestoTag slug={v.impuesto} />
                   {dias >= 0 ? (
                     <AddToCalendarButton
                       items={[v]}
                       srContext={`${v.titulo}${v.detalle ? `, ${v.detalle}` : ""}, ${formatLong(v.fecha)}`}
-                      className="ml-auto"
+                      className="w-full @min-[20rem]:w-auto"
                     />
                   ) : (
                     <CountdownChip text="Ya venció" tone="past" />

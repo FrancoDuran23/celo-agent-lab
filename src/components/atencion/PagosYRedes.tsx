@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { ArrowUpRight, AtSign, Receipt, Smartphone, Store } from "lucide-react";
-import { MEDIOS_DE_PAGO, REDES } from "../../data/contacto";
+import { ArrowUpRight, AtSign, Globe, Receipt, Smartphone, Store } from "lucide-react";
+import { MEDIOS_DE_PAGO, PORTAL, REDES } from "../../data/contacto";
 import { LINKS } from "../../data/site";
 import { ButtonLink } from "../ui/Button";
 import { NEW_TAB } from "./utils";
@@ -118,7 +118,7 @@ function Redes() {
       <p className="mt-3 text-lg leading-relaxed text-ink-3">
         Las cuentas oficiales de la Dirección Provincial de Rentas.
       </p>
-      <ul className="mt-8 grid gap-2.5" aria-label="Redes sociales">
+      <ul className="mt-8 mb-8 grid gap-2.5" aria-label="Redes sociales">
         {REDES.map((r) => (
           <li key={r.href}>
             <a
@@ -143,6 +143,21 @@ function Redes() {
           </li>
         ))}
       </ul>
+      <p className="mt-auto flex items-center gap-2 border-t border-line pt-6 text-sm text-ink-3">
+        <Globe className="size-4 shrink-0" aria-hidden="true" />
+        <span>
+          Sitio oficial:{" "}
+          <a
+            href={PORTAL.sitioOficial}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-ink-2 underline decoration-line-strong underline-offset-4 hover:text-brand hover:decoration-brand"
+          >
+            {PORTAL.sitioOficial.replace(/^https?:\/\//, "")}
+            <span className="sr-only">{NEW_TAB}</span>
+          </a>
+        </span>
+      </p>
     </section>
   );
 }
@@ -151,7 +166,7 @@ function Redes() {
 function RedGlyph({ nombre }: { nombre: string }) {
   const common = {
     viewBox: "0 0 24 24",
-    className: "size-[1.05rem]",
+    className: "size-[1.15rem]",
     fill: "none",
     stroke: "currentColor",
     strokeWidth: 1.8,

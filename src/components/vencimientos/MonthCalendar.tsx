@@ -126,20 +126,20 @@ export function MonthCalendar({ view, onViewChange, min, max, hoy, byDate, selec
   };
 
   const navBtn =
-    "inline-flex size-10 items-center justify-center rounded-full text-ink-2 ring-1 ring-line transition-colors hover:bg-surface-2 hover:text-ink aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:hover:bg-transparent";
+    "inline-flex size-9 items-center justify-center rounded-full text-ink-2 sm:size-10 ring-1 ring-line transition-colors hover:bg-surface-2 hover:text-ink aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:hover:bg-transparent";
 
   return (
     <div>
       <div className="flex items-center justify-between gap-3">
-        <h3 id={headingId} aria-live="polite" className="text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+        <h3 id={headingId} aria-live="polite" className="text-lg font-semibold tracking-tight text-ink sm:text-2xl">
           {monthName(view)} <span className="font-normal text-ink-3 tabular">{view.getFullYear()}</span>
         </h3>
-        <div className="flex items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
           {!sameMonth(view, hoy) && startOfMonth(hoy) >= startOfMonth(min) && startOfMonth(hoy) <= startOfMonth(max) ? (
             <button
               type="button"
               onClick={() => go(startOfMonth(hoy))}
-              className="inline-flex h-10 items-center rounded-full px-3.5 text-sm font-medium text-ink-2 ring-1 ring-line transition-colors hover:bg-surface-2 hover:text-ink"
+              className="inline-flex h-9 items-center rounded-full px-3 text-sm font-medium sm:h-10 sm:px-3.5 text-ink-2 ring-1 ring-line transition-colors hover:bg-surface-2 hover:text-ink"
             >
               Hoy
             </button>
@@ -239,7 +239,10 @@ export function MonthCalendar({ view, onViewChange, min, max, hoy, byDate, selec
                       className={clsx(
                         "relative flex aspect-square w-full items-center justify-center rounded-xl text-sm tabular transition-[background-color,color,box-shadow] duration-200 sm:text-[0.95rem]",
                         isSelected
-                          ? "bg-night-900 font-semibold text-crema-50 shadow-soft dark:bg-crema-100 dark:text-night-900"
+                          ? clsx(
+                              "bg-night-900 font-semibold text-crema-50 shadow-soft dark:bg-crema-100 dark:text-night-900",
+                              isToday && "ring-2 ring-brand ring-offset-2 ring-offset-surface",
+                            )
                           : isToday
                             ? "bg-brand-soft font-semibold text-brand ring-1 ring-brand/50 ring-inset hover:bg-brand-soft/70"
                             : items.length && !isPast

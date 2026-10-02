@@ -30,7 +30,7 @@ export function NextDue({
 
   if (!first) {
     return (
-      <CtaBand className="h-full">
+      <CtaBand className="h-full dark:ring-1 dark:ring-line">
         <div className="flex h-full flex-col p-6 sm:p-8">
           <h2 className="eyebrow !text-crema-200/70">Próximo vencimiento{filtro ? ` · ${filtro}` : ""}</h2>
           <p className="mt-5 max-w-sm text-2xl font-semibold tracking-tight">
@@ -59,7 +59,7 @@ export function NextDue({
   const rel = relativeDays(first.fecha, hoy);
 
   return (
-    <CtaBand className="h-full">
+    <CtaBand className="h-full dark:ring-1 dark:ring-line">
       <div className="flex h-full flex-col p-6 sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="eyebrow !text-crema-200/75">Próximo vencimiento{filtro ? ` · ${filtro}` : ""}</h2>

@@ -47,6 +47,19 @@ const CARD_FOCUS =
 const CARD_HOVER =
   "transition-[box-shadow,transform] duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-0.5 hover:shadow-lift";
 
+/** En correos, permite cortar la línea antes de la "@" en pantallas angostas. */
+function formatValor(valor: string) {
+  const at = valor.indexOf("@");
+  if (at <= 0) return valor;
+  return (
+    <>
+      {valor.slice(0, at)}
+      <wbr />
+      {valor.slice(at)}
+    </>
+  );
+}
+
 function ChannelLink({ c, className }: { c: Canal; className?: string }) {
   const newTab = opensNewTab(c.href);
   return (
@@ -57,7 +70,7 @@ function ChannelLink({ c, className }: { c: Canal; className?: string }) {
       className={clsx("after:absolute after:inset-0 after:content-[''] focus-visible:outline-none", className)}
     >
       <span className="sr-only">{c.nombre}: </span>
-      {c.valor}
+      {formatValor(c.valor)}
       {newTab ? <span className="sr-only">{NEW_TAB}</span> : null}
     </a>
   );
@@ -151,10 +164,19 @@ function BotCard({ c, className }: { c: Canal; className?: string }) {
         aria-hidden="true"
         className="absolute -top-28 -right-24 -z-10 size-80 rounded-full bg-[radial-gradient(circle,rgb(224_166_59/0.38),transparent_65%)]"
       />
-      <div
+      {/* Cerros de noche */}
+      <svg
         aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 -z-10 h-1.5 bg-gradient-to-r from-violeta-500 via-rosa-500 to-ocre-500"
-      />
+        focusable="false"
+        viewBox="0 0 400 200"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 bottom-0 -z-10 h-32 w-full sm:h-28 lg:h-2/5"
+      >
+        <path d="M0 112C58 84 104 98 152 78S252 50 306 80 378 88 400 76V200H0Z" fill="#2a4470" opacity="0.55" />
+        <path d="M0 146C66 120 130 138 198 114S318 104 400 124V200H0Z" fill="#563a7d" opacity="0.5" />
+        <path d="M0 170C88 152 166 168 248 150S356 148 400 158V200H0Z" fill="#9a3c1f" opacity="0.32" />
+        <path d="M0 188C96 176 182 186 268 174S364 172 400 178V200H0Z" fill="#070f1c" opacity="0.55" />
+      </svg>
 
       <div className="flex items-center justify-between gap-3">
         <span className="inline-flex size-11 items-center justify-center rounded-xl bg-white/10 text-ocre-300 ring-1 ring-white/10">

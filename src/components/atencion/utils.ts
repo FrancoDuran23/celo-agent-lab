@@ -8,7 +8,7 @@ export const REGION_META: Record<Region, { label: string; color: PaletteColor; d
   Quebrada: { label: "Quebrada", color: "terracota", dot: "bg-terracota-500" },
   Puna: { label: "Puna", color: "violeta", dot: "bg-violeta-500" },
   Ramal: { label: "Ramal", color: "salvia", dot: "bg-salvia-500" },
-  CABA: { label: "CABA", color: "night", dot: "bg-night-600" },
+  CABA: { label: "CABA", color: "night", dot: "bg-[var(--t-night)]" },
 };
 
 /**

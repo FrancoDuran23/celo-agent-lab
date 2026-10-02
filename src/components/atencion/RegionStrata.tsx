@@ -6,8 +6,8 @@ import type { Region } from "../../data/types";
  * Cada punto es una oficina; el estrato elegido en el filtro se resalta.
  */
 
-const W = 360;
-const H = 262;
+const W = 280;
+const H = 236;
 
 type Wave = [amp: number, freq: number, phase: number];
 
@@ -22,24 +22,24 @@ function line(base: number, waves: Wave[], step = 4): [number, number][] {
 }
 
 const LINES = [
-  line(64, [
-    [11, 1.25, 0.5],
-    [6, 3.6, 1.2],
-    [2.6, 8.2, 2.4],
+  line(56, [
+    [10, 1.15, 0.5],
+    [5.5, 3.4, 1.2],
+    [2.4, 7.6, 2.4],
   ]),
-  line(106, [
-    [6, 1.05, 2.1],
-    [3, 2.8, 0.4],
+  line(96, [
+    [5.5, 1.05, 2.1],
+    [2.6, 2.8, 0.4],
   ]),
-  line(146, [
-    [5.5, 0.9, 3.0],
-    [2.6, 2.4, 1.6],
+  line(132, [
+    [5, 0.9, 3.0],
+    [2.4, 2.4, 1.6],
   ]),
-  line(186, [
-    [5, 1.2, 0.3],
-    [2.4, 3.1, 2.2],
+  line(168, [
+    [4.5, 1.2, 0.3],
+    [2.2, 3.1, 2.2],
   ]),
-  line(222, [[2.5, 1, 1]]),
+  line(200, [[2.2, 1, 1]]),
 ];
 
 const BANDS: { region: Region; fill: string; ink: string }[] = [
@@ -83,22 +83,22 @@ export function RegionStrata({
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className={className} aria-hidden="true" focusable="false">
       {/* Sol bajo, como en el logo */}
-      <circle cx="306" cy="30" r="20" fill="var(--ocre-500)" opacity="0.18" />
-      <circle cx="306" cy="30" r="9" fill="var(--ocre-300)" />
+      <circle cx="238" cy="24" r="17" fill="var(--ocre-500)" opacity="0.18" />
+      <circle cx="238" cy="24" r="7.5" fill="var(--ocre-300)" />
 
       {BANDS.map((b, i) => {
         const n = counts[b.region] ?? 0;
-        const x0 = 200;
-        const x1 = 336;
-        const xs = n <= 1 ? [x1 - 40] : Array.from({ length: n }, (_, k) => x0 + (k * (x1 - x0)) / (n - 1));
+        const x0 = 150;
+        const x1 = 262;
+        const xs = n <= 1 ? [x1 - 30] : Array.from({ length: n }, (_, k) => x0 + (k * (x1 - x0)) / (n - 1));
         return (
           <g key={b.region} style={{ opacity: dim(b.region), transition: "opacity 300ms ease" }}>
             <path d={bandPath(i)} fill={b.fill} />
             <text
-              x="16"
-              y={midY(i, 40) + 4}
+              x="14"
+              y={midY(i, 40) + 4.5}
               fill={b.ink}
-              style={{ font: "500 10.5px var(--font-mono)", letterSpacing: "0.16em", textTransform: "uppercase" }}
+              style={{ font: "600 12px var(--font-mono)", letterSpacing: "0.14em", textTransform: "uppercase" }}
             >
               {b.region}
             </text>
@@ -136,13 +136,13 @@ export function RegionStrata({
 
       {caba ? (
         <g style={{ opacity: dim("CABA"), transition: "opacity 300ms ease" }}>
-          <rect x="16" y="234" width="76" height="22" rx="11" fill="var(--night-700)" />
-          <circle cx="30" cy="245" r="4" fill="var(--crema-50)" />
+          <rect x="14" y="210" width="80" height="24" rx="12" fill="var(--night-700)" stroke="var(--line-strong)" />
+          <circle cx="29" cy="222" r="4.2" fill="var(--crema-50)" />
           <text
             x="42"
-            y="249"
+            y="226.5"
             fill="var(--crema-50)"
-            style={{ font: "500 10.5px var(--font-mono)", letterSpacing: "0.16em", textTransform: "uppercase" }}
+            style={{ font: "600 12px var(--font-mono)", letterSpacing: "0.14em", textTransform: "uppercase" }}
           >
             CABA
           </text>

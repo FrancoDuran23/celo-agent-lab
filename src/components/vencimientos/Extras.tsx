@@ -83,7 +83,7 @@ export function ImpuestoFilter({
 }) {
   return (
     <div role="group" aria-labelledby="filtro-impuesto" className="flex flex-wrap items-center gap-2">
-      <span id="filtro-impuesto" className="eyebrow mr-2">
+      <span id="filtro-impuesto" className="eyebrow w-full sm:mr-2 sm:w-auto">
         Filtrar por impuesto
       </span>
       <Chip active={!value} onClick={() => onChange(null)} count={total}>

@@ -241,21 +241,19 @@ function OfficeCard({ o }: { o: Oficina }) {
       <article className="relative flex h-full flex-col overflow-hidden rounded-2xl bg-surface p-5 pl-6 ring-1 ring-line transition-[box-shadow] duration-300 hover:shadow-soft sm:p-6 sm:pl-7">
         <span aria-hidden="true" className={clsx("absolute inset-y-0 left-0 w-1", REGION_META[o.region].dot)} />
         <h4 className="font-semibold text-ink">{o.nombre}</h4>
-        <p className="mt-0.5 text-sm text-ink-3">{o.localidad}</p>
 
-        <ul className="mt-4 grid gap-2.5 text-[0.95rem] text-ink-2">
-          {o.direccion ? (
-            <li className="flex gap-2.5">
-              <MapPin className="mt-0.5 size-4 shrink-0 text-ink-3" aria-hidden="true" />
-              <span>
-                <span className="sr-only">Dirección: </span>
-                {o.direccion}
-              </span>
-            </li>
-          ) : null}
+        <ul className="mt-3 grid gap-2 text-[0.95rem] text-ink-2">
+          <li className="flex gap-2.5">
+            <MapPin className="mt-1 size-4 shrink-0 text-ink-3" aria-hidden="true" />
+            <span>
+              <span className="sr-only">Dirección: </span>
+              {o.direccion ? <>{o.direccion}, </> : null}
+              <span className="text-ink-3">{o.localidad}</span>
+            </span>
+          </li>
           {tel ? (
             <li className="flex gap-2.5">
-              <Phone className="mt-0.5 size-4 shrink-0 text-ink-3" aria-hidden="true" />
+              <Phone className="mt-1 size-4 shrink-0 text-ink-3" aria-hidden="true" />
               <span>
                 <span className="sr-only">Teléfono: </span>
                 {telLink ? (
@@ -274,7 +272,7 @@ function OfficeCard({ o }: { o: Oficina }) {
           ) : null}
           {o.horario ? (
             <li className="flex gap-2.5">
-              <Clock className="mt-0.5 size-4 shrink-0 text-ink-3" aria-hidden="true" />
+              <Clock className="mt-1 size-4 shrink-0 text-ink-3" aria-hidden="true" />
               <span>
                 <span className="sr-only">Horario: </span>
                 {o.horario}
@@ -288,7 +286,7 @@ function OfficeCard({ o }: { o: Oficina }) {
             href={maps}
             target="_blank"
             rel="noopener noreferrer"
-            className="group mt-auto inline-flex items-center gap-1.5 self-start rounded-full pt-5 text-sm font-semibold text-brand hover:underline"
+            className="group mt-auto inline-flex items-center gap-1.5 self-start rounded-full pt-4 text-sm font-semibold text-brand hover:underline"
           >
             <Navigation className="size-4" aria-hidden="true" />
             Cómo llegar
@@ -340,7 +338,7 @@ function RegionChip({
           active ? "bg-white/15 dark:bg-night-900/10" : "bg-surface-2 text-ink-3",
         )}
       >
-        <span className="sr-only">(</span>
+        <span className="sr-only"> (</span>
         {count}
         <span className="sr-only"> {count === 1 ? "oficina" : "oficinas"})</span>
       </span>

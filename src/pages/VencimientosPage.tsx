@@ -72,7 +72,7 @@ export function VencimientosPage() {
 
   const [view, setView] = useState(() => startOfMonth(hoy));
   const [selected, setSelected] = useState<string | null>(() => {
-    const first = all.find((v) => v.fecha >= hoyISO)?.fecha;
+    const first = items.find((v) => v.fecha >= hoyISO)?.fecha;
     return first && sameMonth(parseISODate(first), hoy) ? first : null;
   });
   const [focusRequest, setFocusRequest] = useState(0);
