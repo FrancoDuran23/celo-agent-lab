@@ -220,7 +220,7 @@ export function Novedades() {
                 <time dateTime={n.fecha}>{formatFull(n.fecha)}</time> · {n.categoria}
               </p>
               <h3 className="mt-1.5 text-lg leading-snug font-semibold">
-                <SmartLink to={n.href ?? `/noticias#${n.slug}`} className="link text-ink decoration-transparent hover:decoration-current">
+                <SmartLink to={n.href ?? `/noticias#${n.slug}`} className="link">
                   {n.titulo}
                 </SmartLink>
               </h3>

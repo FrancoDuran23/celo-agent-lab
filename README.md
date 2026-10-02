@@ -1,6 +1,8 @@
-# Rentas Jujuy — propuesta de rediseño
+# Rentas Jujuy — nuevo front
 
-Prototipo **no oficial** de un nuevo front para el sitio de la Dirección Provincial de Rentas de Jujuy ([rentasjujuy.gob.ar](https://www.rentasjujuy.gob.ar)), pensado para presentarse al organismo como propuesta de modernización. Es sólo front: no procesa trámites ni pagos; cada acción deriva al portal oficial (sitio informativo y sistema de Clave Fiscal en rentasjujuyonline.gob.ar).
+Nuevo front para el sitio de la Dirección Provincial de Rentas de Jujuy ([rentasjujuy.gob.ar](https://www.rentasjujuy.gob.ar)). Es sólo front: no procesa trámites ni pagos; cada acción deriva al portal oficial (sitio informativo y sistema de Clave Fiscal en rentasjujuyonline.gob.ar).
+
+Publicado en GitHub Pages: https://francoduran23.github.io/celo-agent-lab/
 
 ## Correrlo
 
@@ -12,6 +14,14 @@ npm run preview    # sirve dist/ en http://localhost:4173
 ```
 
 Es una SPA (Vite + React 19 + TypeScript + Tailwind CSS 4 + react-router). Para publicarla en un hosting estático, configurá el fallback de rutas a `index.html`.
+
+### GitHub Pages
+
+```bash
+npm run build:pages   # build con base /celo-agent-lab/, 404.html (fallback de rutas) y .nojekyll
+```
+
+El contenido de `dist/` se publica en la rama `gh-pages` (Settings → Pages → Deploy from a branch → `gh-pages` / root). Para otro subdirectorio, usá `VITE_BASE=/otro/ npx vite build`.
 
 ## Qué incluye
 
@@ -38,7 +48,7 @@ Los tokens viven en `src/styles/index.css`. Las primitivas (`LinkList`, `Notice`
 
 ## vgpu (WebGPU)
 
-La banda del buscador usa un shader propio (`src/shaders/luz.wgsl`) renderizado con [vgpu](https://vgpu.sh): una luz ambiental muy sutil sobre el azul institucional. La luminancia tiene un tope para que el texto blanco cumpla WCAG AA en cualquier píxel.
+La portada usa un shader propio (`src/shaders/luz.wgsl`) renderizado con [vgpu](https://vgpu.sh): un velo celeste muy tenue sobre el fondo blanco (y casi imperceptible en modo oscuro), que reacciona levemente al puntero. Los colores se pasan como uniforms por tema, así el cambio claro/oscuro no recrea el canvas.
 
 - vgpu se carga con `import()` dinámico y queda fuera del bundle inicial (`src/gpu/runtime.ts`).
 - Hay un solo `Gpu` y un solo `frameLoop`, y los Effects se reutilizan desde un pool.

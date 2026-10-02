@@ -1,11 +1,13 @@
 import clsx from "clsx";
 
+const BASE = import.meta.env.BASE_URL;
+
 /** Isologo oficial de Rentas Jujuy (imagen aportada, fondo transparente). */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <img
-      src="/brand/logo-rentas-96.png"
-      srcSet="/brand/logo-rentas-96.png 1x, /brand/logo-rentas-180.png 2x"
+      src={`${BASE}brand/logo-rentas-96.png`}
+      srcSet={`${BASE}brand/logo-rentas-96.png 1x, ${BASE}brand/logo-rentas-180.png 2x`}
       width={40}
       height={40}
       alt=""
