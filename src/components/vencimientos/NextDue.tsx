@@ -1,19 +1,16 @@
-import { ArrowUpRight, CalendarRange } from "lucide-react";
-import clsx from "clsx";
+import { ArrowUpRight } from "lucide-react";
 import type { Vencimiento } from "../../data/types";
 import { VENCIMIENTOS_INFO } from "../../data/vencimientos";
 import { daysBetween, formatLong, parseISODate, relativeDays } from "../../lib/dates";
-import { CtaBand } from "../home/CtaBand";
-import { buttonClass } from "../ui/Button";
+import { Button, ButtonLink } from "../ui/Button";
+import { Badge, Panel } from "../ui/primitives";
 import { AddToCalendarButton } from "./AddToCalendar";
-import { DOT, capitalize, impuestoMeta, monthName, vencKey } from "./utils";
+import { ImpuestoTag } from "./bits";
+import { capitalize, monthName, vencKey } from "./utils";
 
 const fmtWeekday = new Intl.DateTimeFormat("es-AR", { weekday: "long" });
 
-/**
- * Destacado del próximo vencimiento sobre el shader "aguayo" (único
- * acento WebGPU de la página), con cuenta regresiva.
- */
+/** Próximo vencimiento (respeta el filtro): fecha grande, cuenta regresiva y .ics. */
 export function NextDue({
   items,
   hoy,
@@ -27,30 +24,23 @@ export function NextDue({
   onShow: (iso: string) => void;
 }) {
   const first = items[0];
+  const titulo = `Próximo vencimiento${filtro ? ` de ${filtro}` : ""}`;
 
   if (!first) {
     return (
-      <CtaBand className="h-full dark:ring-1 dark:ring-line">
-        <div className="flex h-full flex-col p-6 sm:p-8">
-          <h2 className="eyebrow !text-crema-200/70">Próximo vencimiento{filtro ? ` · ${filtro}` : ""}</h2>
-          <p className="mt-5 max-w-sm text-2xl font-semibold tracking-tight">
-            No hay próximos vencimientos cargados{filtro ? " para este impuesto" : ""}.
-          </p>
-          <p className="mt-3 max-w-md text-crema-100/75">Consultá las fechas vigentes en el calendario oficial.</p>
-          <div className="mt-auto pt-8">
-            <a
-              href={VENCIMIENTOS_INFO.oficial}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={buttonClass({ variant: "light" })}
-            >
-              Ver calendario oficial
-              <ArrowUpRight aria-hidden="true" />
-              <span className="sr-only">(se abre en una pestaña nueva)</span>
-            </a>
-          </div>
-        </div>
-      </CtaBand>
+      <Panel as="section" aria-labelledby="proximo-titulo" className="p-6 sm:p-8">
+        <h2 id="proximo-titulo" className="text-lg font-bold text-ink">
+          {titulo}
+        </h2>
+        <p className="mt-4 text-xl font-semibold text-ink">
+          No hay próximos vencimientos cargados{filtro ? " para este impuesto" : ""}.
+        </p>
+        <p className="mt-2 text-ink-3">Consultá las fechas vigentes en el calendario oficial.</p>
+        <ButtonLink to={VENCIMIENTOS_INFO.oficial} variant="secondary" className="mt-6">
+          Ver calendario oficial
+          <ArrowUpRight aria-hidden="true" />
+        </ButtonLink>
+      </Panel>
     );
   }
 
@@ -59,68 +49,57 @@ export function NextDue({
   const rel = relativeDays(first.fecha, hoy);
 
   return (
-    <CtaBand className="h-full dark:ring-1 dark:ring-line">
-      <div className="flex h-full flex-col p-6 sm:p-8">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="eyebrow !text-crema-200/75">Próximo vencimiento{filtro ? ` · ${filtro}` : ""}</h2>
-          <p
-            className={clsx(
-              "inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold",
-              dias <= 7 ? "bg-ocre-500 text-night-900" : "bg-white/10 text-crema-50 ring-1 ring-white/20 backdrop-blur-sm",
-            )}
-          >
-            <span aria-hidden="true" className={clsx("size-1.5 rounded-full", dias <= 7 ? "bg-night-900" : "bg-ocre-300")} />
-            Vence {rel}
-          </p>
-        </div>
-
-        <time dateTime={first.fecha} className="sr-only">
-          {capitalize(formatLong(first.fecha))} de {d.getFullYear()}
-        </time>
-        <div aria-hidden="true" className="mt-6 flex items-end gap-4 sm:gap-6">
-          <span className="font-serif text-[5.5rem] leading-[0.78] text-ocre-300 italic tabular sm:text-[7.5rem]">
-            {d.getDate()}
-          </span>
-          <div className="pb-1">
-            <p className="text-2xl leading-tight font-semibold tracking-tight sm:text-3xl">{monthName(d)}</p>
-            <p className="mt-1 text-crema-100/70 first-letter:uppercase">
-              {fmtWeekday.format(d)} · {d.getFullYear()}
-            </p>
-          </div>
-        </div>
-
-        <ul className="mt-7 space-y-2.5">
-          {items.map((v) => {
-            const m = impuestoMeta(v.impuesto);
-            return (
-              <li key={vencKey(v)} className="flex items-start gap-3">
-                <span aria-hidden="true" className={clsx("mt-2 size-2 shrink-0 rounded-full", DOT[m.color])} />
-                <span className="min-w-0">
-                  <span className="font-semibold text-crema-50">{v.titulo}</span>
-                  {v.detalle ? <span className="text-crema-100/70"> · {v.detalle}</span> : null}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-
-        <div className="mt-auto flex flex-wrap gap-3 pt-8">
-          <AddToCalendarButton
-            items={items}
-            variant="light"
-            size="md"
-            srContext={`${items.length === 1 ? "el vencimiento" : `los ${items.length} vencimientos`} del ${formatLong(first.fecha)}`}
-          />
-          <button
-            type="button"
-            onClick={() => onShow(first.fecha)}
-            className={buttonClass({ variant: "outline-light", size: "md" })}
-          >
-            <CalendarRange aria-hidden="true" />
-            Ver en el calendario
-          </button>
-        </div>
+    <Panel as="section" aria-labelledby="proximo-titulo" className="p-6 sm:p-8">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <h2 id="proximo-titulo" className="text-lg font-bold text-ink">
+          {titulo}
+        </h2>
+        <Badge tone={dias <= 7 ? "warn" : "info"} className="tabular">
+          Vence {rel}
+        </Badge>
       </div>
-    </CtaBand>
+
+      <time dateTime={first.fecha} className="sr-only">
+        {capitalize(formatLong(first.fecha))} de {d.getFullYear()}
+      </time>
+      <div aria-hidden="true" className="mt-5 flex items-center gap-4 sm:gap-5">
+        <span className="text-6xl leading-none font-bold tracking-[-0.03em] text-ink tabular sm:text-7xl">
+          {d.getDate()}
+        </span>
+        <span className="min-w-0">
+          <span className="block text-2xl leading-tight font-bold text-ink">{monthName(d)}</span>
+          <span className="mt-0.5 block text-ink-3 tabular first-letter:uppercase">
+            {fmtWeekday.format(d)} · {d.getFullYear()}
+          </span>
+        </span>
+      </div>
+
+      <ul className="mt-6 border-b border-line">
+        {items.map((v) => (
+          <li
+            key={vencKey(v)}
+            className="flex flex-col gap-1 border-t border-line py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+          >
+            <span className="min-w-0">
+              <span className="block font-semibold text-ink">{v.titulo}</span>
+              {v.detalle ? <span className="block text-sm text-ink-3">{v.detalle}</span> : null}
+            </span>
+            <ImpuestoTag slug={v.impuesto} className="shrink-0" />
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-6 flex flex-wrap gap-3">
+        <AddToCalendarButton
+          items={items}
+          variant="secondary"
+          size="md"
+          srContext={`${items.length === 1 ? "el vencimiento" : `los ${items.length} vencimientos`} del ${formatLong(first.fecha)}`}
+        />
+        <Button variant="subtle" onClick={() => onShow(first.fecha)}>
+          Ver en el calendario
+        </Button>
+      </div>
+    </Panel>
   );
 }
