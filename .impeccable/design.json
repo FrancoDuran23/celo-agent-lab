@@ -1,0 +1,998 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-02T11:59:01+00:00",
+  "title": "Design System: Rentas Jujuy",
+  "extensions": {
+    "colorMeta": {
+      "brand": {
+        "role": "primary",
+        "displayName": "Azul Rentas",
+        "canonical": "oklch(49.8% 0.123 244.0)",
+        "tonalRamp": [
+          "#000c19",
+          "#002742",
+          "#01466f",
+          "#0266a0",
+          "#3489c6",
+          "#5aadec",
+          "#98d0fe",
+          "#e1f1ff"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-brand"
+      },
+      "brand-hover": {
+        "role": "primary",
+        "displayName": "Azul Rentas profundo",
+        "canonical": "oklch(44.4% 0.111 244.5)",
+        "tonalRamp": [
+          "#000c19",
+          "#012742",
+          "#03466f",
+          "#1a669b",
+          "#4189c0",
+          "#65ace6",
+          "#99d0fe",
+          "#e1f1fe"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-brand-hover"
+      },
+      "brand-ink": {
+        "role": "primary",
+        "displayName": "Tinta sobre marca",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-brand-ink"
+      },
+      "brand-soft": {
+        "role": "primary",
+        "displayName": "Celeste agua",
+        "canonical": "oklch(95.2% 0.015 235.4)",
+        "tonalRamp": [
+          "#060c11",
+          "#1e262b",
+          "#3b4349",
+          "#596369",
+          "#7a848a",
+          "#9ca7ad",
+          "#c0cbd2",
+          "#e5f0f7"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-brand-soft"
+      },
+      "bg": {
+        "role": "neutral",
+        "displayName": "Blanco (fondo)",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-bg"
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Blanco (superficie)",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-surface"
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Gris niebla",
+        "canonical": "oklch(97.2% 0.005 258.3)",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#242527",
+          "#404244",
+          "#606164",
+          "#818285",
+          "#a3a5a8",
+          "#c7c9cc",
+          "#edeff1"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-surface-2"
+      },
+      "surface-3": {
+        "role": "neutral",
+        "displayName": "Gris niebla profundo",
+        "canonical": "oklch(94.5% 0.009 258.3)",
+        "tonalRamp": [
+          "#090b0f",
+          "#22252a",
+          "#3f4247",
+          "#5e6167",
+          "#7f8388",
+          "#a2a5ab",
+          "#c5c9cf",
+          "#ebeff5"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-surface-3"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "oklch(17.0% 0.022 267.3)",
+        "tonalRamp": [
+          "#070b15",
+          "#202530",
+          "#3d424e",
+          "#5c616e",
+          "#7c8290",
+          "#9fa5b3",
+          "#c3c9d8",
+          "#e8eefe"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-ink"
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Grafito",
+        "canonical": "oklch(34.7% 0.025 262.8)",
+        "tonalRamp": [
+          "#060b16",
+          "#1f2531",
+          "#3b424f",
+          "#5a6170",
+          "#7b8392",
+          "#9da5b5",
+          "#c1cada",
+          "#e6effe"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-ink-2"
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Pizarra",
+        "canonical": "oklch(48.0% 0.025 261.7)",
+        "tonalRamp": [
+          "#060b16",
+          "#1e2531",
+          "#3b424f",
+          "#5a6270",
+          "#7a8392",
+          "#9da5b5",
+          "#c0cada",
+          "#e6effe"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-ink-3"
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Filete",
+        "canonical": "oklch(92.3% 0.012 259.8)",
+        "tonalRamp": [
+          "#080b10",
+          "#22252b",
+          "#3e4249",
+          "#5d6168",
+          "#7e838a",
+          "#a1a5ad",
+          "#c5c9d1",
+          "#eaeff7"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-line"
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Filete fuerte",
+        "canonical": "oklch(84.3% 0.019 258.4)",
+        "tonalRamp": [
+          "#070b13",
+          "#1f252e",
+          "#3c424c",
+          "#5b626c",
+          "#7c838e",
+          "#9ea6b1",
+          "#c2cad6",
+          "#e7effc"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-line-strong"
+      },
+      "ok": {
+        "role": "state",
+        "displayName": "Verde",
+        "canonical": "oklch(48.9% 0.123 151.4)",
+        "tonalRamp": [
+          "#001003",
+          "#012e13",
+          "#035025",
+          "#14743b",
+          "#40975b",
+          "#65bb7d",
+          "#89e0a0",
+          "#c7ffd3"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-ok"
+      },
+      "ok-soft": {
+        "role": "state",
+        "displayName": "Verde suave",
+        "canonical": "oklch(95.5% 0.017 159.1)",
+        "tonalRamp": [
+          "#050d09",
+          "#1e2822",
+          "#3a453f",
+          "#59645e",
+          "#7a867f",
+          "#9ca9a1",
+          "#c0cdc5",
+          "#e5f2ea"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-ok-soft"
+      },
+      "warn": {
+        "role": "state",
+        "displayName": "Ámbar",
+        "canonical": "oklch(49.4% 0.109 66.9)",
+        "tonalRamp": [
+          "#140800",
+          "#371f01",
+          "#5f3801",
+          "#895304",
+          "#ae7431",
+          "#d39756",
+          "#f9bb7a",
+          "#feebd8"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-warn"
+      },
+      "warn-soft": {
+        "role": "state",
+        "displayName": "Ámbar suave",
+        "canonical": "oklch(96.8% 0.032 82.8)",
+        "tonalRamp": [
+          "#120a00",
+          "#2d2413",
+          "#4a412f",
+          "#6a604d",
+          "#8c816d",
+          "#afa48f",
+          "#d3c8b2",
+          "#f9edd7"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-warn-soft"
+      },
+      "danger": {
+        "role": "state",
+        "displayName": "Rojo",
+        "canonical": "oklch(50.0% 0.182 29.5)",
+        "tonalRamp": [
+          "#1f0000",
+          "#4d0000",
+          "#800200",
+          "#b12015",
+          "#da4a3b",
+          "#fe7462",
+          "#feb3a7",
+          "#fee9e5"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-danger"
+      },
+      "danger-soft": {
+        "role": "state",
+        "displayName": "Rojo suave",
+        "canonical": "oklch(95.6% 0.019 21.6)",
+        "tonalRamp": [
+          "#120808",
+          "#2e2221",
+          "#4c3e3e",
+          "#6c5d5c",
+          "#8d7e7d",
+          "#b1a1a0",
+          "#d5c5c4",
+          "#fbeae9"
+        ],
+        "mode": "light",
+        "darkCounterpart": "dark-danger-soft"
+      },
+      "focus": {
+        "role": "focus",
+        "displayName": "Amarillo foco",
+        "canonical": "oklch(87.7% 0.174 92.5)",
+        "tonalRamp": [
+          "#100b00",
+          "#2e2400",
+          "#504002",
+          "#755f01",
+          "#9c7f07",
+          "#c5a107",
+          "#f0c404",
+          "#ffeeb9"
+        ],
+        "mode": "light",
+        "darkCounterpart": "focus"
+      },
+      "focus-ink": {
+        "role": "focus",
+        "displayName": "Tinta de foco",
+        "canonical": "oklch(17.0% 0.022 267.3)",
+        "tonalRamp": [
+          "#070b15",
+          "#202530",
+          "#3d424e",
+          "#5c616e",
+          "#7c8290",
+          "#9fa5b3",
+          "#c3c9d8",
+          "#e8eefe"
+        ],
+        "mode": "light",
+        "darkCounterpart": "focus-ink"
+      },
+      "dark-brand": {
+        "role": "primary",
+        "displayName": "Azul Rentas (modo oscuro)",
+        "canonical": "oklch(73.5% 0.116 238.8)",
+        "tonalRamp": [
+          "#000d18",
+          "#01283e",
+          "#024769",
+          "#036898",
+          "#308bc0",
+          "#58afe5",
+          "#90d2ff",
+          "#dff1fe"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "brand"
+      },
+      "dark-brand-hover": {
+        "role": "primary",
+        "displayName": "Azul Rentas profundo (modo oscuro)",
+        "canonical": "oklch(81.2% 0.083 237.2)",
+        "tonalRamp": [
+          "#000d17",
+          "#00283d",
+          "#034768",
+          "#2b688b",
+          "#4e8aae",
+          "#71add3",
+          "#95d2f9",
+          "#dff2fe"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "brand-hover"
+      },
+      "dark-brand-ink": {
+        "role": "primary",
+        "displayName": "Tinta sobre marca (modo oscuro)",
+        "canonical": "oklch(20.9% 0.045 243.2)",
+        "tonalRamp": [
+          "#000c19",
+          "#0f2739",
+          "#2c4558",
+          "#4b6579",
+          "#6b869c",
+          "#8da9c0",
+          "#b1cde5",
+          "#e1f1fe"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "brand-ink"
+      },
+      "dark-brand-soft": {
+        "role": "primary",
+        "displayName": "Celeste agua (modo oscuro)",
+        "canonical": "oklch(27.5% 0.052 243.4)",
+        "tonalRamp": [
+          "#000c19",
+          "#0a273c",
+          "#28455c",
+          "#47657d",
+          "#6886a0",
+          "#89a9c4",
+          "#adcee9",
+          "#e1f1fe"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "brand-soft"
+      },
+      "dark-bg": {
+        "role": "neutral",
+        "displayName": "Blanco (fondo) (modo oscuro)",
+        "canonical": "oklch(17.6% 0.014 258.4)",
+        "tonalRamp": [
+          "#080b11",
+          "#21252c",
+          "#3d424a",
+          "#5c6269",
+          "#7d838b",
+          "#a0a5ae",
+          "#c4cad2",
+          "#e9eff8"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "bg"
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "Blanco (superficie) (modo oscuro)",
+        "canonical": "oklch(20.7% 0.020 258.3)",
+        "tonalRamp": [
+          "#060b14",
+          "#1f252f",
+          "#3b424d",
+          "#5a626d",
+          "#7b838f",
+          "#9da6b2",
+          "#c1cad7",
+          "#e6effc"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "surface"
+      },
+      "dark-surface-2": {
+        "role": "neutral",
+        "displayName": "Gris niebla (modo oscuro)",
+        "canonical": "oklch(23.7% 0.026 258.3)",
+        "tonalRamp": [
+          "#050b16",
+          "#1d2532",
+          "#3a4350",
+          "#586270",
+          "#798392",
+          "#9ba6b6",
+          "#bfcadb",
+          "#e6effe"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "surface-2"
+      },
+      "dark-surface-3": {
+        "role": "neutral",
+        "displayName": "Gris niebla profundo (modo oscuro)",
+        "canonical": "oklch(27.8% 0.030 256.8)",
+        "tonalRamp": [
+          "#040b17",
+          "#1c2633",
+          "#384352",
+          "#576272",
+          "#778394",
+          "#99a6b8",
+          "#bdcadd",
+          "#e5efff"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "surface-3"
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "Tinta (modo oscuro)",
+        "canonical": "oklch(96.0% 0.008 253.9)",
+        "tonalRamp": [
+          "#090b0e",
+          "#222529",
+          "#3f4246",
+          "#5e6266",
+          "#7f8387",
+          "#a2a5aa",
+          "#c6c9ce",
+          "#ebeff4"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "ink"
+      },
+      "dark-ink-2": {
+        "role": "neutral",
+        "displayName": "Grafito (modo oscuro)",
+        "canonical": "oklch(84.3% 0.017 259.4)",
+        "tonalRamp": [
+          "#070b12",
+          "#20252e",
+          "#3d424b",
+          "#5c626b",
+          "#7c838d",
+          "#9fa5b0",
+          "#c3cad5",
+          "#e8effa"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "ink-2"
+      },
+      "dark-ink-3": {
+        "role": "neutral",
+        "displayName": "Pizarra (modo oscuro)",
+        "canonical": "oklch(71.6% 0.024 260.7)",
+        "tonalRamp": [
+          "#060b15",
+          "#1e2531",
+          "#3b424f",
+          "#59626f",
+          "#7a8391",
+          "#9da6b5",
+          "#c0cad9",
+          "#e6effe"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "ink-3"
+      },
+      "dark-line": {
+        "role": "neutral",
+        "displayName": "Filete (modo oscuro)",
+        "canonical": "oklch(30.7% 0.034 258.9)",
+        "tonalRamp": [
+          "#040b19",
+          "#1b2536",
+          "#374355",
+          "#566275",
+          "#768397",
+          "#98a6bb",
+          "#bccae0",
+          "#e6effe"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "line"
+      },
+      "dark-line-strong": {
+        "role": "neutral",
+        "displayName": "Filete fuerte (modo oscuro)",
+        "canonical": "oklch(38.3% 0.040 258.3)",
+        "tonalRamp": [
+          "#020b1c",
+          "#192539",
+          "#354358",
+          "#536279",
+          "#74839b",
+          "#96a6bf",
+          "#b9cae4",
+          "#e6effe"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "line-strong"
+      },
+      "dark-ok": {
+        "role": "state",
+        "displayName": "Verde (modo oscuro)",
+        "canonical": "oklch(79.1% 0.126 156.9)",
+        "tonalRamp": [
+          "#000f06",
+          "#012e18",
+          "#01502e",
+          "#007445",
+          "#2f9863",
+          "#58bc85",
+          "#7ee2a8",
+          "#c4ffda"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "ok"
+      },
+      "dark-ok-soft": {
+        "role": "state",
+        "displayName": "Verde suave (modo oscuro)",
+        "canonical": "oklch(25.7% 0.038 157.5)",
+        "tonalRamp": [
+          "#001006",
+          "#142b1e",
+          "#31483a",
+          "#4f6859",
+          "#708a79",
+          "#92ad9c",
+          "#b5d1bf",
+          "#daf7e5"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "ok-soft"
+      },
+      "dark-warn": {
+        "role": "state",
+        "displayName": "Ámbar (modo oscuro)",
+        "canonical": "oklch(82.4% 0.129 79.0)",
+        "tonalRamp": [
+          "#120900",
+          "#332100",
+          "#583c00",
+          "#7f5905",
+          "#aa7806",
+          "#d09a38",
+          "#f6bf60",
+          "#ffecce"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "warn"
+      },
+      "dark-warn-soft": {
+        "role": "state",
+        "displayName": "Ámbar suave (modo oscuro)",
+        "canonical": "oklch(26.0% 0.034 78.7)",
+        "tonalRamp": [
+          "#120900",
+          "#2e2311",
+          "#4c402d",
+          "#6c5f4b",
+          "#8e806c",
+          "#b1a38d",
+          "#d5c7b1",
+          "#fbecd5"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "warn-soft"
+      },
+      "dark-danger": {
+        "role": "state",
+        "displayName": "Rojo (modo oscuro)",
+        "canonical": "oklch(76.6% 0.139 26.6)",
+        "tonalRamp": [
+          "#1f0000",
+          "#4d0104",
+          "#7b1314",
+          "#a13a34",
+          "#c85d54",
+          "#ef8076",
+          "#ffb3aa",
+          "#ffe9e6"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "danger"
+      },
+      "dark-danger-soft": {
+        "role": "state",
+        "displayName": "Rojo suave (modo oscuro)",
+        "canonical": "oklch(23.3% 0.043 25.5)",
+        "tonalRamp": [
+          "#1a0403",
+          "#371c1a",
+          "#573936",
+          "#785855",
+          "#9b7975",
+          "#bf9b97",
+          "#e4bfbb",
+          "#ffe9e6"
+        ],
+        "mode": "dark",
+        "lightCounterpart": "danger-soft"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Sólo el H1 del hero de inicio. 2.25rem con interlineado 1.2 por debajo de 640px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "H1 de páginas internas (PageIntro) y 404. 1.875rem por debajo de 640px."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "H2 de sección (SectionHeader). 1.5rem por debajo de 640px."
+      },
+      "subhead": {
+        "displayName": "Subhead",
+        "purpose": "Títulos de asides y paneles; 1.125rem en bloques chicos."
+      },
+      "item-title": {
+        "displayName": "Item title",
+        "purpose": "H3 de noticias dentro de listas."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Bajada del hero y de PageIntro, en ink-2."
+      },
+      "link-title": {
+        "displayName": "Link title",
+        "purpose": "Enlace principal de cada ítem de LinkList."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Texto corrido; prosa a 68ch."
+      },
+      "body-sm": {
+        "displayName": "Body small",
+        "purpose": "Descripciones bajo enlaces, footer, avisos."
+      },
+      "nav": {
+        "displayName": "Nav",
+        "purpose": "Navegación principal."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Botones tamaño md (sm 0.875rem, lg 1rem)."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Metadatos, migas, chips (500), títulos de columna del footer (700)."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Badges y mes/día abreviado en mayúsculas."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Día del mes en listas de vencimientos; 3.75–4.5rem en 'Próximo vencimiento'."
+      }
+    },
+    "shadows": [
+      {
+        "name": "pop",
+        "value": "0 12px 32px -8px rgb(var(--shadow-color) / 0.22), 0 2px 6px rgb(var(--shadow-color) / 0.08)",
+        "purpose": "Sólo menú desplegable y panel del buscador. --shadow-color: 15 23 42 (claro), 0 0 0 (oscuro); en oscuro se suma un anillo de 1px line."
+      },
+      {
+        "name": "dialog-backdrop",
+        "value": "ink al 50% (claro) / black al 70% (oscuro)",
+        "purpose": "Telón del dialog modal."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 3px solid var(--focus); box-shadow: 0 0 0 5px var(--focus-ink)",
+        "purpose": "Foco global de controles (patrón GOV.UK). En enlaces: fondo var(--focus), texto var(--focus-ink), box-shadow 0 -2px var(--focus), 0 4px var(--focus-ink)."
+      },
+      {
+        "name": "sticky-header",
+        "value": "background: var(--bg) al 85% (95% sin backdrop-filter); backdrop-filter: blur(8px)",
+        "purpose": "Translucidez del header fijo, separado por un filete de 1px."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-quint",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Curva de entrada de menús y diálogos."
+      },
+      {
+        "name": "pop-in",
+        "value": "160ms ease-out-quint; opacity 0→1, translateY(-4px)→none",
+        "purpose": "Entrada del desplegable y del buscador. Anulada con prefers-reduced-motion."
+      },
+      {
+        "name": "color-change",
+        "value": "150ms",
+        "purpose": "Hover de botones, enlaces, navegación, chips y celdas (100ms en opciones del buscador)."
+      },
+      {
+        "name": "chevron-rotate",
+        "value": "rotate(180deg), 150ms (200ms en la agenda)",
+        "purpose": "Acordeones y desplegable al abrir."
+      },
+      {
+        "name": "veil-fade-in",
+        "value": "opacity 1000ms ease-out",
+        "purpose": "Aparición del canvas vgpu al primer cuadro; sin transición con reduced-motion."
+      },
+      {
+        "name": "veil-drift",
+        "value": "time × 0.03, 45 fps, pausa fuera de pantalla / pestaña oculta / reduced-motion (cuadro fijo t=12s)",
+        "purpose": "Deriva del velo de luz del hero."
+      },
+      {
+        "name": "scroll",
+        "value": "scroll-behavior: smooth (auto con reduced-motion); scroll-padding-top: 5rem",
+        "purpose": "Anclas y saltos de página."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "xs-logo",
+        "value": "420px"
+      },
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Una sola acción principal por bloque: 'Ingresar con clave fiscal', 'Buscar'.",
+      "html": "<button class=\"ds-btn ds-btn-primary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m10 17 5-5-5-5\"/><path d=\"M15 12H3\"/><path d=\"M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4\"/></svg>Ingresar con clave fiscal</button>",
+      "css": ".ds-btn { font-family: 'Public Sans Variable', 'Public Sans', ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 2.75rem; padding: 0 1.25rem; border: 0; border-radius: 8px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background-color 150ms, color 150ms; } .ds-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 0; box-shadow: 0 0 0 5px var(--focus-ink); border-radius: 8px; } .ds-btn svg { width: 1.1em; height: 1.1em; flex-shrink: 0; } .ds-btn:disabled { opacity: 0.5; pointer-events: none; } .ds-btn-primary { background: var(--brand); color: var(--brand-ink); } .ds-btn-primary:hover { background: var(--brand-hover); }"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción alternativa: fondo de superficie con anillo interior de 1px line-strong.",
+      "html": "<button class=\"ds-btn ds-btn-secondary\">Agregar al calendario</button>",
+      "css": ".ds-btn { font-family: 'Public Sans Variable', 'Public Sans', ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 2.75rem; padding: 0 1.25rem; border: 0; border-radius: 8px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background-color 150ms, color 150ms; } .ds-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 0; box-shadow: 0 0 0 5px var(--focus-ink); border-radius: 8px; } .ds-btn svg { width: 1.1em; height: 1.1em; flex-shrink: 0; } .ds-btn:disabled { opacity: 0.5; pointer-events: none; } .ds-btn-secondary { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line-strong); } .ds-btn-secondary:hover { background: var(--surface-2); } .ds-btn-secondary:focus-visible { outline: 3px solid var(--focus); outline-offset: 0; box-shadow: 0 0 0 5px var(--focus-ink); }"
+    },
+    {
+      "name": "Botón sutil",
+      "kind": "button",
+      "refersTo": "button-subtle",
+      "description": "Acción terciaria dentro de un panel.",
+      "html": "<button class=\"ds-btn ds-btn-subtle\">Ver en el calendario</button>",
+      "css": ".ds-btn { font-family: 'Public Sans Variable', 'Public Sans', ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 2.75rem; padding: 0 1.25rem; border: 0; border-radius: 8px; font-size: 0.95rem; font-weight: 600; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background-color 150ms, color 150ms; } .ds-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 0; box-shadow: 0 0 0 5px var(--focus-ink); border-radius: 8px; } .ds-btn svg { width: 1.1em; height: 1.1em; flex-shrink: 0; } .ds-btn:disabled { opacity: 0.5; pointer-events: none; } .ds-btn-subtle { background: var(--surface-2); color: var(--ink); } .ds-btn-subtle:hover { background: var(--surface-3); }"
+    },
+    {
+      "name": "Búsqueda del hero",
+      "kind": "input",
+      "refersTo": "input-hero-search",
+      "description": "Campo de 52px con borde de 2px de tinta, pegado al botón primario; foco amarillo sin anillo oscuro.",
+      "html": "<form class=\"ds-hero-search\" role=\"search\"><label class=\"ds-hero-label\" for=\"ds-q\">Buscar un trámite</label><div class=\"ds-hero-row\"><input id=\"ds-q\" class=\"ds-hero-input\" type=\"search\" placeholder=\"Por ejemplo: libre deuda\"><button class=\"ds-hero-submit\" type=\"submit\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21 21-4.34-4.34\"/><circle cx=\"11\" cy=\"11\" r=\"8\"/></svg><span>Buscar</span></button></div></form>",
+      "css": ".ds-hero-search { font-family: 'Public Sans Variable', 'Public Sans', ui-sans-serif, system-ui, sans-serif; max-width: 42rem; } .ds-hero-label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--ink); } .ds-hero-row { display: flex; } .ds-hero-input { flex: 1; min-width: 0; height: 3.25rem; padding: 0 1rem; font: inherit; font-size: 1rem; color: var(--ink); background: var(--surface); border: 2px solid var(--ink); border-right: 0; border-radius: 8px 0 0 8px; } .ds-hero-input::placeholder { color: var(--ink-3); } .ds-hero-input:focus { outline: 3px solid var(--focus); outline-offset: 0; box-shadow: none; } .ds-hero-submit { display: inline-flex; align-items: center; gap: 0.5rem; height: 3.25rem; padding: 0 1.25rem; border: 0; border-radius: 0 8px 8px 0; background: var(--brand); color: var(--brand-ink); font: inherit; font-weight: 600; cursor: pointer; transition: background-color 150ms; } .ds-hero-submit:hover { background: var(--brand-hover); } .ds-hero-submit:focus-visible { outline: 3px solid var(--focus); outline-offset: 0; box-shadow: 0 0 0 5px var(--focus-ink); }"
+    },
+    {
+      "name": "Chip de filtro",
+      "kind": "chip",
+      "refersTo": "chip-filter",
+      "description": "Píldora con aria-pressed; activo se invierte a tinta. Conteo tabular.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\" aria-pressed=\"true\">Todos <span class=\"ds-chip-n\">42</span></button><button class=\"ds-chip\" aria-pressed=\"false\">Ingresos Brutos <span class=\"ds-chip-n\">18</span></button></div>",
+      "css": ".ds-chips { font-family: 'Public Sans Variable', 'Public Sans', ui-sans-serif, system-ui, sans-serif; display: flex; flex-wrap: wrap; gap: 0.5rem; } .ds-chip { display: inline-flex; align-items: center; gap: 0.5rem; height: 2.25rem; padding: 0 0.875rem; border: 0; border-radius: 9999px; font: inherit; font-size: 0.875rem; font-weight: 500; cursor: pointer; background: var(--surface); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line-strong); transition: background-color 150ms, color 150ms; } .ds-chip:hover { background: var(--surface-2); color: var(--ink); } .ds-chip[aria-pressed='true'] { background: var(--ink); color: var(--bg); box-shadow: none; } .ds-chip-n { font-size: 0.75rem; font-variant-numeric: tabular-nums; color: var(--ink-3); } .ds-chip[aria-pressed='true'] .ds-chip-n { color: color-mix(in oklab, var(--bg) 75%, transparent); } .ds-chip:focus-visible { outline: 3px solid var(--focus); outline-offset: 0; box-shadow: 0 0 0 5px var(--focus-ink); }"
+    },
+    {
+      "name": "Badges de estado",
+      "kind": "chip",
+      "refersTo": "badge-neutral",
+      "description": "Estado y categoría, nunca decoración. Cuenta regresiva: ámbar a 7 días o menos; impuesto en neutral, Clave fiscal en info. (El canal en ok/warn es una excepción heredada.)",
+      "html": "<div class=\"ds-badges\"><span class=\"ds-badge ds-badge-neutral\">En 12 días</span><span class=\"ds-badge ds-badge-warn\">En 3 días</span><span class=\"ds-badge ds-badge-neutral\">Ingresos Brutos</span><span class=\"ds-badge ds-badge-info\">Clave fiscal</span><span class=\"ds-badge ds-badge-ok\">En línea</span></div>",
+      "css": ".ds-badges { font-family: 'Public Sans Variable', 'Public Sans', ui-sans-serif, system-ui, sans-serif; display: flex; flex-wrap: wrap; gap: 0.375rem; } .ds-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.125rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; line-height: 1.333; font-variant-numeric: tabular-nums; } .ds-badge-neutral { background: var(--surface-2); color: var(--ink-2); } .ds-badge-info { background: var(--brand-soft); color: var(--brand); } .ds-badge-ok { background: var(--ok-soft); color: var(--ok); } .ds-badge-warn { background: var(--warn-soft); color: var(--warn); } .ds-badge-danger { background: var(--danger-soft); color: var(--danger); }"
+    },
+    {
+      "name": "Lista de enlaces",
+      "kind": "custom",
+      "description": "LinkList: el formato base para trámites y servicios. Filete superior, título subrayado, descripción en pizarra.",
+      "html": "<ul class=\"ds-linklist\"><li><a class=\"ds-link ds-linklist-title\" href=\"#\">Consultar y pagar el Inmobiliario</a><p>Con el padrón del inmueble o el CUIT del titular, mirá tu estado de cuenta y pagá.</p></li><li><a class=\"ds-link ds-linklist-title\" href=\"#\">Turnos web</a><p>Elegí día y horario para que te atiendan en Casa Central o en una delegación.</p></li></ul>",
+      "css": ".ds-linklist { font-family: 'Public Sans Variable', 'Public Sans', ui-sans-serif, system-ui, sans-serif; list-style: none; margin: 0; padding: 0; max-width: 24rem; } .ds-linklist li { border-top: 1px solid var(--line); padding: 1rem 0; } .ds-linklist p { margin: 0.25rem 0 0; font-size: 0.95rem; line-height: 1.6; color: var(--ink-3); } .ds-linklist-title { font-size: 1.05rem; font-weight: 600; } .ds-link { color: var(--brand); text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: color-mix(in oklab, var(--brand) 45%, transparent); transition: text-decoration-color 150ms, color 150ms; } .ds-link:hover { color: var(--brand-hover); text-decoration-color: currentColor; text-decoration-thickness: 2px; } .ds-link:focus-visible { background-color: var(--focus); color: var(--focus-ink); text-decoration: none; outline: none; box-shadow: 0 -2px var(--focus), 0 4px var(--focus-ink); border-radius: 0; }"
+    },
+    {
+      "name": "Aviso",
+      "kind": "card",
+      "refersTo": "notice-info",
+      "description": "Notice: fondo suave del tono, ícono del tono, sin franja lateral.",
+      "html": "<div class=\"ds-notice\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 16v-4\"/><path d=\"M12 8h.01\"/></svg><div><p class=\"ds-notice-title\">Fechas orientativas</p><p class=\"ds-notice-body\">Basadas en el Calendario Impositivo 2026. Confirmá siempre en el calendario oficial.</p></div></div>",
+      "css": ".ds-notice { font-family: 'Public Sans Variable', 'Public Sans', ui-sans-serif, system-ui, sans-serif; display: flex; gap: 0.75rem; padding: 1rem; border-radius: 12px; background: var(--brand-soft); color: var(--ink); max-width: 32rem; } .ds-notice svg { flex-shrink: 0; margin-top: 0.125rem; color: var(--brand); } .ds-notice p { margin: 0; font-size: 0.95rem; } .ds-notice-title { font-weight: 600; } .ds-notice-body { margin-top: 0.25rem !important; color: var(--ink-2); }"
+    },
+    {
+      "name": "Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Contenedor con borde de 1px y 12px de radio, sin sombra.",
+      "html": "<section class=\"ds-panel\"><h3>Próximo vencimiento</h3><div class=\"ds-panel-date\"><span class=\"ds-panel-day\">15</span><span><strong>octubre</strong><small>miércoles · 2026</small></span></div></section>",
+      "css": ".ds-panel { font-family: 'Public Sans Variable', 'Public Sans', ui-sans-serif, system-ui, sans-serif; max-width: 22rem; padding: 1.5rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); } .ds-panel h3 { margin: 0; font-size: 1.125rem; font-weight: 700; letter-spacing: -0.015em; } .ds-panel-date { display: flex; align-items: center; gap: 1rem; margin-top: 1.25rem; } .ds-panel-day { font-size: 3.75rem; line-height: 1; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; } .ds-panel-date strong { display: block; font-size: 1.5rem; line-height: 1.25; } .ds-panel-date small { display: block; font-size: 1rem; color: var(--ink-3); }"
+    },
+    {
+      "name": "Navegación principal",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Enlaces de 0.95rem/500 con borde inferior de 3px: transparente, line-strong en hover, brand activo.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Principal\"><a href=\"#\" class=\"ds-nav-link\">Trámites</a><a href=\"#\" class=\"ds-nav-link\" aria-current=\"page\">Impuestos</a><a href=\"#\" class=\"ds-nav-link\">Vencimientos</a><a href=\"#\" class=\"ds-nav-link\">Atención</a><a href=\"#\" class=\"ds-nav-link\">Normativa</a></nav>",
+      "css": ".ds-nav { font-family: 'Public Sans Variable', 'Public Sans', ui-sans-serif, system-ui, sans-serif; display: flex; gap: 0.25rem; height: 4.5rem; align-items: stretch; border-bottom: 1px solid var(--line); background: var(--bg); } .ds-nav-link { display: flex; align-items: center; padding: 0 0.625rem; font-size: 0.95rem; font-weight: 500; color: var(--ink-2); text-decoration: none; border-bottom: 3px solid transparent; transition: color 150ms, border-color 150ms; } .ds-nav-link:hover { color: var(--ink); border-bottom-color: var(--line-strong); } .ds-nav-link[aria-current='page'] { color: var(--ink); border-bottom-color: var(--brand); } .ds-nav-link:focus-visible { background-color: var(--focus); color: var(--focus-ink); text-decoration: none; outline: none; box-shadow: 0 -2px var(--focus), 0 4px var(--focus-ink); border-radius: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El portal estándar, ejecutado al máximo",
+    "overview": "Este sistema no tiene mundo propio: es el canon de un portal de servicios públicos hecho con oficio. Tiene la claridad de GOV.UK, la familiaridad de argentina.gob.ar y la terminación de un producto de primer nivel. La pantalla es casi siempre blanca, el texto es tinta casi negra y hay un solo azul, el del isologo de Rentas, para lo que se puede tocar: enlaces y botón primario. El verde, el ámbar y el rojo aparecen sólo para comunicar estado. El modo oscuro es completo y espeja los mismos roles; no es una versión decorativa.\n\nLa densidad es la de una herramienta (modo Operate): listas con filetes de 1px, títulos que hablan solos, enlaces subrayados, números tabulares y nada que compita con la tarea. Todo lo que el sistema descarta es tan importante como lo que usa: no hay eyebrows, ni grillas de tarjetas iguales con ícono, ni sombras decorativas, ni glow, ni bandas oscuras de hero. Tampoco vuelven las exploraciones de mundo propio que se descartaron (estratos de Siete Colores, aguayo, acentos en serif itálica).\n\nLa única atmósfera es un velo de luz celeste, apenas visible, renderizado con vgpu (WebGPU) detrás del hero de inicio. Es un detalle al servicio del canon, nunca identidad: si no hay WebGPU, la página es exactamente igual sobre fondo liso.",
+    "keyCharacteristics": [
+      "Blanco primero, tinta #0b0f19, un solo azul de marca (#0068a3) y colores sólo para estado.",
+      "Modo claro, oscuro y automático con los mismos roles semánticos.",
+      "Una sola familia, Public Sans, en una escala fija de roles, con números tabulares donde hay cifras.",
+      "Enlaces de texto siempre subrayados y foco amarillo de alta visibilidad (patrón GOV.UK).",
+      "Separación con filetes de 1px y superficies tonales; sombra sólo en menús y diálogos.",
+      "Radios de 8px en controles y de 12px en contenedores.",
+      "Movimiento mínimo: cambios de color de 150ms y un fundido de 160ms con 4px de desplazamiento en menús y diálogos."
+    ],
+    "rules": [
+      {
+        "name": "La regla del azul único",
+        "body": "El azul de marca marca lo que se puede tocar (enlaces, botón primario) y lo que está activo (pestaña de navegación, hoy). No se usa como fondo de bandas, títulos ni decoración.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del color con significado",
+        "body": "El verde, el ámbar y el rojo sólo comunican estado, siempre con texto o ícono que diga lo mismo. Ninguna categoría (impuesto, tipo de norma) tiene un color propio. Hoy hay una excepción en el código: el badge de canal del trámite usa verde para \"En línea\" y para \"En línea o presencial\", y ámbar para \"Presencial\". Es una deuda conocida; no la repitas en piezas nuevas.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de las cifras tabulares",
+        "body": "Fechas, teléfonos, conteos, cuentas regresivas y números de paso llevan `.tabular` (`font-variant-numeric: tabular-nums`). La cifra se alinea y no salta al cambiar.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla de la familia única",
+        "body": "No hay segunda familia, serif, itálica de acento ni monoespaciada. El archivo de itálica de Public Sans está importado, pero la interfaz no lo usa.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla del contenedor único",
+        "body": "Ningún bloque define su propio ancho máximo de página ni sus márgenes laterales: todo pasa por `container-page`. Las bandas tonales (`surface-2`) ocupan todo el ancho y el contenedor va adentro.",
+        "section": "layout"
+      },
+      {
+        "name": "La regla de la sombra que flota",
+        "body": "La sombra sólo aparece en lo que está por encima de la página (menús y diálogos). Paneles, avisos, botones y tarjetas son planos: se separan con borde o con fondo tonal.",
+        "section": "elevation"
+      },
+      {
+        "name": "La regla del sin glow",
+        "body": "No hay brillos, halos, degradés de color ni sombras de color. El velo vgpu del hero es la única luz del sistema.",
+        "section": "elevation"
+      },
+      {
+        "name": "La regla del velo invisible",
+        "body": "El velo tiene que pasar casi inadvertido. Si alguien lo nota antes que el buscador, sobra intensidad. Vive sólo en el hero de inicio, nunca detrás de texto que dependa de él y nunca como identidad.",
+        "section": "components"
+      },
+      {
+        "name": "La regla del movimiento que informa",
+        "body": "Nada se anima para lucirse: sólo cambian colores de estado y aparecen piezas que flotan. Toda animación tiene su versión con `prefers-reduced-motion`.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "**Do** usá sólo tokens semánticos (`bg`, `surface*`, `ink*`, `line*`, `brand*`, `ok`/`warn`/`danger` y sus `-soft`, `focus`) a través de las utilidades de Tailwind; el modo oscuro se resuelve solo.",
+      "**Do** reservá `brand` (#0068a3 / #5cb3ea) para enlaces, el botón primario y los indicadores de \"activo\" o \"hoy\".",
+      "**Do** subrayá todo enlace de texto con `.link` (1px al 45%; 2px a color pleno en hover).",
+      "**Do** dejá el foco global intacto: contorno amarillo #ffd21f de 3px con anillo #0b0f19 de 5px en controles, y fondo amarillo con barra inferior oscura en enlaces.",
+      "**Do** armá trámites, servicios e impuestos como `LinkList`, con filetes de 1px y descripción, en 1 a 3 columnas.",
+      "**Do** usá 8px de radio en controles, 12px en contenedores, 6px en badges y píldora sólo en chips de filtro.",
+      "**Do** poné `.tabular` en fechas, teléfonos, conteos y cuentas regresivas.",
+      "**Do** rotulá como orientativo todo dato que no sea oficial (vencimientos) y enlazá a la fuente oficial.",
+      "**Do** marcá los enlaces externos con la flecha diagonal y el aviso \"(se abre en una pestaña nueva)\".",
+      "**Do** pasá todo por `container-page` (76rem; márgenes de 1rem, 1.5rem y 2rem) y usá `minmax(0, …)` en las pistas de grilla.",
+      "**Do** diferenciá categorías con forma más tono, como las marcas del calendario, nunca sólo con color."
+    ],
+    "donts": [
+      "**Don't** uses eyebrows ni rótulos sobre los títulos: `SectionHeader` y `PageIntro` ignoran ese prop.",
+      "**Don't** armes grillas de tarjetas iguales con ícono para trámites o servicios.",
+      "**Don't** pongas sombras fuera de menús y diálogos, ni glow, halos o degradés de color.",
+      "**Don't** uses bandas oscuras o azules de hero, ni una paleta terrosa, ni las exploraciones descartadas (estratos de Siete Colores, aguayo, acentos en serif itálica).",
+      "**Don't** escribas texto en `--celeste` (#2581c6, 4,17:1 sobre blanco) ni en `line-strong`.",
+      "**Don't** uses las variantes de botón `inverse` e `inverse-outline`: son un resto de la banda azul descartada y no tienen uso.",
+      "**Don't** redibujes, recolorees ni encuadres de otra forma el isologo oficial, y no lo pongas sobre fondos de color.",
+      "**Don't** sumes una segunda familia tipográfica, ni itálicas o versalitas de acento.",
+      "**Don't** lleves el velo vgpu fuera del hero de inicio, ni le subas la intensidad, ni lo hagas imprescindible: la página tiene que verse igual sin WebGPU.",
+      "**Don't** animes nada que no sea un cambio de estado o la aparición de un menú o diálogo, y nunca sin su versión con movimiento reducido."
+    ]
+  }
+}
