@@ -132,7 +132,8 @@ export function VencimientosPage() {
           {/* Desde sm, calendario y detalle del día lado a lado (tablet, celular apaisado); el calendario nunca
               baja de 21.5rem para que las celdas tengan 42px o más. Desde lg pasan a la columna angosta. */}
           <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-4 sm:grid-cols-[minmax(21.5rem,1.2fr)_minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)]">
-            <div ref={calendarRef} className="min-w-0">
+            {/* El scroll-padding global (5rem) ya deja ~15px bajo el header de 64px; desde lg el header mide 72px. */}
+            <div ref={calendarRef} className="min-w-0 lg:scroll-mt-2">
               <Panel className="p-3 sm:p-4 lg:p-5">
                 <MonthCalendar
                   view={view}

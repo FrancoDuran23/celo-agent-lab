@@ -160,6 +160,12 @@
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
   }
+  /* Celulares apaisados: el header deja de ser fijo, no hace falta el margen. */
+  @media (max-height: 480px) {
+    html {
+      scroll-padding-top: 1rem;
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
