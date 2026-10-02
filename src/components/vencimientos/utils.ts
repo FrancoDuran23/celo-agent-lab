@@ -1,5 +1,6 @@
 import { IMPUESTOS } from "../../data/impuestos";
-import type { ImpuestoSlug, PaletteColor, Vencimiento } from "../../data/types";
+import { VENCIMIENTOS } from "../../data/vencimientos";
+import type { ImpuestoSlug, Vencimiento } from "../../data/types";
 import { parseISODate } from "../../lib/dates";
 
 /* ------------------------------------------------------------------ */
@@ -90,36 +91,33 @@ export interface ImpuestoMeta {
   slug: ImpuestoSlug;
   nombre: string;
   corto: string;
-  color: PaletteColor;
+  /** Índice en MARKS: cómo se marca el impuesto en la grilla. */
+  mark: number;
 }
 
+/**
+ * Marcas de la grilla: dos tonos (azul de marca y tinta) y dos formas
+ * (lleno y hueco), para que los impuestos se distingan sin depender
+ * sólo del color. Las clases van completas para que Tailwind las genere.
+ */
+export const MARKS: { tone: string; shape: string }[] = [
+  { tone: "text-brand", shape: "rounded-full bg-current" },
+  { tone: "text-ink-2", shape: "rounded-full border-2 border-current" },
+  { tone: "text-brand", shape: "rounded-[2px] border-2 border-current" },
+  { tone: "text-ink-2", shape: "rounded-[2px] bg-current" },
+];
+
+// Los impuestos con vencimientos cargados reciben las primeras marcas.
+const PRESENT = new Set<string>(VENCIMIENTOS.map((v) => v.impuesto));
+const ORDERED = [...IMPUESTOS.filter((i) => PRESENT.has(i.slug)), ...IMPUESTOS.filter((i) => !PRESENT.has(i.slug))];
+
 const META = new Map<string, ImpuestoMeta>(
-  IMPUESTOS.map((i) => [i.slug, { slug: i.slug, nombre: i.nombre, corto: i.corto, color: i.color }]),
+  ORDERED.map((i, idx) => [i.slug, { slug: i.slug, nombre: i.nombre, corto: i.corto, mark: idx % MARKS.length }]),
 );
 
 export function impuestoMeta(slug: ImpuestoSlug): ImpuestoMeta {
-  return META.get(slug) ?? { slug, nombre: slug, corto: slug, color: "night" };
+  return META.get(slug) ?? { slug, nombre: slug, corto: slug, mark: 0 };
 }
-
-/** Puntos de color sólidos (clases completas para que Tailwind las genere). */
-export const DOT: Record<PaletteColor, string> = {
-  terracota: "bg-terracota-500",
-  ocre: "bg-ocre-500",
-  rosa: "bg-rosa-500",
-  salvia: "bg-salvia-500",
-  violeta: "bg-violeta-500",
-  night: "bg-night-600 dark:bg-[#a4bde8]",
-};
-
-/** Tintes suaves (fondo + texto) definidos en index.css. */
-export const TINT: Record<PaletteColor, string> = {
-  terracota: "tint-terracota",
-  ocre: "tint-ocre",
-  rosa: "tint-rosa",
-  salvia: "tint-salvia",
-  violeta: "tint-violeta",
-  night: "tint-night",
-};
 
 /* ------------------------------------------------------------------ */
 /* Vencimientos                                                         */

@@ -48,7 +48,7 @@ export function AddToCalendarButton({
   label?: string;
   /** Texto extra solo para lectores (qué se agrega). */
   srContext?: string;
-  variant?: "secondary" | "light" | "outline-light" | "ghost" | "primary";
+  variant?: "primary" | "secondary" | "subtle";
   size?: "sm" | "md" | "lg";
   className?: string;
 }) {
@@ -82,7 +82,12 @@ export function AddToCalendarButton({
       className={buttonClass({
         variant,
         size,
-        className: clsx(status === "done" && variant === "secondary" && "!text-ok !ring-ok/40", className),
+        className: clsx(
+          "tabular",
+          status === "done" && variant !== "primary" && "!text-ok",
+          status === "done" && variant === "secondary" && "!ring-ok/50",
+          className,
+        ),
       })}
     >
       <Icon aria-hidden="true" />
