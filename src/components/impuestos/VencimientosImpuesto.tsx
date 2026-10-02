@@ -34,20 +34,22 @@ export function VencimientosImpuesto({ imp }: { imp: Impuesto }) {
         {proximos.map((v) => {
           const d = parseISODate(v.fecha);
           return (
-            <li key={v.fecha + v.titulo} className="flex items-center gap-4 border-t border-line py-3.5">
+            <li key={v.fecha + v.titulo} className="flex items-start gap-4 border-t border-line py-3.5 sm:items-center">
               <time dateTime={v.fecha} className="w-14 shrink-0 text-center leading-none">
                 <span className="block text-2xl font-bold tabular text-ink">{d.getDate()}</span>
                 <span className="mt-1 block text-xs font-semibold text-ink-3 uppercase">
                   {MES.format(d).replace(".", "")}
                 </span>
               </time>
-              <div className="min-w-0 flex-1">
-                <p className="font-semibold text-ink">{v.titulo}</p>
-                {v.detalle ? <p className="text-sm text-ink-3">{v.detalle}</p> : null}
+              <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between sm:gap-4">
+                <div className="min-w-0">
+                  <p className="font-semibold text-ink">{v.titulo}</p>
+                  {v.detalle ? <p className="text-sm text-ink-3">{v.detalle}</p> : null}
+                </div>
+                <Badge tone={countdownTone(v.fecha, hoy)} className="mt-2 shrink-0 tabular sm:mt-0">
+                  {countdownLabel(v.fecha, hoy)}
+                </Badge>
               </div>
-              <Badge tone={countdownTone(v.fecha, hoy)} className="shrink-0 tabular">
-                {countdownLabel(v.fecha, hoy)}
-              </Badge>
             </li>
           );
         })}

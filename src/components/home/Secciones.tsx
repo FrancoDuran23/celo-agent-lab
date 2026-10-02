@@ -81,7 +81,7 @@ export function VencimientosYAtencion() {
                   <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between sm:gap-4">
                     <div className="min-w-0">
                       {imp ? (
-                        <Link to={`/impuestos/${imp.slug}`} className="link font-semibold text-ink decoration-transparent hover:decoration-current">
+                        <Link to={`/impuestos/${imp.slug}`} className="link font-semibold">
                           {v.titulo}
                         </Link>
                       ) : (
