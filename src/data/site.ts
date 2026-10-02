@@ -32,6 +32,8 @@ export const LINKS = {
   decretos: `${OFFICIAL_URL}/decretos-2/`,
   tutoriales: `${OFFICIAL_URL}/tutoriales/`,
   formularios: `${OFFICIAL_URL}/formularios/`,
+  aplicativos: `${OFFICIAL_URL}/descarga-de-aplicativos/`,
+  preguntasFrecuentes: `${OFFICIAL_URL}/preguntas-frecuentes/`,
   /** El Impuesto Automotor es un recurso municipal (Const. de Jujuy, art. 215). */
   automotorCapital: "https://rentasmunijujuy.gob.ar",
 } as const;

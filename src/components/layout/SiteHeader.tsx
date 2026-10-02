@@ -76,6 +76,9 @@ export function SiteHeader() {
             <Link to="/atencion#turnos" className="hover:underline">
               Turnos web
             </Link>
+            <Link to="/ayuda" className="hover:underline">
+              Centro de ayuda
+            </Link>
             <Link to="/atencion" className="hover:underline">
               Canales de atención
             </Link>

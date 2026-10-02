@@ -1,28 +1,30 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Layout } from "./components/layout/Layout";
 import { HomePage } from "./pages/HomePage";
-import { TramitesPage } from "./pages/TramitesPage";
-import { ImpuestosPage } from "./pages/ImpuestosPage";
-import { ImpuestoPage } from "./pages/ImpuestoPage";
-import { VencimientosPage } from "./pages/VencimientosPage";
-import { AtencionPage } from "./pages/AtencionPage";
-import { NormativaPage } from "./pages/NormativaPage";
-import { NoticiasPage } from "./pages/NoticiasPage";
-import { NotFoundPage } from "./pages/NotFoundPage";
 
+/*
+ * La portada va en el bundle inicial; el resto de las páginas se cargan
+ * bajo demanda (un chunk por ruta).
+ */
 const router = createBrowserRouter([
   {
     element: <Layout />,
+    // Mientras carga el chunk de la primera ruta (entrada directa a una página interna).
+    hydrateFallbackElement: <div className="min-h-dvh bg-bg" aria-busy="true" />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "tramites", element: <TramitesPage /> },
-      { path: "impuestos", element: <ImpuestosPage /> },
-      { path: "impuestos/:slug", element: <ImpuestoPage /> },
-      { path: "vencimientos", element: <VencimientosPage /> },
-      { path: "atencion", element: <AtencionPage /> },
-      { path: "normativa", element: <NormativaPage /> },
-      { path: "noticias", element: <NoticiasPage /> },
-      { path: "*", element: <NotFoundPage /> },
+      { path: "tramites", lazy: async () => ({ Component: (await import("./pages/TramitesPage")).TramitesPage }) },
+      { path: "impuestos", lazy: async () => ({ Component: (await import("./pages/ImpuestosPage")).ImpuestosPage }) },
+      { path: "impuestos/:slug", lazy: async () => ({ Component: (await import("./pages/ImpuestoPage")).ImpuestoPage }) },
+      {
+        path: "vencimientos",
+        lazy: async () => ({ Component: (await import("./pages/VencimientosPage")).VencimientosPage }),
+      },
+      { path: "atencion", lazy: async () => ({ Component: (await import("./pages/AtencionPage")).AtencionPage }) },
+      { path: "normativa", lazy: async () => ({ Component: (await import("./pages/NormativaPage")).NormativaPage }) },
+      { path: "noticias", lazy: async () => ({ Component: (await import("./pages/NoticiasPage")).NoticiasPage }) },
+      { path: "ayuda", lazy: async () => ({ Component: (await import("./pages/AyudaPage")).AyudaPage }) },
+      { path: "*", lazy: async () => ({ Component: (await import("./pages/NotFoundPage")).NotFoundPage }) },
     ],
   },
 ]);

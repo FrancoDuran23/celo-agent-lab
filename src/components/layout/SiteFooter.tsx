@@ -135,7 +135,7 @@ export function SiteFooter() {
                 </span>
               </a>
             </li>
-            {CANALES.map((c) => (
+            {CANALES.filter((c) => c.href !== CONTACTO.telefono.href).map((c) => (
               <li key={c.id}>
                 <SmartLink to={c.href} className={clsx(linkClass, "items-center gap-2.5")}>
                   <Icon name={c.icon} className="size-4 shrink-0 text-ocre-300" />
