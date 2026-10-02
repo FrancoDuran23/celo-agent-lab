@@ -3,13 +3,13 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import clsx from "clsx";
 import type { Vencimiento } from "../../data/types";
 import { formatLong, formatMonth } from "../../lib/dates";
+import { buttonClass } from "../ui/Button";
+import { Mark } from "./bits";
 import {
-  DOT,
   WEEKDAYS,
   addDays,
   addMonths,
   capitalize,
-  impuestoMeta,
   monthMatrix,
   monthName,
   pluralVenc,
@@ -126,20 +126,20 @@ export function MonthCalendar({ view, onViewChange, min, max, hoy, byDate, selec
   };
 
   const navBtn =
-    "inline-flex size-9 items-center justify-center rounded-full text-ink-2 sm:size-10 ring-1 ring-line transition-colors hover:bg-surface-2 hover:text-ink aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:hover:bg-transparent";
+    "inline-flex size-9 items-center justify-center rounded-lg bg-surface text-ink ring-1 ring-line-strong ring-inset transition-colors hover:bg-surface-2 aria-disabled:cursor-not-allowed aria-disabled:text-ink-3 aria-disabled:opacity-50 aria-disabled:hover:bg-surface";
 
   return (
     <div>
       <div className="flex items-center justify-between gap-3">
-        <h3 id={headingId} aria-live="polite" className="text-lg font-semibold tracking-tight text-ink sm:text-2xl">
+        <h3 id={headingId} aria-live="polite" className="text-lg font-bold text-ink sm:text-xl">
           {monthName(view)} <span className="font-normal text-ink-3 tabular">{view.getFullYear()}</span>
         </h3>
-        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
+        <div className="flex shrink-0 items-center gap-1.5">
           {!sameMonth(view, hoy) && startOfMonth(hoy) >= startOfMonth(min) && startOfMonth(hoy) <= startOfMonth(max) ? (
             <button
               type="button"
               onClick={() => go(startOfMonth(hoy))}
-              className="inline-flex h-9 items-center rounded-full px-3 text-sm font-medium sm:h-10 sm:px-3.5 text-ink-2 ring-1 ring-line transition-colors hover:bg-surface-2 hover:text-ink"
+              className={buttonClass({ variant: "secondary", size: "sm" })}
             >
               Hoy
             </button>
@@ -175,21 +175,13 @@ export function MonthCalendar({ view, onViewChange, min, max, hoy, byDate, selec
         role="grid"
         aria-labelledby={headingId}
         aria-describedby={hintId}
-        className="mt-5 w-full table-fixed border-separate border-spacing-0.5 sm:border-spacing-1"
+        className="mt-4 w-full table-fixed border-separate border-spacing-0.5 sm:border-spacing-1"
       >
         <thead>
           <tr>
-            {WEEKDAYS.map((w, i) => (
-              <th
-                key={w.long}
-                scope="col"
-                abbr={w.long}
-                className={clsx(
-                  "pb-2 text-center font-mono text-[0.68rem] font-medium tracking-[0.12em] uppercase",
-                  i >= 5 ? "text-ink-3/75" : "text-ink-3",
-                )}
-              >
-                {w.short.slice(0, 3)}
+            {WEEKDAYS.map((w) => (
+              <th key={w.long} scope="col" abbr={w.long} className="pb-2 text-center text-xs font-semibold text-ink-3">
+                {capitalize(w.short.slice(0, 3))}
               </th>
             ))}
           </tr>
@@ -202,12 +194,7 @@ export function MonthCalendar({ view, onViewChange, min, max, hoy, byDate, selec
                 if (!sameMonth(d, view)) {
                   return (
                     <td key={iso} role="gridcell" className="p-0">
-                      <span
-                        aria-hidden="true"
-                        className="flex aspect-square w-full items-center justify-center text-sm text-ink-3/35 tabular"
-                      >
-                        {d.getDate()}
-                      </span>
+                      <span aria-hidden="true" className="block aspect-square w-full" />
                     </td>
                   );
                 }
@@ -237,34 +224,30 @@ export function MonthCalendar({ view, onViewChange, min, max, hoy, byDate, selec
                       onFocus={() => setFocusISO(iso)}
                       onKeyDown={(e) => onKeyDown(e, d)}
                       className={clsx(
-                        "relative flex aspect-square w-full items-center justify-center rounded-xl text-sm tabular transition-[background-color,color,box-shadow] duration-200 sm:text-[0.95rem]",
+                        "relative flex aspect-square w-full items-center justify-center rounded-lg border-2 text-sm tabular transition-colors duration-150 sm:text-[0.95rem]",
+                        isToday ? "border-brand" : "border-transparent",
                         isSelected
-                          ? clsx(
-                              "bg-night-900 font-semibold text-crema-50 shadow-soft dark:bg-crema-100 dark:text-night-900",
-                              isToday && "ring-2 ring-brand ring-offset-2 ring-offset-surface",
-                            )
+                          ? "bg-ink font-bold text-bg"
                           : isToday
-                            ? "bg-brand-soft font-semibold text-brand ring-1 ring-brand/50 ring-inset hover:bg-brand-soft/70"
+                            ? "font-bold text-brand hover:bg-surface-2"
                             : items.length && !isPast
-                              ? "bg-surface-2 font-semibold text-ink hover:bg-surface-3"
+                              ? "font-bold text-ink hover:bg-surface-2"
                               : isPast
-                                ? "text-ink-3/70 hover:bg-surface-2"
+                                ? "text-ink-3 hover:bg-surface-2"
                                 : "text-ink-2 hover:bg-surface-2 hover:text-ink",
                       )}
                     >
-                      <span className={clsx(isToday && !isSelected && "-translate-y-px")}>{d.getDate()}</span>
+                      <span className={clsx(items.length && "-translate-y-1")}>{d.getDate()}</span>
                       {items.length ? (
-                        <span aria-hidden="true" className="absolute inset-x-0 bottom-[16%] flex justify-center gap-[3px]">
+                        <span
+                          aria-hidden="true"
+                          className={clsx(
+                            "absolute inset-x-0 bottom-[14%] flex justify-center gap-[3px]",
+                            isPast && !isSelected && "opacity-60",
+                          )}
+                        >
                           {items.slice(0, 3).map((v) => (
-                            <span
-                              key={vencKey(v)}
-                              className={clsx(
-                                "size-1.5 rounded-full",
-                                DOT[impuestoMeta(v.impuesto).color],
-                                isPast && !isSelected && "opacity-45",
-                                isSelected && "ring-1 ring-night-900/30 dark:ring-crema-100/40",
-                              )}
-                            />
+                            <Mark key={vencKey(v)} slug={v.impuesto} inherit={isSelected} />
                           ))}
                         </span>
                       ) : null}

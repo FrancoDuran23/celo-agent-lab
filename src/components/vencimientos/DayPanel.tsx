@@ -2,9 +2,10 @@ import { CalendarCheck2, CalendarSearch } from "lucide-react";
 import clsx from "clsx";
 import type { Vencimiento } from "../../data/types";
 import { daysBetween, formatLong, parseISODate, relativeDays } from "../../lib/dates";
+import { Panel } from "../ui/primitives";
 import { AddToCalendarButton } from "./AddToCalendar";
-import { CountdownChip, ImpuestoTag } from "./bits";
-import { DOT, capitalize, impuestoMeta, monthName, pluralVenc, vencKey, weekdayShort } from "./utils";
+import { CountdownChip, ImpuestoTag, Mark } from "./bits";
+import { capitalize, monthName, pluralVenc, vencKey, weekdayShort } from "./utils";
 
 interface Props {
   selected: string | null;
@@ -27,56 +28,46 @@ export function DayPanel({ selected, view, hoy, byDate, filtro, onSelect }: Prop
   const dias = selected ? daysBetween(hoy, parseISODate(selected)) : 0;
 
   return (
-    <div className="flex h-full flex-col rounded-3xl bg-surface p-5 ring-1 ring-line sm:p-6">
+    <Panel className="flex h-full flex-col p-5 sm:p-6">
       <div aria-live="polite" aria-atomic="true">
-        <p className="eyebrow">{selected ? "Día seleccionado" : "Este mes"}</p>
-        <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-          <h4 className="text-lg font-semibold tracking-tight text-ink sm:text-xl">
-            {selected ? capitalize(formatLong(selected)) : `${monthName(view)} ${view.getFullYear()}`}
-          </h4>
-          <p className="text-sm text-ink-3">
-            {selected
-              ? items.length
-                ? `${pluralVenc(items.length)}${deFiltro} · ${relativeDays(selected, hoy)}`
-                : `Sin vencimientos${deFiltro}`
-              : monthCount
-                ? `${pluralVenc(monthCount)}${deFiltro}`
-                : `Sin vencimientos${deFiltro} cargados`}
-          </p>
-        </div>
+        <h3 className="text-lg font-bold text-ink">
+          {selected ? capitalize(formatLong(selected)) : `${monthName(view)} ${view.getFullYear()}`}
+        </h3>
+        <p className="mt-0.5 text-sm text-ink-3 tabular">
+          {selected
+            ? items.length
+              ? `${pluralVenc(items.length)}${deFiltro} · ${relativeDays(selected, hoy)}`
+              : `Sin vencimientos${deFiltro}`
+            : monthCount
+              ? `${pluralVenc(monthCount)}${deFiltro} en el mes`
+              : `Sin vencimientos${deFiltro} cargados`}
+        </p>
       </div>
 
       {selected && items.length ? (
-        <ul className="mt-4 space-y-2.5">
-          {items.map((v) => {
-            const m = impuestoMeta(v.impuesto);
-            return (
-              <li
-                key={vencKey(v)}
-                className="@container relative overflow-hidden rounded-2xl bg-surface-2/70 p-4 pl-5 ring-1 ring-line"
-              >
-                <span aria-hidden="true" className={clsx("absolute inset-y-3 left-0 w-1 rounded-r-full", DOT[m.color])} />
-                <p className="font-semibold text-ink">{v.titulo}</p>
-                {v.detalle ? <p className="mt-0.5 text-sm text-ink-3">{v.detalle}</p> : null}
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-                  <ImpuestoTag slug={v.impuesto} />
-                  {dias >= 0 ? (
-                    <AddToCalendarButton
-                      items={[v]}
-                      srContext={`${v.titulo}${v.detalle ? `, ${v.detalle}` : ""}, ${formatLong(v.fecha)}`}
-                      className="w-full @min-[20rem]:w-auto"
-                    />
-                  ) : (
-                    <CountdownChip text="Ya venció" tone="past" />
-                  )}
-                </div>
-              </li>
-            );
-          })}
+        <ul className="mt-4 border-b border-line">
+          {items.map((v) => (
+            <li key={vencKey(v)} className="@container border-t border-line py-4">
+              <p className="font-semibold text-ink">{v.titulo}</p>
+              {v.detalle ? <p className="text-sm text-ink-3">{v.detalle}</p> : null}
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                <ImpuestoTag slug={v.impuesto} />
+                {dias >= 0 ? (
+                  <AddToCalendarButton
+                    items={[v]}
+                    srContext={`${v.titulo}${v.detalle ? `, ${v.detalle}` : ""}, ${formatLong(v.fecha)}`}
+                    className="w-full @min-[20rem]:w-auto"
+                  />
+                ) : (
+                  <CountdownChip text="Ya venció" tone="past" />
+                )}
+              </div>
+            </li>
+          ))}
         </ul>
       ) : (
         <div className="mt-4 flex flex-1 flex-col">
-          <p className="flex items-start gap-3 text-sm leading-relaxed text-ink-3">
+          <p className="flex items-start gap-2.5 text-[0.95rem] text-ink-2">
             {selected ? (
               <CalendarCheck2 className="mt-0.5 size-5 shrink-0 text-ok" aria-hidden="true" />
             ) : (
@@ -85,7 +76,7 @@ export function DayPanel({ selected, view, hoy, byDate, filtro, onSelect }: Prop
             <span>
               {selected
                 ? monthDates.length
-                  ? "Este día no vence nada. Elegí uno de los días marcados con puntos de color:"
+                  ? "Este día no vence nada. Elegí uno de los días marcados:"
                   : `Este día no vence nada, y no hay otros vencimientos${deFiltro} cargados en ${monthName(view).toLowerCase()}.`
                 : monthDates.length
                   ? "Elegí un día marcado para ver qué vence:"
@@ -105,20 +96,15 @@ export function DayPanel({ selected, view, hoy, byDate, filtro, onSelect }: Prop
                       onClick={() => onSelect(iso)}
                       aria-label={`${capitalize(formatLong(iso))}, ${pluralVenc(list.length)}`}
                       className={clsx(
-                        "inline-flex items-center gap-2 rounded-full bg-surface py-1.5 pr-3.5 pl-2 text-sm font-medium ring-1 ring-line transition-colors hover:bg-surface-2",
+                        "inline-flex h-9 items-center gap-2 rounded-lg bg-surface px-3 text-sm ring-1 ring-line-strong ring-inset transition-colors hover:bg-surface-2",
                         past ? "text-ink-3" : "text-ink",
                       )}
                     >
-                      <span className="inline-flex size-7 items-center justify-center rounded-full bg-surface-2 text-xs font-semibold tabular ring-1 ring-line">
-                        {d.getDate()}
-                      </span>
-                      <span className="capitalize">{weekdayShort(d)}</span>
-                      <span aria-hidden="true" className="flex gap-[3px]">
+                      <span className="font-bold tabular">{d.getDate()}</span>
+                      <span>{weekdayShort(d)}</span>
+                      <span aria-hidden="true" className={clsx("flex gap-[3px]", past && "opacity-60")}>
                         {list.slice(0, 3).map((v) => (
-                          <span
-                            key={vencKey(v)}
-                            className={clsx("size-1.5 rounded-full", DOT[impuestoMeta(v.impuesto).color], past && "opacity-45")}
-                          />
+                          <Mark key={vencKey(v)} slug={v.impuesto} />
                         ))}
                       </span>
                     </button>
@@ -129,6 +115,6 @@ export function DayPanel({ selected, view, hoy, byDate, filtro, onSelect }: Prop
           ) : null}
         </div>
       )}
-    </div>
+    </Panel>
   );
 }
