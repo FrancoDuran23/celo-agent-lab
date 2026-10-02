@@ -64,6 +64,14 @@
   --info: var(--violeta-600);
   --info-soft: var(--violeta-100);
   --shadow-color: 30 22 10;
+
+  /* Tintes de la paleta (texto/ícono sobre su propio fondo suave) */
+  --t-terracota: #a8401f;
+  --t-ocre: #8a5c0a;
+  --t-rosa: #9c4a42;
+  --t-salvia: #4a6633;
+  --t-violeta: #563a7d;
+  --t-night: #2a4470;
 }
 
 :root[data-theme="dark"] {
@@ -92,6 +100,12 @@
   --info: #b49ae0;
   --info-soft: #2a2140;
   --shadow-color: 0 0 0;
+  --t-terracota: #f09a78;
+  --t-ocre: #f2c56a;
+  --t-rosa: #f0aaa2;
+  --t-salvia: #b0cc92;
+  --t-violeta: #c3abea;
+  --t-night: #a4bde8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -121,6 +135,12 @@
     --info: #b49ae0;
     --info-soft: #2a2140;
     --shadow-color: 0 0 0;
+  --t-terracota: #f09a78;
+  --t-ocre: #f2c56a;
+  --t-rosa: #f0aaa2;
+  --t-salvia: #b0cc92;
+  --t-violeta: #c3abea;
+  --t-night: #a4bde8;
   }
 }
 
@@ -220,7 +240,44 @@
   }
 }
 
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+}
+
 @layer components {
+  /* Tintes: fondo suave + texto del mismo tono, legibles en ambos modos */
+  .tint-terracota {
+    background: color-mix(in oklab, var(--terracota-500) 13%, transparent);
+    color: var(--t-terracota);
+  }
+  .tint-ocre {
+    background: color-mix(in oklab, var(--ocre-500) 18%, transparent);
+    color: var(--t-ocre);
+  }
+  .tint-rosa {
+    background: color-mix(in oklab, var(--rosa-500) 18%, transparent);
+    color: var(--t-rosa);
+  }
+  .tint-salvia {
+    background: color-mix(in oklab, var(--salvia-500) 18%, transparent);
+    color: var(--t-salvia);
+  }
+  .tint-violeta {
+    background: color-mix(in oklab, var(--violeta-500) 15%, transparent);
+    color: var(--t-violeta);
+  }
+  .tint-night {
+    background: color-mix(in oklab, var(--night-600) 15%, transparent);
+    color: var(--t-night);
+  }
+
   /* Contenedor estándar del sitio */
   .container-page {
     width: 100%;

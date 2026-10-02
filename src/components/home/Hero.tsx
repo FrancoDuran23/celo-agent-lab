@@ -25,7 +25,7 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-titulo"
-      className="relative isolate -mt-16 overflow-hidden bg-night-900 text-crema-50 lg:-mt-[4.5rem]"
+      className="relative isolate -mt-[calc(4rem+1px)] overflow-hidden bg-night-900 text-crema-50 lg:-mt-[calc(4.5rem+1px)]"
     >
       <ShaderCanvas
         shader="quebrada"

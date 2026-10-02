@@ -134,7 +134,7 @@ export function SiteHeader() {
               )}
             >
               <Search className="size-4" aria-hidden="true" />
-              <span className="pr-6">Buscar trámite</span>
+              <span className="pr-1 whitespace-nowrap xl:hidden 2xl:inline 2xl:pr-6">Buscar trámite</span>
               <kbd
                 className={clsx(
                   "rounded-md px-1.5 py-0.5 font-mono text-[0.68rem]",

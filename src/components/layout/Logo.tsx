@@ -32,7 +32,7 @@ export function Logo({ tone = "default", className }: { tone?: "default" | "ligh
       <span className="flex flex-col leading-none">
         <span
           className={clsx(
-            "text-[1.15rem] font-semibold tracking-tight",
+            "text-[1.15rem] font-semibold tracking-tight whitespace-nowrap",
             tone === "light" ? "text-crema-50" : "text-ink",
           )}
         >
@@ -40,7 +40,7 @@ export function Logo({ tone = "default", className }: { tone?: "default" | "ligh
         </span>
         <span
           className={clsx(
-            "mt-1 text-[0.62rem] font-medium tracking-[0.12em] uppercase",
+            "mt-1 text-[0.62rem] font-medium tracking-[0.12em] whitespace-nowrap uppercase",
             tone === "light" ? "text-crema-200/75" : "text-ink-3",
           )}
         >
