@@ -49,7 +49,7 @@ export function SiteHeader() {
 
       {/* Barra institucional */}
       <div className="border-b border-line bg-surface-2 text-[0.8rem] text-ink-2">
-        <div className="container-page flex h-9 items-center justify-between gap-4">
+        <div className="container-page flex min-h-9 items-center justify-between gap-4 py-1.5">
           <p className="truncate">Gobierno de Jujuy · Ministerio de Hacienda y Finanzas</p>
           <ul className="hidden items-center gap-5 md:flex">
             <li>
