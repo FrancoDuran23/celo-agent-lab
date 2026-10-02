@@ -136,7 +136,7 @@ export function SiteHeader() {
       >
         {/* Bajo 360px (22.5rem), menos aire y el botón del menú corrido 6px hacia el margen: así entran los tres controles de 44px. */}
         <div className="container-page flex h-16 items-center gap-3 max-[22.5rem]:gap-2 sm:gap-6 lg:h-[4.5rem] lg:gap-4 xl:gap-6">
-          <Link to="/" className="shrink-0 rounded-md" aria-label="Rentas Jujuy, ir al inicio" onClick={() => setMenuOpen(false)}>
+          <Link to="/" className="flex shrink-0 rounded-md" aria-label="Rentas Jujuy, ir al inicio" onClick={() => setMenuOpen(false)}>
             <Logo />
           </Link>
 
