@@ -11,7 +11,7 @@ Whole site (Inicio and every interior route). Visitor mode: **Operate** (the vis
 
 ## Audience and task
 
-Vecinos and profesionales, weighted equally (PRODUCT.md). First job on Inicio: **find and start** a procedure; then see what is due. Proof/content: verified data in src/data. Constraints: vgpu mandatory (subtle accent only), front-end only.
+Vecinos and profesionales, weighted equally (PRODUCT.md). First job on Inicio: **find and start** a procedure; then see what is due. Proof/content: verified data in src/data. Constraints: vgpu mandatory (in service of the canon, never identity), front-end only. User (oct. 2026) asked for backgrounds that move, slightly and smoothly, for a professional feel.
 
 ## Direction contract
 
@@ -21,9 +21,9 @@ OWN-WORLD: Canon, not a world. Predominantly white grounds with near-black ink; 
 
 STORY: The vecino knows in one second where to search and what is due; the professional reaches the Clave Fiscal service in one click; both trust it because it is plain, consistent and official in tone.
 
-FIRST VIEWPORT: Thin institutional bar (Gobierno de Jujuy, 0800) over a white header (name, navigation, "Ingresar con clave fiscal"). Below, a white header area (a barely visible pale-celeste vgpu light veil on the right) with H1 "¿Qué necesitás hacer?" left, a large bordered search field and "Más buscados" links, and "Accesos directos" as a plain three-link list on the right. Directly under it: "Trámites más usados" as six links in three columns, then "Próximos vencimientos" beside the Centro de Atención.
+FIRST VIEWPORT: Thin institutional bar (Gobierno de Jujuy, 0800) over a white header (name, navigation, "Ingresar con clave fiscal"). Below, a white header area (soft pale-celeste light drifting slowly on the right — on portrait phones top-right and behind the access list — vgpu shader, CSS veil fallback) with H1 "¿Qué necesitás hacer?" left, a large bordered search field and "Más buscados" links, and "Accesos directos" as a plain three-link list on the right. Directly under it: "Trámites más usados" as six links in three columns, then "Próximos vencimientos" beside the Centro de Atención.
 
-FORM: Canon standing exit chosen by the user over the assigned direction (candidate 3 of 7, "Salinas Grandes"); seed key c3bce641. Signature interaction: instant search (field and Ctrl+K / "/" dialog). Motion grammar: short fades and 4px translates on menus and dialogs only; the vgpu light drifts slowly and freezes with reduced motion.
+FORM: Canon standing exit chosen by the user over the assigned direction (candidate 3 of 7, "Salinas Grandes"); seed key c3bce641. Signature interaction: instant search (field and Ctrl+K / "/" dialog). Motion grammar: short fades and 4px translates on menus and dialogs only; the background light drifts on slow Lissajous paths (26–47 s cycles; perceptible if you look, calm if you don't), the same light in CSS drifts in every inner-page header band, and everything freezes with reduced motion.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
