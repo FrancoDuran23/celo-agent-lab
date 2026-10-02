@@ -29,4 +29,4 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 ## Unresolved
 
-Official logo supplied by the user and used as provided (the supplied image is cropped at top and bottom; swap in a complete version if one appears). The "prototipo no oficial" notice was removed at the user's request. Real vencimientos from RG 1732/2025 still pending (dates stay labeled orientative).
+Official logo supplied by the user and used as provided (complete version with swooshes, oct. 2026). The "prototipo no oficial" notice was removed at the user's request. Real vencimientos from RG 1732/2025 still pending (dates stay labeled orientative).
