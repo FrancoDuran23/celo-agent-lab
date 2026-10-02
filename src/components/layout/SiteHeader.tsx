@@ -1,28 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import clsx from "clsx";
-import { ChevronDown, LogIn, Menu, Monitor, Moon, Phone, Search, Sun, X } from "lucide-react";
+import { ChevronDown, LogIn, Menu, Monitor, Moon, Search, Sun, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { NAV, SHOW_PROTOTYPE_NOTICE } from "../../data/site";
 import { CONTACTO, PORTAL } from "../../data/contacto";
-import { Icon } from "../../lib/icons";
 import { useTheme } from "../../lib/theme";
 import { ButtonLink } from "../ui/Button";
 import { SearchDialog } from "../search/SearchDialog";
 
 export function SiteHeader() {
   const { pathname } = useLocation();
-  const overHero = pathname === "/";
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   // Cerrar el menú móvil al navegar.
   useEffect(() => setMenuOpen(false), [pathname]);
@@ -41,8 +31,6 @@ export function SiteHeader() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const transparent = overHero && !scrolled && !menuOpen;
-
   return (
     <>
       <a href="#contenido" className="skip-link">
@@ -50,9 +38,9 @@ export function SiteHeader() {
       </a>
 
       {SHOW_PROTOTYPE_NOTICE ? (
-        <div className="bg-night-950 px-4 py-1.5 text-center text-[0.72rem] text-crema-200/80">
-          Propuesta de rediseño · prototipo no oficial. Los trámites se realizan en el{" "}
-          <a href={PORTAL.sitioOficial} className="underline underline-offset-2 hover:text-crema-50">
+        <div className="bg-ink px-4 py-1.5 text-center text-xs text-bg">
+          Propuesta de rediseño, prototipo no oficial. Los trámites se hacen en el{" "}
+          <a href={PORTAL.sitioOficial} className="font-semibold underline underline-offset-2">
             sitio oficial
           </a>
           .
@@ -60,126 +48,88 @@ export function SiteHeader() {
       ) : null}
 
       {/* Barra institucional */}
-      <div
-        className={clsx(
-          "relative z-40 hidden text-[0.8rem] lg:block",
-          overHero ? "bg-night-900 text-crema-200/80" : "border-b border-line bg-surface-2 text-ink-3",
-        )}
-      >
-        <div className="container-page flex h-9 items-center justify-between">
-          <p>Gobierno de Jujuy · Ministerio de Hacienda y Finanzas</p>
-          <div className="flex items-center gap-5">
-            <a href={CONTACTO.telefono.href} className="inline-flex items-center gap-1.5 hover:underline">
-              <Phone className="size-3.5" aria-hidden="true" />
-              {CONTACTO.telefono.valor}
-            </a>
-            <Link to="/atencion#turnos" className="hover:underline">
-              Turnos web
-            </Link>
-            <Link to="/ayuda" className="hover:underline">
-              Centro de ayuda
-            </Link>
-            <Link to="/atencion" className="hover:underline">
-              Canales de atención
-            </Link>
-          </div>
+      <div className="border-b border-line bg-surface-2 text-[0.8rem] text-ink-2">
+        <div className="container-page flex h-9 items-center justify-between gap-4">
+          <p className="truncate">Gobierno de Jujuy · Ministerio de Hacienda y Finanzas</p>
+          <ul className="hidden items-center gap-5 md:flex">
+            <li>
+              <a href={CONTACTO.telefono.href} className="hover:underline">
+                Línea gratuita <span className="font-semibold tabular">{CONTACTO.telefono.valor}</span>
+              </a>
+            </li>
+            <li>
+              <a href={PORTAL.turnos.href} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                Turnos web<span className="sr-only"> (se abre en una pestaña nueva)</span>
+              </a>
+            </li>
+            <li>
+              <Link to="/ayuda" className="hover:underline">
+                Centro de ayuda
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
 
-      <header
-        className={clsx(
-          "sticky top-0 z-40 transition-[background-color,box-shadow,border-color] duration-300",
-          transparent
-            ? "border-b border-transparent bg-night-900/0"
-            : "border-b border-line bg-bg/85 shadow-[0_1px_0_rgb(0_0_0/0.02)] backdrop-blur-xl backdrop-saturate-150",
-          overHero && !transparent && "bg-bg/90",
-        )}
-      >
-        <div className="container-page flex h-16 items-center gap-2 sm:gap-4 lg:h-[4.5rem]">
-          <Link to="/" className="rounded-lg" aria-label="Rentas Jujuy — inicio">
-            {/* En móvil la bajada del logo pasa a dos líneas para que la fila no desborde a 360–390px. */}
-            <Logo
-              tone={transparent ? "light" : "default"}
-              className="max-sm:[&>span>span:last-child]:max-w-[9rem] max-sm:[&>span>span:last-child]:leading-[1.2] max-sm:[&>span>span:last-child]:whitespace-normal"
-            />
+      <header className="sticky top-0 z-40 border-b border-line bg-bg/95 backdrop-blur-sm supports-[backdrop-filter]:bg-bg/85">
+        <div className="container-page flex h-16 items-center gap-3 sm:gap-6 lg:h-[4.5rem]">
+          <Link to="/" className="shrink-0 rounded-md" aria-label="Rentas Jujuy, ir al inicio">
+            <Logo />
           </Link>
 
-          <nav aria-label="Principal" className="ml-6 hidden flex-1 items-center gap-1 xl:flex">
-            {NAV.map((item) =>
-              item.children ? (
-                <NavDropdown key={item.to} item={item} light={transparent} />
-              ) : (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={({ isActive }) =>
-                    clsx(
-                      "rounded-full px-3.5 py-2 text-[0.92rem] font-medium transition-colors",
-                      transparent
-                        ? "text-crema-100/85 hover:bg-white/10 hover:text-white"
-                        : isActive
-                          ? "bg-surface-2 text-ink"
-                          : "text-ink-2 hover:bg-surface-2 hover:text-ink",
-                    )
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ),
-            )}
+          <nav aria-label="Principal" className="hidden h-full flex-1 items-stretch xl:flex">
+            <ul className="flex items-stretch gap-1">
+              {NAV.map((item) => (
+                <li key={item.to} className="flex">
+                  {item.children ? (
+                    <NavDropdown item={item} />
+                  ) : (
+                    <NavLink
+                      to={item.to}
+                      className={({ isActive }) =>
+                        clsx(
+                          "flex items-center border-b-[3px] px-2.5 text-[0.95rem] font-medium transition-colors 2xl:px-3",
+                          isActive
+                            ? "border-brand text-ink"
+                            : "border-transparent text-ink-2 hover:border-line-strong hover:text-ink",
+                        )
+                      }
+                    >
+                      {item.label}
+                    </NavLink>
+                  )}
+                </li>
+              ))}
+            </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-1 sm:gap-1.5">
+          <div className="ml-auto flex items-center gap-1 sm:gap-2">
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className={clsx(
-                "hidden h-10 items-center gap-2 rounded-full pr-2 pl-3.5 text-sm ring-1 transition-colors md:inline-flex",
-                transparent
-                  ? "text-crema-100/80 ring-white/20 hover:bg-white/10"
-                  : "bg-surface text-ink-3 ring-line hover:ring-line-strong",
-              )}
+              className="hidden h-10 w-56 items-center gap-2 rounded-lg border border-line-strong bg-surface pr-2 pl-3 text-left text-sm text-ink-3 transition-colors hover:border-ink-3 md:flex xl:w-44 2xl:w-56"
             >
-              <Search className="size-4" aria-hidden="true" />
-              <span className="pr-1 whitespace-nowrap xl:hidden 2xl:inline 2xl:pr-6">Buscar trámite</span>
-              <kbd
-                className={clsx(
-                  "rounded-md px-1.5 py-0.5 font-mono text-[0.68rem]",
-                  transparent ? "bg-white/10" : "bg-surface-2 text-ink-3",
-                )}
-              >
-                /
-              </kbd>
+              <Search className="size-4 shrink-0" aria-hidden="true" />
+              <span className="flex-1">Buscar trámite</span>
+              <kbd className="rounded border border-line bg-surface-2 px-1.5 font-sans text-xs text-ink-3">/</kbd>
             </button>
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className={clsx(
-                "inline-flex size-10 items-center justify-center rounded-full md:hidden",
-                transparent ? "text-crema-50 hover:bg-white/10" : "text-ink-2 hover:bg-surface-2",
-              )}
+              className="inline-flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-surface-2 md:hidden"
               aria-label="Buscar trámite"
             >
               <Search className="size-5" aria-hidden="true" />
             </button>
-            <ThemeToggle light={transparent} />
-            <ButtonLink
-              to={PORTAL.clave.href}
-              variant={transparent ? "light" : "primary"}
-              size="sm"
-              // max-sm:hidden (no "hidden sm:inline-flex"): la clase base del botón ya trae
-              // inline-flex y, sin tailwind-merge, ganaba sobre "hidden" y desbordaba en móvil.
-              className="ml-1 max-sm:hidden"
-            >
+            <ThemeToggle />
+            <ButtonLink to={PORTAL.clave.href} size="sm" className="max-sm:hidden">
               <LogIn aria-hidden="true" />
-              {PORTAL.clave.cta}
+              <span className="2xl:hidden">{PORTAL.clave.cta}</span>
+              <span className="max-2xl:hidden">{PORTAL.clave.ctaLargo}</span>
             </ButtonLink>
             <button
               type="button"
-              className={clsx(
-                "inline-flex size-10 items-center justify-center rounded-full xl:hidden",
-                transparent ? "text-crema-50 hover:bg-white/10" : "text-ink hover:bg-surface-2",
-              )}
+              className="inline-flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2 xl:hidden"
               aria-expanded={menuOpen}
               aria-controls="menu-movil"
               aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
@@ -198,7 +148,7 @@ export function SiteHeader() {
   );
 }
 
-function NavDropdown({ item, light }: { item: (typeof NAV)[number]; light: boolean }) {
+function NavDropdown({ item }: { item: (typeof NAV)[number] }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
@@ -223,9 +173,7 @@ function NavDropdown({ item, light }: { item: (typeof NAV)[number]; light: boole
   return (
     <div
       ref={ref}
-      className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      className="relative flex"
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false);
       }}
@@ -233,48 +181,34 @@ function NavDropdown({ item, light }: { item: (typeof NAV)[number]; light: boole
       <button
         type="button"
         aria-expanded={open}
+        aria-controls="menu-impuestos"
         onClick={() => setOpen((o) => !o)}
         className={clsx(
-          "inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-[0.92rem] font-medium transition-colors",
-          light
-            ? "text-crema-100/85 hover:bg-white/10 hover:text-white"
-            : active
-              ? "bg-surface-2 text-ink"
-              : "text-ink-2 hover:bg-surface-2 hover:text-ink",
+          "flex items-center gap-1 border-b-[3px] px-2.5 text-[0.95rem] font-medium transition-colors 2xl:px-3",
+          active || open ? "border-brand text-ink" : "border-transparent text-ink-2 hover:border-line-strong hover:text-ink",
         )}
       >
         {item.label}
         <ChevronDown className={clsx("size-4 transition-transform", open && "rotate-180")} aria-hidden="true" />
       </button>
       {open ? (
-        <div className="absolute top-full left-1/2 z-50 w-[26rem] -translate-x-1/2 pt-2">
-          <div className="animate-rise rounded-2xl bg-surface p-2 shadow-lift ring-1 ring-line [animation-duration:250ms]">
-            <ul className="grid gap-0.5">
+        <div id="menu-impuestos" className="animate-pop absolute top-full left-0 z-50 w-[22rem] pt-px">
+          <div className="rounded-b-xl border border-t-0 border-line bg-surface p-2 shadow-pop">
+            <ul>
               {item.children?.map((c) => (
                 <li key={c.to}>
-                  <Link
-                    to={c.to}
-                    className="flex items-start gap-3 rounded-xl p-3 transition-colors hover:bg-surface-2"
-                  >
-                    {c.icon ? (
-                      <span className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-soft text-brand">
-                        <Icon name={c.icon} className="size-[1.1rem]" />
-                      </span>
-                    ) : null}
-                    <span>
-                      <span className="block text-sm font-semibold text-ink">{c.label}</span>
-                      {c.descripcion ? <span className="block text-sm text-ink-3">{c.descripcion}</span> : null}
-                    </span>
+                  <Link to={c.to} className="group block rounded-lg px-3 py-2.5 hover:bg-surface-2">
+                    <span className="block font-semibold text-ink group-hover:text-brand">{c.label}</span>
+                    {c.descripcion ? <span className="block text-sm text-ink-3">{c.descripcion}</span> : null}
                   </Link>
                 </li>
               ))}
             </ul>
-            <Link
-              to={item.to}
-              className="mt-1 flex items-center justify-between rounded-xl bg-surface-2 px-3 py-2.5 text-sm font-medium text-ink-2 hover:text-ink"
-            >
-              Ver todos los impuestos <span aria-hidden="true">→</span>
-            </Link>
+            <div className="mt-1 border-t border-line px-3 pt-2 pb-1">
+              <Link to={item.to} className="link text-sm font-semibold">
+                Todos los impuestos
+              </Link>
+            </div>
           </div>
         </div>
       ) : null}
@@ -285,41 +219,35 @@ function NavDropdown({ item, light }: { item: (typeof NAV)[number]; light: boole
 function MobileMenu({ onSearch }: { onSearch: () => void }) {
   return (
     <div id="menu-movil" className="border-t border-line bg-bg xl:hidden">
-      <nav aria-label="Menú móvil" className="container-page max-h-[calc(100dvh-4rem)] overflow-y-auto py-4">
+      <nav aria-label="Menú" className="container-page max-h-[calc(100dvh-4rem)] overflow-y-auto pt-4 pb-8">
         <button
           type="button"
           onClick={onSearch}
-          className="mb-3 flex h-12 w-full items-center gap-3 rounded-xl bg-surface px-4 text-left text-ink-3 ring-1 ring-line"
+          className="mb-4 flex h-12 w-full items-center gap-3 rounded-lg border border-line-strong bg-surface px-4 text-left text-ink-3"
         >
           <Search className="size-5" aria-hidden="true" />
           ¿Qué trámite necesitás?
         </button>
-        <ul className="divide-y divide-line">
+        <ul className="divide-y divide-line border-y border-line">
           {NAV.map((item) => (
-            <li key={item.to} className="py-1">
+            <li key={item.to}>
               <NavLink
                 to={item.to}
                 end={!!item.children}
                 className={({ isActive }) =>
-                  clsx("block rounded-lg px-2 py-3 text-lg font-medium", isActive ? "text-brand" : "text-ink")
+                  clsx("block py-3.5 text-lg font-semibold", isActive ? "text-brand" : "text-ink")
                 }
               >
                 {item.label}
               </NavLink>
               {item.children ? (
-                <ul className="mb-2 grid grid-cols-2 gap-1 pl-2">
+                <ul className="mb-3 grid grid-cols-2 gap-x-4 gap-y-1">
                   {item.children.map((c) => (
                     <li key={c.to}>
                       <NavLink
                         to={c.to}
-                        className={({ isActive }) =>
-                          clsx(
-                            "flex items-center gap-2 rounded-lg px-2 py-2 text-[0.95rem]",
-                            isActive ? "bg-brand-soft text-brand" : "text-ink-2",
-                          )
-                        }
+                        className={({ isActive }) => clsx("block py-1.5", isActive ? "font-semibold text-brand" : "text-ink-2")}
                       >
-                        {c.icon ? <Icon name={c.icon} className="size-4" /> : null}
                         {c.label}
                       </NavLink>
                     </li>
@@ -328,15 +256,19 @@ function MobileMenu({ onSearch }: { onSearch: () => void }) {
               ) : null}
             </li>
           ))}
+          <li>
+            <NavLink to="/ayuda" className="block py-3.5 text-lg font-semibold text-ink">
+              Centro de ayuda
+            </NavLink>
+          </li>
         </ul>
-        <div className="mt-4 grid gap-2 pb-4 sm:hidden">
+        <div className="mt-6 grid gap-2">
           <ButtonLink to={PORTAL.clave.href} size="lg">
             <LogIn aria-hidden="true" />
-            {PORTAL.clave.cta}
+            {PORTAL.clave.ctaLargo}
           </ButtonLink>
           <ButtonLink to={CONTACTO.telefono.href} variant="secondary" size="lg">
-            <Phone aria-hidden="true" />
-            {CONTACTO.telefono.valor}
+            Línea gratuita {CONTACTO.telefono.valor}
           </ButtonLink>
         </div>
       </nav>
@@ -344,9 +276,9 @@ function MobileMenu({ onSearch }: { onSearch: () => void }) {
   );
 }
 
-function ThemeToggle({ light }: { light: boolean }) {
+function ThemeToggle() {
   const { pref, cycle } = useTheme();
-  const label = pref === "system" ? "Tema: automático" : pref === "light" ? "Tema: claro" : "Tema: oscuro";
+  const label = pref === "system" ? "Tema automático" : pref === "light" ? "Tema claro" : "Tema oscuro";
   const IconC = pref === "system" ? Monitor : pref === "light" ? Sun : Moon;
   return (
     <button
@@ -354,10 +286,7 @@ function ThemeToggle({ light }: { light: boolean }) {
       onClick={cycle}
       aria-label={`${label}. Cambiar tema`}
       title={label}
-      className={clsx(
-        "inline-flex size-10 items-center justify-center rounded-full transition-colors",
-        light ? "text-crema-50 hover:bg-white/10" : "text-ink-2 hover:bg-surface-2",
-      )}
+      className="inline-flex size-10 items-center justify-center rounded-lg text-ink-2 transition-colors hover:bg-surface-2"
     >
       <IconC className="size-[1.15rem]" aria-hidden="true" />
     </button>

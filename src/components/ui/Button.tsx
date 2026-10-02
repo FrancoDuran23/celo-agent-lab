@@ -2,25 +2,25 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "reac
 import { Link } from "react-router";
 import clsx from "clsx";
 
-type Variant = "primary" | "secondary" | "ghost" | "light" | "outline-light";
+type Variant = "primary" | "secondary" | "subtle" | "inverse" | "inverse-outline";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-[background-color,color,box-shadow,transform] duration-200 ease-[var(--ease-out-soft)] active:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-[1.1em] [&_svg]:shrink-0";
+  "inline-flex items-center justify-center gap-2 rounded-lg font-semibold whitespace-nowrap no-underline transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-[1.1em] [&_svg]:shrink-0";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-brand text-brand-ink shadow-soft hover:bg-brand-hover",
-  secondary: "bg-surface text-ink ring-1 ring-line-strong hover:bg-surface-2",
-  ghost: "text-ink-2 hover:bg-surface-2 hover:text-ink",
-  /** Sobre fondos oscuros / shader. */
-  light: "bg-crema-50 text-night-900 shadow-soft hover:bg-white",
-  "outline-light": "text-crema-50 ring-1 ring-white/30 backdrop-blur-sm hover:bg-white/10 hover:ring-white/50",
+  primary: "bg-brand text-brand-ink hover:bg-brand-hover",
+  secondary: "bg-surface text-ink ring-1 ring-line-strong ring-inset hover:bg-surface-2",
+  subtle: "bg-surface-2 text-ink hover:bg-surface-3",
+  /** Sobre la banda azul. */
+  inverse: "bg-white text-[#0e3a86] hover:bg-[#eaf1fd]",
+  "inverse-outline": "text-white ring-1 ring-white/60 ring-inset hover:bg-white/10",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-4 text-sm",
+  sm: "h-9 px-3.5 text-sm",
   md: "h-11 px-5 text-[0.95rem]",
-  lg: "h-13 px-7 text-base",
+  lg: "h-12 px-6 text-base",
 };
 
 interface CommonProps {
@@ -39,10 +39,11 @@ export function Button({
   size,
   className,
   children,
+  type = "button",
   ...rest
 }: CommonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button className={buttonClass({ variant, size, className })} {...rest}>
+    <button type={type} className={buttonClass({ variant, size, className })} {...rest}>
       {children}
     </button>
   );
@@ -61,9 +62,17 @@ export function ButtonLink({
   ...rest
 }: CommonProps & { to: string } & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href">) {
   const cls = buttonClass({ variant, size, className });
-  if (isExternal(to)) {
+  if (/^https?:/.test(to)) {
     return (
       <a href={to} target="_blank" rel="noopener noreferrer" className={cls} {...rest}>
+        {children}
+        <span className="sr-only"> (se abre en una pestaña nueva)</span>
+      </a>
+    );
+  }
+  if (isExternal(to)) {
+    return (
+      <a href={to} className={cls} {...rest}>
         {children}
       </a>
     );
