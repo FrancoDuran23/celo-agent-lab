@@ -40,11 +40,16 @@ export function SiteHeader() {
     // Con barra de desplazamiento clásica, se reserva su lugar para que nada salte.
     if (window.innerWidth > root.clientWidth) root.style.scrollbarGutter = "stable";
     root.style.overflow = "hidden";
+    // El foco con teclado igual puede mover la página bloqueada (por el scroll-padding
+    // global y el header fijo): al cerrar sin navegar, vuelve a donde estaba.
+    const y = window.scrollY;
+    const entrada = history.state;
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       setMenuOpen(false);
-      toggleRef.current?.focus();
+      // Sin preventScroll, Chrome desplaza la página hacia la posición "en flujo" del header fijo.
+      toggleRef.current?.focus({ preventScroll: true });
     };
     const escritorio = matchMedia("(min-width: 64rem)");
     const onResize = () => escritorio.matches && setMenuOpen(false);
@@ -54,6 +59,7 @@ export function SiteHeader() {
       fondo.forEach((el) => el.removeAttribute("inert"));
       root.style.overflow = "";
       root.style.scrollbarGutter = "";
+      if (history.state === entrada) window.scrollTo({ top: y, behavior: "instant" });
       document.removeEventListener("keydown", onKey);
       escritorio.removeEventListener("change", onResize);
     };
@@ -223,7 +229,7 @@ function NavDropdown({ item }: { item: (typeof NAV)[number] }) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       setOpen(false);
-      if (ref.current?.contains(document.activeElement)) ref.current.querySelector("button")?.focus();
+      if (ref.current?.contains(document.activeElement)) ref.current.querySelector("button")?.focus({ preventScroll: true });
     };
     document.addEventListener("pointerdown", onDown);
     document.addEventListener("keydown", onKey);

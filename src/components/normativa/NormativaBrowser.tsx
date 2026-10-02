@@ -1,9 +1,9 @@
-import { useId, useMemo, useRef, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, type ReactNode } from "react";
 import { useSearchParams } from "react-router";
 import { ArrowUpRight, Search, X } from "lucide-react";
 import clsx from "clsx";
 import type { Norma } from "../../data/types";
-import { Button, chipClass, chipRowClass } from "../ui/Button";
+import { Button, chipClass, chipRowClass, revelarChip } from "../ui/Button";
 import { SmartLink } from "../ui/primitives";
 import { Highlight } from "./bits";
 import {
@@ -41,17 +41,23 @@ export function NormativaBrowser({ normas }: { normas: Norma[] }) {
   const clearAll = () => setParams(new URLSearchParams(), { replace: true, preventScrollReset: true });
 
   // Tras tocar un chip, el conteo tiene que quedar a la vista: si quedó debajo
-  // del borde inferior de la pantalla, lo acercamos lo justo.
-  const statusRef = useRef<HTMLParagraphElement>(null);
-  const filtrar = (key: string, value: string | null) => {
+  // del borde inferior de la pantalla, lo acercamos lo justo. Se mide después
+  // del render, cuando ya apareció (o no) "Limpiar filtros" en la misma fila.
+  const conteoRef = useRef<HTMLDivElement>(null);
+  const revelarConteo = useRef(false);
+  const filtrar = (key: "tipo" | "tema", value: string | null) => {
+    revelarConteo.current = ((key === "tipo" ? tipo?.id : tema?.id) ?? null) !== value;
     update(key, value);
-    requestAnimationFrame(() => {
-      const el = statusRef.current;
-      if (el && el.getBoundingClientRect().bottom > window.innerHeight) el.scrollIntoView({ block: "nearest" });
-    });
   };
 
   const terms = useMemo(() => queryTerms(q), [q]);
+
+  useEffect(() => {
+    if (!revelarConteo.current) return;
+    revelarConteo.current = false;
+    const el = conteoRef.current;
+    if (el && el.getBoundingClientRect().bottom > window.innerHeight) el.scrollIntoView({ block: "nearest" });
+  }, [tipo, tema]);
 
   const { results, tipoCounts, temaCounts } = useMemo(() => {
     const base = normas.filter((n) => matchesTerms(n, terms));
@@ -137,8 +143,8 @@ export function NormativaBrowser({ normas }: { normas: Norma[] }) {
         </fieldset>
       </div>
 
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        <p ref={statusRef} role="status" aria-live="polite" aria-atomic="true" className="text-ink-2">
+      <div ref={conteoRef} className="mt-8 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <p role="status" aria-live="polite" aria-atomic="true" className="text-ink-2">
           <span className="font-semibold text-ink tabular">{results.length}</span>{" "}
           {results.length === 1 ? "norma" : "normas"}
           {hasFilters ? (
@@ -273,7 +279,13 @@ function Chip({
   children: ReactNode;
 }) {
   return (
-    <button type="button" aria-pressed={active} onClick={onClick} className={chipClass(active, "gap-2")}>
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      onFocus={revelarChip}
+      className={chipClass(active, "gap-2")}
+    >
       {children}
       <span className={clsx("text-xs tabular", active ? "text-bg/75" : "text-ink-3")}>
         <span className="sr-only">(</span>

@@ -62,6 +62,14 @@ function Grupo({ titulo, icon, items }: { titulo: string; icon: ReactNode; items
 
 /* ------------------------------------------------------------------ */
 
+/**
+ * Enlace a una red: en táctil, área de toque de al menos 44×44px (la "X" sola
+ * mide 11px de ancho). El alto lo da min-h; el ancho, un ::before de 44px
+ * centrado, para que la "X" no quede corrida respecto de las otras redes.
+ */
+const REDES_LINK =
+  "link font-semibold coarse:relative coarse:inline-flex coarse:min-h-11 coarse:items-center coarse:before:absolute coarse:before:inset-y-0 coarse:before:left-1/2 coarse:before:w-11 coarse:before:-translate-x-1/2";
+
 function Redes() {
   return (
     <section aria-labelledby="redes-titulo" className="min-w-0">
@@ -72,12 +80,9 @@ function Redes() {
       />
       <ul className="mt-6 border-b border-line" aria-label="Redes sociales">
         {REDES.map((r) => (
-          // En táctil el enlace mide 44×44px (la "X" sola son 11px); el py menor compensa la altura de la fila.
+          // En táctil el py menor compensa el alto extra del enlace (ver REDES_LINK).
           <li key={r.href} className="flex flex-wrap items-baseline gap-x-2 border-t border-line py-3 coarse:py-1">
-            <SmartLink
-              to={r.href}
-              className="link font-semibold coarse:inline-flex coarse:min-h-11 coarse:min-w-11 coarse:items-center coarse:justify-center"
-            >
+            <SmartLink to={r.href} className={REDES_LINK}>
               {r.nombre}
               {r.nombre === "X" ? <span className="sr-only"> (Twitter)</span> : null}
             </SmartLink>

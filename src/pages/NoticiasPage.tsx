@@ -2,7 +2,7 @@ import { useEffect, useMemo, type ReactNode } from "react";
 import { useLocation, useSearchParams } from "react-router";
 import { NOTICIAS } from "../data/noticias";
 import { useDocumentTitle } from "../lib/useDocumentTitle";
-import { Button, chipClass, chipRowClass } from "../components/ui/Button";
+import { Button, chipClass, chipRowClass, revelarChip } from "../components/ui/Button";
 import { PageIntro } from "../components/ui/primitives";
 import { NoticiaDestacada } from "../components/noticias/NoticiaDestacada";
 import { NoticiaItem } from "../components/noticias/NoticiaItem";
@@ -164,7 +164,13 @@ function FilterChip({
   children: ReactNode;
 }) {
   return (
-    <button type="button" aria-pressed={active} onClick={onClick} className={chipClass(active, "gap-2")}>
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      onFocus={revelarChip}
+      className={chipClass(active, "gap-2")}
+    >
       {children}
       <span className={active ? "text-xs text-bg/75 tabular" : "text-xs text-ink-3 tabular"}>
         <span className="sr-only">(</span>

@@ -1,9 +1,13 @@
 import { REDES } from "../../data/contacto";
 import { SmartLink } from "../ui/primitives";
 
-/** Enlace a una red: en táctil, área de toque de 44×44px (la "X" sola mide 11px de ancho). */
+/**
+ * Enlace a una red: en táctil, área de toque de al menos 44×44px (la "X" sola
+ * mide 11px de ancho). El alto lo da min-h; el ancho, un ::before de 44px
+ * centrado, para que la "X" no quede corrida respecto de las otras redes.
+ */
 const REDES_LINK =
-  "link font-semibold coarse:inline-flex coarse:min-h-11 coarse:min-w-11 coarse:items-center coarse:justify-center";
+  "link font-semibold coarse:relative coarse:inline-flex coarse:min-h-11 coarse:items-center coarse:before:absolute coarse:before:inset-y-0 coarse:before:left-1/2 coarse:before:w-11 coarse:before:-translate-x-1/2";
 
 /** Cierre con las cuentas oficiales (REDES), como una línea de enlaces. */
 export function Seguinos() {
