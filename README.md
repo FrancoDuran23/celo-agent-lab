@@ -46,15 +46,18 @@ El diseño se definió con [impeccable](https://impeccable.style):
 
 Los tokens viven en `src/styles/index.css`. Las primitivas (`LinkList`, `Notice`, `Disclosure`, `PageIntro`, `Badge`, botones) están en `src/components/ui/`.
 
-## vgpu (WebGPU)
+## Fondo en movimiento (vgpu + CSS)
 
-La portada usa un shader propio (`src/shaders/luz.wgsl`) renderizado con [vgpu](https://vgpu.sh): un velo celeste muy tenue sobre el fondo blanco (y casi imperceptible en modo oscuro), que reacciona levemente al puntero. Los colores se pasan como uniforms por tema, así el cambio claro/oscuro no recrea el canvas.
+La portada tiene una luz celeste que deriva despacio detrás del buscador: tres masas suaves en trayectorias lentas (ciclos de 26 a 47 s). Se dibuja con un shader propio (`src/shaders/luz.wgsl`) renderizado con [vgpu](https://vgpu.sh). Los encabezados de las páginas internas llevan una versión CSS más tenue del mismo velo.
 
 - vgpu se carga con `import()` dinámico y queda fuera del bundle inicial (`src/gpu/runtime.ts`).
 - Hay un solo `Gpu` y un solo `frameLoop`, y los Effects se reutilizan desde un pool.
+- Se dibuja por debajo de la resolución de pantalla (0,75x; 0,5x en móvil) a 30 fps (24 en móvil): es luz difusa, no necesita más.
+- Si el navegador sólo ofrece un adaptador de software, no se usa WebGPU (frenaría la página). Para probar el shader igual: `?gpu=forzar`.
+- Sin WebGPU (o con adaptador de software) se ve el velo CSS: dos degradés radiales que se mueven sólo con `transform`.
+- La animación se pausa fuera de pantalla y con la pestaña oculta. Con `prefers-reduced-motion` queda quieta.
+- El texto del hero mantiene contraste AA sobre cualquier cuadro.
 - El montaje se puede cancelar (StrictMode) y se maneja la pérdida de dispositivo.
-- La animación se pausa fuera de pantalla y con la pestaña oculta. Con `prefers-reduced-motion` queda un cuadro fijo.
-- Sin WebGPU se muestra un degradé CSS equivalente.
 - Los shaders se validan con `npx vgpu check src/shaders/*.wgsl`.
 
 ## Datos

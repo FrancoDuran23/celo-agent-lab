@@ -38,7 +38,7 @@ The official provincial tax authority of Jujuy. Only the DPR can truthfully pres
 - **vgpu is mandatory** (explicit user requirement): WebGPU shader work built with vgpu, loaded lazily, paused offscreen, a still frame with reduced motion, and a static fallback where WebGPU is unavailable.
 - Front-end only, deployable as a static SPA. No backend, no authentication, no real payments.
 - Pages: Inicio, Trámites (search + filters), Impuestos (index + detail), Vencimientos (calendar + .ics), Atención (channels, offices, turnos), Normativa, Noticias, Centro de ayuda, 404, global search (/ or Ctrl+K).
-- Undecided: official deployment target; whether the DPR would supply its own logo and imagery.
+- Undecided: official deployment target; whether the DPR would supply photography. Published for review on GitHub Pages (FrancoDuran23/rentas, `gh-pages`).
 
 ## Brand Commitments
 
@@ -47,14 +47,15 @@ The official provincial tax authority of Jujuy. Only the DPR can truthfully pres
 - **Logo (supplied by the user, oct. 2026):** Rentas' official isologo is reused as provided, not redrawn (`public/brand/`: background removed outside the circle only; the supplied image is cropped at top and bottom). Colors sampled from it: #2581C6 → **#0068A3** (brand) → #00588C.
 - Voice: clear, warm, public-service Spanish with voseo; no marketing fluff.
 - **Visual direction (user decision, oct. 2026): the category standard, played straight at top craft.** No world of its own: a very clean, easy-to-understand public-service portal with refined UX/UI. Craft bar: the clarity of GOV.UK, the familiarity of argentina.gob.ar, the polish of a top-tier product. Earlier own-world explorations (Siete Colores strata, aguayo, serif-italic accents) are discarded and must not return.
-- **Color and ground (user, oct. 2026):** Rentas' brand color is the logo's celeste-blue **#0068A3** on white (AA 6:1, used for links and primary buttons). The site is predominantly white (light), with a complete dark mode as well (light, dark and automatic). No dark hero bands, no earthy palette.
-- vgpu stays (mandatory) as a very faint accent in service of the canon (a pale celeste light veil on the white home header), never as identity.
+- **Color and ground (user, oct. 2026):** Rentas' brand color is the logo's celeste-blue **#0068A3** on white (AA 6:1, used for links and primary buttons). The site is predominantly white (light), with a complete dark mode as well. The header toggle switches light/dark and falls back to automatic (system) when the choice matches the system. No dark hero bands, no earthy palette.
+- **Motion (user, oct. 2026):** "Me gustan los fondos en movimiento aunque sea leve y suave para darle profesionalidad." Backgrounds move, slightly and smoothly: soft celeste light drifting on slow paths (26–47 s cycles) behind the home hero (vgpu shader, CSS veil where WebGPU is missing or software-only) and, CSS-only and fainter, in the header band of every inner page. Never behind dense content, never glow, always static with `prefers-reduced-motion`, and text keeps AA over every frame.
+- vgpu stays (mandatory) for the home hero light, in service of the canon, never as identity.
 
 ## Evidence on Hand
 
 - Verified content (relevamiento oct. 2026) in `src/data/`: channels and offices (`contacto.ts`), portal links (`site.ts`), procedures (`tramites.ts`), taxes (`impuestos.ts`), regulations (`normativa.ts`), 2026 news (`noticias.ts`), help content (`ayuda.ts`).
 - `src/data/vencimientos.ts` holds **orientative** dates derived from observed patterns, not the official resolution text; the UI must say so.
-- Absent, never fabricate: official logo and photography, usage statistics, testimonials, amounts or percentages not in the data, office hours beyond Casa Central.
+- Absent, never fabricate: official photography, usage statistics, testimonials, amounts or percentages not in the data, office hours beyond Casa Central.
 
 ## Product Principles
 
