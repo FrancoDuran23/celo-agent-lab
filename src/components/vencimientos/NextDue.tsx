@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import type { Vencimiento } from "../../data/types";
 import { VENCIMIENTOS_INFO } from "../../data/vencimientos";
-import { daysBetween, formatLong, parseISODate, relativeDays } from "../../lib/dates";
+import { countdownLabel, countdownTone, formatLong, parseISODate } from "../../lib/dates";
 import { Button, ButtonLink } from "../ui/Button";
 import { Badge, Panel } from "../ui/primitives";
 import { AddToCalendarButton } from "./AddToCalendar";
@@ -45,8 +45,6 @@ export function NextDue({
   }
 
   const d = parseISODate(first.fecha);
-  const dias = daysBetween(hoy, d);
-  const rel = relativeDays(first.fecha, hoy);
 
   return (
     <Panel as="section" aria-labelledby="proximo-titulo" className="p-6 sm:p-8">
@@ -54,8 +52,8 @@ export function NextDue({
         <h2 id="proximo-titulo" className="text-lg font-bold text-ink">
           {titulo}
         </h2>
-        <Badge tone={dias <= 7 ? "warn" : "info"} className="tabular">
-          Vence {rel}
+        <Badge tone={countdownTone(first.fecha, hoy)} className="tabular">
+          {countdownLabel(first.fecha, hoy)}
         </Badge>
       </div>
 

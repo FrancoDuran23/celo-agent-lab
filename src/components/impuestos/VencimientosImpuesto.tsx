@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { VENCIMIENTOS, VENCIMIENTOS_INFO } from "../../data/vencimientos";
 import type { Impuesto } from "../../data/types";
-import { daysBetween, parseISODate, relativeDays, today } from "../../lib/dates";
+import { countdownLabel, countdownTone, daysBetween, parseISODate, today } from "../../lib/dates";
 import { Badge, SmartLink } from "../ui/primitives";
 
 const MES = new Intl.DateTimeFormat("es-AR", { month: "short" });
@@ -33,7 +33,6 @@ export function VencimientosImpuesto({ imp }: { imp: Impuesto }) {
       <ol className="border-b border-line">
         {proximos.map((v) => {
           const d = parseISODate(v.fecha);
-          const dias = daysBetween(hoy, d);
           return (
             <li key={v.fecha + v.titulo} className="flex items-center gap-4 border-t border-line py-3.5">
               <time dateTime={v.fecha} className="w-14 shrink-0 text-center leading-none">
@@ -46,8 +45,8 @@ export function VencimientosImpuesto({ imp }: { imp: Impuesto }) {
                 <p className="font-semibold text-ink">{v.titulo}</p>
                 {v.detalle ? <p className="text-sm text-ink-3">{v.detalle}</p> : null}
               </div>
-              <Badge tone={dias <= 7 ? "warn" : "neutral"} className="shrink-0">
-                {relativeDays(v.fecha, hoy)}
+              <Badge tone={countdownTone(v.fecha, hoy)} className="shrink-0 tabular">
+                {countdownLabel(v.fecha, hoy)}
               </Badge>
             </li>
           );

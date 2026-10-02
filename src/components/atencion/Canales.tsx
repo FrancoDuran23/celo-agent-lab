@@ -5,7 +5,7 @@ import { CANALES } from "../../data/contacto";
 import type { Canal } from "../../data/types";
 import { Icon } from "../../lib/icons";
 import { Button } from "../ui/Button";
-import { Panel, SectionHeader } from "../ui/primitives";
+import { SectionHeader } from "../ui/primitives";
 import { NEW_TAB } from "./utils";
 
 /* ------------------------------------------------------------------ */
@@ -83,44 +83,38 @@ function CopyButton({ value, label }: { value: string; label: string }) {
 /* Canal                                                               */
 /* ------------------------------------------------------------------ */
 
-function ChannelPanel({ c }: { c: Canal }) {
+function ChannelRow({ c }: { c: Canal }) {
   const copy = copyLabel(c);
   const number = isNumber(c);
   return (
-    <Panel as="li" className="flex min-w-0 flex-col p-5 sm:p-6">
-      <div className="flex items-center gap-2.5">
-        <Icon name={c.icon} className="size-5 shrink-0 text-brand" />
-        <h3 className="text-lg font-semibold text-ink">{c.nombre}</h3>
-      </div>
-      <p
-        className={clsx(
-          "mt-3 font-bold",
-          number ? "text-2xl tabular sm:text-[1.75rem]" : "text-lg [overflow-wrap:anywhere] sm:text-xl",
-        )}
-      >
-        <ChannelLink c={c} />
-      </p>
-      <p className="mt-2 text-ink-2">{c.descripcion}</p>
-
-      {c.horario || copy ? (
-        <div className="mt-auto pt-5">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+    <li className="grid grid-cols-[minmax(0,1fr)] items-center gap-x-8 gap-y-3 border-t border-line py-5 sm:grid-cols-[minmax(0,1fr)_auto]">
+      <div className="flex min-w-0 gap-3">
+        <Icon name={c.icon} className="mt-1 size-5 shrink-0 text-brand" />
+        <div className="min-w-0">
+          <h3 className="font-semibold text-ink-2">{c.nombre}</h3>
+          <p className={clsx("mt-0.5 font-bold text-ink", number ? "text-2xl tabular sm:text-[1.75rem]" : "text-lg sm:text-xl")}>
+            <ChannelLink c={c} />
+          </p>
+          <p className="mt-1 text-ink-3">
+            {c.descripcion}
             {c.horario ? (
-              <p className="flex items-center gap-1.5 text-sm text-ink-3">
+              <span className="mt-1 flex items-center gap-1.5 text-sm">
                 <Clock className="size-4 shrink-0" aria-hidden="true" />
                 <span>
                   <span className="sr-only">Horario: </span>
                   {c.horario}
                 </span>
-              </p>
-            ) : (
-              <span aria-hidden="true" />
-            )}
-            {copy ? <CopyButton value={c.valor} label={copy} /> : null}
-          </div>
+              </span>
+            ) : null}
+          </p>
+        </div>
+      </div>
+      {copy ? (
+        <div className="pl-8 sm:pl-0">
+          <CopyButton value={c.valor} label={copy} />
         </div>
       ) : null}
-    </Panel>
+    </li>
   );
 }
 
@@ -138,9 +132,9 @@ export function Canales({ id }: { id: string }) {
         title="Centro de Atención Omnicanal"
         description="Hacé tus consultas, reclamos y sugerencias por el canal que te quede más cómodo, sin ir a una oficina."
       />
-      <ul className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-[repeat(2,minmax(0,1fr))]">
+      <ul className="mt-6 max-w-4xl border-b border-line">
         {CANALES.map((c) => (
-          <ChannelPanel key={c.id} c={c} />
+          <ChannelRow key={c.id} c={c} />
         ))}
       </ul>
     </section>

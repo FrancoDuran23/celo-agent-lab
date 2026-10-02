@@ -11,7 +11,7 @@ Whole site (Inicio and every interior route). Visitor mode: **Operate** (the vis
 
 ## Audience and task
 
-Vecinos and profesionales, weighted equally (PRODUCT.md). First job on Inicio: **find and start** a procedure; then see what is due. Proof/content: verified data in src/data. Constraints: vgpu mandatory (subtle accent only), unofficial-prototype notice stays, front-end only.
+Vecinos and profesionales, weighted equally (PRODUCT.md). First job on Inicio: **find and start** a procedure; then see what is due. Proof/content: verified data in src/data. Constraints: vgpu mandatory (subtle accent only), front-end only.
 
 ## Direction contract
 
@@ -29,4 +29,4 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 ## Unresolved
 
-Official logo and imagery (none supplied; a neutral wordmark stands in). Real vencimientos from RG 1732/2025.
+Official logo supplied by the user and used as provided (the supplied image is cropped at top and bottom; swap in a complete version if one appears). The "prototipo no oficial" notice was removed at the user's request. Real vencimientos from RG 1732/2025 still pending (dates stay labeled orientative).

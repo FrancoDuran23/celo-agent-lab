@@ -81,8 +81,9 @@ export function SiteFooter() {
             </SmartLink>
           </li>
           <li>
-            <a href={CONTACTO.email.href} className="link break-all">
-              {CONTACTO.email.valor}
+            <a href={CONTACTO.email.href} className="link">
+              {CONTACTO.email.valor.split("@")[0]}@<wbr />
+              {CONTACTO.email.valor.split("@")[1]}
             </a>
           </li>
           {casaCentral ? (

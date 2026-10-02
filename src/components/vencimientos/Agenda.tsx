@@ -1,7 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import clsx from "clsx";
 import type { Vencimiento } from "../../data/types";
-import { daysBetween, formatLong, parseISODate, relativeDays } from "../../lib/dates";
+import { countdownLabel, daysBetween, formatLong, parseISODate } from "../../lib/dates";
 import { AddToCalendarButton } from "./AddToCalendar";
 import { CountdownChip, DateBadge, ImpuestoTag } from "./bits";
 import { capitalize, groupByDate, groupByMonth, monthName, pluralVenc, vencKey } from "./utils";
@@ -104,7 +104,7 @@ function MonthGroup({
               <div className="min-w-0 flex-1">
                 <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-3">
                   <time dateTime={fecha}>{capitalize(formatLong(fecha))}</time>
-                  <CountdownChip text={capitalize(relativeDays(fecha, hoy))} tone={tone} />
+                  <CountdownChip text={countdownLabel(fecha, hoy)} tone={tone} />
                 </p>
                 <ul className="mt-2 space-y-3">
                   {list.map((v) => (

@@ -24,7 +24,7 @@ const ACCESOS = [
 /** Colores del velo vgpu por tema (sRGB 0..1). */
 const LUZ = {
   light: { top: [1, 1, 1], bottom: [0.957, 0.976, 0.992], glow: [0.78, 0.89, 0.97], amount: 0.75 },
-  dark: { top: [0.051, 0.067, 0.09], bottom: [0.063, 0.086, 0.118], glow: [0.055, 0.17, 0.26], amount: 0.7 },
+  dark: { top: [0.051, 0.067, 0.09], bottom: [0.058, 0.077, 0.104], glow: [0.07, 0.11, 0.15], amount: 0.45 },
 } as const;
 
 export function Hero() {

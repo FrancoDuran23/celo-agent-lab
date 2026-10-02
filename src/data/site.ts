@@ -64,5 +64,4 @@ export const NAV: NavItem[] = [
   { label: "Vencimientos", to: "/vencimientos" },
   { label: "Atención", to: "/atencion" },
   { label: "Normativa", to: "/normativa" },
-  { label: "Noticias", to: "/noticias" },
 ];

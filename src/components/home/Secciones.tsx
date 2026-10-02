@@ -6,9 +6,22 @@ import { NOTICIAS } from "../../data/noticias";
 import { VENCIMIENTOS, VENCIMIENTOS_INFO } from "../../data/vencimientos";
 import { CANALES } from "../../data/contacto";
 import type { Perfil } from "../../data/types";
-import { daysBetween, formatFull, parseISODate, relativeDays, today } from "../../lib/dates";
+import { countdownLabel, countdownTone, daysBetween, formatFull, parseISODate, today } from "../../lib/dates";
 import { Icon } from "../../lib/icons";
 import { ArrowLink, Badge, LinkList, SectionHeader, SmartLink } from "../ui/primitives";
+
+/** Correo con un único punto de corte, después de la "@". */
+function BreakAtSign({ value }: { value: string }) {
+  const at = value.indexOf("@");
+  if (at <= 0) return <>{value}</>;
+  return (
+    <>
+      {value.slice(0, at + 1)}
+      <wbr />
+      {value.slice(at + 1)}
+    </>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /* Trámites más usados                                                 */
@@ -56,33 +69,30 @@ export function VencimientosYAtencion() {
           <ol className="mt-6 border-b border-line">
             {proximos.map((v) => {
               const d = parseISODate(v.fecha);
-              const dias = daysBetween(hoy, d);
               const imp = IMPUESTOS.find((i) => i.slug === v.impuesto);
               return (
-                <li key={v.fecha + v.titulo} className="flex items-center gap-4 border-t border-line py-3.5">
+                <li key={v.fecha + v.titulo} className="flex items-start gap-4 border-t border-line py-3.5 sm:items-center">
                   <time dateTime={v.fecha} className="w-14 shrink-0 text-center leading-none">
                     <span className="block text-2xl font-bold tabular text-ink">{d.getDate()}</span>
                     <span className="mt-1 block text-xs font-semibold text-ink-3 uppercase">
                       {MES.format(d).replace(".", "")}
                     </span>
                   </time>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-ink">{v.titulo}</p>
-                    <p className="text-sm text-ink-3">
-                      {v.detalle}
+                  <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between sm:gap-4">
+                    <div className="min-w-0">
                       {imp ? (
-                        <>
-                          {" · "}
-                          <Link to={`/impuestos/${imp.slug}`} className="link">
-                            {imp.corto}
-                          </Link>
-                        </>
-                      ) : null}
-                    </p>
+                        <Link to={`/impuestos/${imp.slug}`} className="link font-semibold text-ink decoration-transparent hover:decoration-current">
+                          {v.titulo}
+                        </Link>
+                      ) : (
+                        <p className="font-semibold text-ink">{v.titulo}</p>
+                      )}
+                      {v.detalle ? <p className="text-sm text-ink-3">{v.detalle}</p> : null}
+                    </div>
+                    <Badge tone={countdownTone(v.fecha, hoy)} className="mt-2 shrink-0 tabular sm:mt-0">
+                      {countdownLabel(v.fecha, hoy)}
+                    </Badge>
                   </div>
-                  <Badge tone={dias <= 7 ? "warn" : "neutral"} className="shrink-0">
-                    {relativeDays(v.fecha, hoy)}
-                  </Badge>
                 </li>
               );
             })}
@@ -111,8 +121,8 @@ export function VencimientosYAtencion() {
               <Icon name={c.icon} className="mt-0.5 size-5 shrink-0 text-brand" />
               <div className="min-w-0">
                 <p className="text-sm text-ink-3">{c.nombre}</p>
-                <SmartLink to={c.href} className="link font-semibold [overflow-wrap:anywhere]">
-                  {c.valor}
+                <SmartLink to={c.href} className="link font-semibold">
+                  <BreakAtSign value={c.valor} />
                 </SmartLink>
               </div>
             </li>
@@ -163,42 +173,27 @@ export function ImpuestosLista() {
 /* Trámites según tu perfil (todo visible, sin pestañas)               */
 /* ------------------------------------------------------------------ */
 
-const PERFILES: { id: Perfil; label: string }[] = [
-  { id: "personas", label: "Personas" },
-  { id: "empresas", label: "Comercios y empresas" },
-  { id: "profesionales", label: "Profesionales" },
-  { id: "agentes", label: "Agentes de recaudación" },
+const PERFILES: { id: Perfil; label: string; descripcion: string }[] = [
+  { id: "personas", label: "Personas", descripcion: "Inmobiliario, libre deuda, planes de pago y exenciones." },
+  { id: "empresas", label: "Comercios y empresas", descripcion: "Ingresos Brutos, Sellos, certificados y retenciones." },
+  { id: "profesionales", label: "Profesionales", descripcion: "Trámites para contadores, escribanos y gestores." },
+  { id: "agentes", label: "Agentes de recaudación", descripcion: "Declaraciones juradas, alícuotas y regímenes." },
 ];
 
 export function PorPerfil() {
   return (
     <section aria-labelledby="perfil-titulo" className="container-page py-14 sm:py-16">
       <SectionHeader id="perfil-titulo" title="Trámites según tu perfil" />
-      <div className="mt-6 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {PERFILES.map((p) => {
-          // Para cada perfil, los trámites específicos primero (menos perfiles = más propios).
-          const items = TRAMITES.filter((t) => t.perfiles.includes(p.id))
-            .sort((a, b) => a.perfiles.length - b.perfiles.length)
-            .slice(0, 5);
-          return (
-            <div key={p.id} className="border-t-2 border-ink pt-4">
-              <h3 className="text-lg font-bold text-ink">{p.label}</h3>
-              <ul className="mt-3 grid gap-2.5">
-                {items.map((t) => (
-                  <li key={t.id}>
-                    <SmartLink to={t.href} className="link">
-                      {t.titulo}
-                    </SmartLink>
-                  </li>
-                ))}
-              </ul>
-              <Link to={`/tramites?perfil=${p.id}`} className="link mt-4 inline-block text-sm font-semibold">
-                Más trámites para {p.label.toLowerCase()}
-              </Link>
-            </div>
-          );
-        })}
-      </div>
+      <ul className="mt-6 grid gap-x-10 sm:grid-cols-2 lg:grid-cols-4">
+        {PERFILES.map((p) => (
+          <li key={p.id} className="border-t border-line py-4">
+            <Link to={`/tramites?perfil=${p.id}`} className="link text-[1.05rem] font-semibold">
+              {p.label}
+            </Link>
+            <p className="mt-1 text-[0.95rem] text-ink-3">{p.descripcion}</p>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

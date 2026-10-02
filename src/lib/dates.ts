@@ -39,3 +39,15 @@ export function relativeDays(iso: string, from = today()): string {
   if (n === -1) return "ayer";
   return n > 0 ? `en ${n} días` : `hace ${-n} días`;
 }
+
+/** Etiqueta de cuenta regresiva, igual en todo el sitio: "Hoy", "Mañana", "En 18 días". */
+export function countdownLabel(iso: string, from = today()): string {
+  const s = relativeDays(iso, from);
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/** Tono de la cuenta regresiva: advertencia a 7 días o menos, neutro el resto. */
+export function countdownTone(iso: string, from = today()): "warn" | "neutral" {
+  const n = daysBetween(from, parseISODate(iso));
+  return n >= 0 && n <= 7 ? "warn" : "neutral";
+}

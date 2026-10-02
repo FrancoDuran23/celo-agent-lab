@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import clsx from "clsx";
-import { ChevronDown, LogIn, Menu, Monitor, Moon, Search, Sun, X } from "lucide-react";
+import { ChevronDown, LogIn, Menu, Moon, Search, Sun, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { NAV, SHOW_PROTOTYPE_NOTICE } from "../../data/site";
 import { CONTACTO, PORTAL } from "../../data/contacto";
-import { useTheme } from "../../lib/theme";
+import { useResolvedTheme, useTheme } from "../../lib/theme";
 import { ButtonLink } from "../ui/Button";
 import { SearchDialog } from "../search/SearchDialog";
 
@@ -63,6 +63,11 @@ export function SiteHeader() {
               </a>
             </li>
             <li>
+              <Link to="/noticias" className="hover:underline">
+                Noticias
+              </Link>
+            </li>
+            <li>
               <Link to="/ayuda" className="hover:underline">
                 Centro de ayuda
               </Link>
@@ -107,7 +112,7 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="hidden h-10 w-56 items-center gap-2 rounded-lg border border-line-strong bg-surface pr-2 pl-3 text-left text-sm text-ink-3 transition-colors hover:border-ink-3 md:flex xl:w-44 2xl:w-56"
+              className="hidden h-10 w-56 items-center gap-2 rounded-lg border border-line-strong bg-surface pr-2 pl-3 text-left text-sm text-ink-3 transition-colors hover:border-ink-3 md:flex xl:hidden"
             >
               <Search className="size-4 shrink-0" aria-hidden="true" />
               <span className="flex-1">Buscar trámite</span>
@@ -116,7 +121,7 @@ export function SiteHeader() {
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="inline-flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-surface-2 md:hidden"
+              className="inline-flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-surface-2 md:hidden xl:inline-flex"
               aria-label="Buscar trámite"
             >
               <Search className="size-5" aria-hidden="true" />
@@ -124,8 +129,8 @@ export function SiteHeader() {
             <ThemeToggle />
             <ButtonLink to={PORTAL.clave.href} size="sm" className="max-sm:hidden">
               <LogIn aria-hidden="true" />
-              <span className="2xl:hidden">{PORTAL.clave.cta}</span>
-              <span className="max-2xl:hidden">{PORTAL.clave.ctaLargo}</span>
+              <span className="lg:hidden">{PORTAL.clave.cta}</span>
+              <span className="max-lg:hidden">{PORTAL.clave.ctaLargo}</span>
             </ButtonLink>
             <button
               type="button"
@@ -257,6 +262,11 @@ function MobileMenu({ onSearch }: { onSearch: () => void }) {
             </li>
           ))}
           <li>
+            <NavLink to="/noticias" className="block py-3.5 text-lg font-semibold text-ink">
+              Noticias
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/ayuda" className="block py-3.5 text-lg font-semibold text-ink">
               Centro de ayuda
             </NavLink>
@@ -277,14 +287,21 @@ function MobileMenu({ onSearch }: { onSearch: () => void }) {
 }
 
 function ThemeToggle() {
-  const { pref, cycle } = useTheme();
-  const label = pref === "system" ? "Tema automático" : pref === "light" ? "Tema claro" : "Tema oscuro";
-  const IconC = pref === "system" ? Monitor : pref === "light" ? Sun : Moon;
+  const { setPref } = useTheme();
+  const resolved = useResolvedTheme();
+  const next = resolved === "dark" ? "light" : "dark";
+  const label = next === "dark" ? "Activar tema oscuro" : "Activar tema claro";
+  const IconC = resolved === "dark" ? Moon : Sun;
+  const toggle = () => {
+    // Si el tema elegido coincide con el del sistema, volvemos a "automático".
+    const system = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    setPref(next === system ? "system" : next);
+  };
   return (
     <button
       type="button"
-      onClick={cycle}
-      aria-label={`${label}. Cambiar tema`}
+      onClick={toggle}
+      aria-label={label}
       title={label}
       className="inline-flex size-10 items-center justify-center rounded-lg text-ink-2 transition-colors hover:bg-surface-2"
     >
