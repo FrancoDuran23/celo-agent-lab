@@ -213,7 +213,7 @@ export function Novedades() {
           title="Novedades"
           action={<ArrowLink to="/noticias">Todas las noticias</ArrowLink>}
         />
-        <ul className="mt-6 grid gap-x-10 gap-y-8 md:grid-cols-3">
+        <ul className="mt-6 grid gap-x-10 gap-y-8 lg:grid-cols-3">
           {items.map((n) => (
             <li key={n.slug} className={clsx("border-t border-line pt-4")}>
               <p className="text-sm text-ink-3">
@@ -224,7 +224,7 @@ export function Novedades() {
                   {n.titulo}
                 </SmartLink>
               </h3>
-              <p className="mt-1.5 line-clamp-3 text-[0.95rem] text-ink-3">{n.resumen}</p>
+              <p className="mt-1.5 line-clamp-3 max-w-[65ch] text-[0.95rem] text-ink-3">{n.resumen}</p>
             </li>
           ))}
         </ul>

@@ -12,10 +12,22 @@
 import { effect, frame, frameLoop, init, surface, type Effect, type FrameLoopHandle, type Gpu, type Surface } from "vgpu";
 import { SHADERS, type ShaderName, type ShaderUniforms } from "../shaders";
 
-/** El ruido pierde precisión con valores grandes: el tiempo se acota. */
-const TIME_WRAP = 1800;
-/** Un fondo decorativo no necesita más. */
-const FPS = 45;
+/**
+ * El reloj de cada capa se envuelve en este valor. Los shaders son
+ * periódicos en el mismo período (ver luz.wgsl), así el salto no se ve.
+ */
+const TIME_WRAP = 1200;
+
+/** Pantallas táctiles o angostas: menos cuadros y menos píxeles (batería). */
+const compact = () => matchMedia("(pointer: coarse), (max-width: 767px)").matches;
+
+/**
+ * Un velo de luz no tiene detalle fino: se dibuja por debajo de la
+ * resolución CSS y el navegador lo escala con filtrado bilineal.
+ * A la deriva lenta del velo, 30 (24 en móvil) cuadros sobran.
+ */
+const FPS = () => (compact() ? 24 : 30);
+const RENDER_SCALE = () => (compact() ? 0.5 : 0.75);
 
 interface Layer {
   shader: ShaderName;
@@ -91,8 +103,9 @@ function syncLoop(host: Host) {
       host.gpu,
       (f) => {
         const now = performance.now();
-        // Delta acotado: al volver de una pausa no hay saltos.
-        const dt = Math.min(0.1, (now - host.last) / 1000);
+        // Delta acotado: al volver de una pausa no hay saltos (y el reloj
+        // sigue al tiempo real aunque se pierda algún cuadro).
+        const dt = Math.min(0.25, (now - host.last) / 1000);
         host.last = now;
         for (const layer of host.layers) {
           if (!layer.playing) continue;
@@ -104,7 +117,7 @@ function syncLoop(host: Host) {
           markDrawn(layer);
         }
       },
-      { fps: FPS },
+      { fps: FPS() },
     );
   } else if (!anyPlaying && host.loop) {
     host.loop.stop();
@@ -145,7 +158,7 @@ export async function mountShader(opts: MountOptions): Promise<ShaderHandle> {
   // Chequeo después de cada await: sólo el montaje vigente toca el canvas.
   throwIfAborted(opts.signal);
 
-  const target = surface(host.gpu, opts.canvas, { dpr: [1, 1.5], alphaMode: "opaque" });
+  const target = surface(host.gpu, opts.canvas, { dpr: RENDER_SCALE(), alphaMode: "opaque" });
   const pooled = host.pool.get(opts.shader)?.pop();
   const layer: Layer = {
     shader: opts.shader,

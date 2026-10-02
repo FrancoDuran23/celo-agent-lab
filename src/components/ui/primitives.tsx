@@ -135,6 +135,21 @@ export function ArrowLink({ to, children, className }: { to: string; children: R
   );
 }
 
+/** Pega el ícono a la última palabra para que nunca quede solo en una línea. */
+function WithTrailingIcon({ children, icon }: { children: ReactNode; icon: ReactNode }) {
+  if (typeof children !== "string") return <>{children}{icon}</>;
+  const cut = children.lastIndexOf(" ") + 1;
+  return (
+    <>
+      {children.slice(0, cut)}
+      <span className="whitespace-nowrap">
+        {children.slice(cut)}
+        {icon}
+      </span>
+    </>
+  );
+}
+
 /**
  * Lista de enlaces con descripción (patrón GOV.UK): el formato base para
  * trámites y servicios. Más limpia y escaneable que una grilla de tarjetas.
@@ -160,10 +175,13 @@ export function LinkList({
       {items.map((it, i) => (
         <li key={it.key ?? i} className="border-t border-line py-4">
           <SmartLink to={it.href} className="link text-[1.05rem] font-semibold">
-            {it.title}
             {/^https?:/.test(it.href) ? (
-              <ArrowUpRight className="ml-1 inline size-4 align-[-2px]" aria-hidden="true" />
-            ) : null}
+              <WithTrailingIcon icon={<ArrowUpRight className="ml-1 inline size-4 align-[-2px]" aria-hidden="true" />}>
+                {it.title}
+              </WithTrailingIcon>
+            ) : (
+              it.title
+            )}
           </SmartLink>
           {it.description ? <p className="mt-1 text-[0.95rem] text-ink-3">{it.description}</p> : null}
           {it.meta ? <div className="mt-2 flex flex-wrap gap-1.5">{it.meta}</div> : null}
@@ -265,7 +283,9 @@ export function PageIntro({
   eyebrow?: string;
 }) {
   return (
-    <div className="border-b border-line bg-surface-2">
+    <div className="relative isolate overflow-hidden border-b border-line bg-surface-2">
+      {/* Luz que deriva muy despacio a la derecha, lejos del título. */}
+      <div className="veil veil-band -z-10" aria-hidden="true" />
       <div className="container-page py-8 sm:py-12">
         <Breadcrumbs items={[{ label: "Inicio", to: "/" }, ...(breadcrumbs ?? [{ label: String(title) }])]} />
         <h1 className="mt-4 max-w-3xl text-3xl font-bold text-ink sm:text-[2.5rem]">{title}</h1>

@@ -21,10 +21,14 @@ const ACCESOS = [
   { href: PORTAL.turnos.href, titulo: "Sacar un turno", detalle: "Atención en Casa Central o en una delegación." },
 ];
 
-/** Colores del velo vgpu por tema (sRGB 0..1). */
+/**
+ * Colores del velo vgpu por tema (sRGB 0..1). En claro, el núcleo más
+ * intenso no baja de #cfe5f6 detrás de los enlaces (≥ 4.5:1 con el azul);
+ * en oscuro es un azul petróleo de croma baja, visible sin brillar.
+ */
 const LUZ = {
-  light: { top: [1, 1, 1], bottom: [0.957, 0.976, 0.992], glow: [0.78, 0.89, 0.97], amount: 0.75 },
-  dark: { top: [0.051, 0.067, 0.09], bottom: [0.058, 0.077, 0.104], glow: [0.07, 0.11, 0.15], amount: 0.45 },
+  light: { top: [1, 1, 1], bottom: [0.957, 0.976, 0.992], glow: [0.78, 0.89, 0.97], amount: 0.85 },
+  dark: { top: [0.051, 0.067, 0.09], bottom: [0.063, 0.09, 0.13], glow: [0.086, 0.188, 0.29], amount: 0.7 },
 } as const;
 
 export function Hero() {
@@ -44,19 +48,23 @@ export function Hero() {
         interactive
         uniforms={LUZ[theme]}
         className="absolute inset-0 -z-10"
-        fallback={<div className="h-full w-full bg-bg" />}
+        fallback={
+          <div className="relative h-full w-full bg-bg">
+            <div className="veil veil-hero" />
+          </div>
+        }
       />
 
-      <div className="container-page grid gap-10 py-12 sm:py-16 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16 lg:py-20">
+      <div className="container-page grid gap-10 py-12 sm:py-16 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16 lg:py-20 [@media(max-height:480px)]:py-6">
         <div>
-          <h1 id="hero-titulo" className="text-[2.25rem] font-bold text-ink sm:text-5xl">
+          <h1 id="hero-titulo" className="text-[2.25rem] font-bold text-ink sm:text-5xl [@media(max-height:480px)]:text-4xl">
             ¿Qué necesitás hacer?
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-ink-2">
+          <p className="mt-4 max-w-xl text-lg text-ink-2 [@media(max-height:480px)]:mt-2">
             Pagá, consultá tu deuda, sacá turno y hacé tus trámites de impuestos provinciales desde donde estés.
           </p>
 
-          <form role="search" onSubmit={submit} className="mt-8 max-w-2xl" aria-label="Buscar trámites">
+          <form role="search" onSubmit={submit} className="mt-8 max-w-2xl [@media(max-height:480px)]:mt-4" aria-label="Buscar trámites">
             <label htmlFor="hero-buscar" className="mb-2 block font-semibold text-ink">
               Buscar un trámite
             </label>
@@ -80,10 +88,14 @@ export function Hero() {
             </div>
           </form>
 
-          <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-[0.95rem]">
+          <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-[0.95rem] coarse:gap-y-5">
             <span className="text-ink-3">Más buscados:</span>
             {MAS_BUSCADOS.map((s) => (
-              <Link key={s.q} to={`/tramites?q=${encodeURIComponent(s.q)}`} className="link font-semibold">
+              <Link
+                key={s.q}
+                to={`/tramites?q=${encodeURIComponent(s.q)}`}
+                className="link font-semibold coarse:-my-2.5 coarse:inline-block coarse:py-2.5"
+              >
                 {s.label}
               </Link>
             ))}

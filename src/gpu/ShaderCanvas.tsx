@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import clsx from "clsx";
 import type { ShaderName, ShaderUniforms } from "../shaders";
-import { canUseWebGPU, prefersReducedMotion } from "./support";
+import { canUseWebGPU, hasFinePointer, hasHardwareGPU, prefersReducedMotion } from "./support";
 import type { ShaderHandle } from "./runtime";
 
 interface ShaderCanvasProps {
   shader: ShaderName;
   className?: string;
-  /** Fondo CSS/SVG que se ve siempre debajo y queda solo si no hay WebGPU. */
+  /** Fondo CSS que se ve siempre debajo y queda solo si no hay WebGPU. */
   fallback?: ReactNode;
   uniforms?: ShaderUniforms;
-  /** El puntero mueve sutilmente el fondo (parallax). */
+  /** Con mouse, el puntero corre la luz unos píxeles. */
   interactive?: boolean;
 }
 
@@ -42,7 +42,11 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
 
     const sync = () => handle?.setPlaying(inView && !document.hidden && !reduced.matches);
 
-    import("./runtime")
+    hasHardwareGPU()
+      .then((ok) => {
+        if (!ok) throw new DOMException("Sin GPU de hardware", "NotSupportedError");
+        return import("./runtime");
+      })
       .then(({ mountShader }) =>
         mountShader({
           shader,
@@ -87,7 +91,7 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
         reduced.addEventListener("change", sync);
         cleanups.push(() => reduced.removeEventListener("change", sync));
 
-        if (interactive && !prefersReducedMotion()) {
+        if (interactive && hasFinePointer() && !prefersReducedMotion()) {
           const onMove = (e: PointerEvent) => {
             const r = canvas.getBoundingClientRect();
             if (r.width === 0 || r.height === 0) return;
@@ -101,9 +105,11 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
       })
       .catch((err: unknown) => {
         if (signal.aborted) return; // desmontado antes de terminar: nada que reportar
-        // Sin adaptador, compilación fallida, etc.: el fallback ya está en pantalla.
+        // Sin GPU de hardware, compilación fallida, etc.: el velo CSS ya está en pantalla.
         document.documentElement.dataset.gpu = "off";
-        console.warn("[ShaderCanvas] WebGPU no disponible, se usa el fondo estático.", err);
+        if (!(err instanceof DOMException && err.name === "NotSupportedError")) {
+          console.warn("[ShaderCanvas] WebGPU no disponible, se usa el velo CSS.", err);
+        }
       });
 
     return () => {
