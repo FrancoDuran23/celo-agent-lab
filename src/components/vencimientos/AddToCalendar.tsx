@@ -83,7 +83,6 @@ export function AddToCalendarButton({
         variant,
         size,
         className: clsx(
-          "tabular",
           status === "done" && variant !== "primary" && "!text-ok",
           status === "done" && variant === "secondary" && "!ring-ok/50",
           className,
