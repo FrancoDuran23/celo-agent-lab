@@ -30,7 +30,7 @@ El diseño se definió con [impeccable](https://impeccable.style):
 - `PRODUCT.md` guarda la verdad del producto: usuarios, propósito, restricciones y principios.
 - `.impeccable/surfaces/` guarda el contrato de dirección.
 - La dirección elegida es **el estándar de un portal de servicios públicos, ejecutado al máximo**: sin mundo visual propio, muy limpio y fácil de entender.
-- La paleta es blanca y gris claro, con tinta casi negra y un azul institucional; el verde, el ámbar y el rojo se usan sólo para estados.
+- La paleta es predominantemente blanca, con tinta casi negra y el azul del logo de Rentas (#0068A3) como color de marca; el verde, el ámbar y el rojo se usan sólo para estados. Tiene modo claro, oscuro y automático.
 - La tipografía es Public Sans, una sola familia con números tabulares.
 - El foco sigue el patrón de GOV.UK.
 
@@ -59,5 +59,5 @@ Algunos datos siguen pendientes:
 
 - **Vencimientos**: son **orientativos**. Se armaron a partir de patrones del Calendario Impositivo 2026 (RG 1732/2025) y la interfaz lo aclara. Hay que reemplazarlos por el calendario oficial antes de publicar.
 - **Delegaciones y redes sociales**: se vieron sólo en fragmentos del sitio oficial. Hay que verificarlas antes de publicar.
-- **Logo**: no se usa el logo oficial del organismo (no estuvo disponible). La marca del prototipo es un monograma neutro.
+- **Logo**: isologo de Rentas redibujado en SVG a partir de la imagen oficial (`src/components/layout/Logo.tsx`). Los colores se tomaron del original y el azul #0068A3 es el color de marca del sitio.
 - **Aviso de prototipo**: el aviso "prototipo no oficial" se controla con `SHOW_PROTOTYPE_NOTICE` en `src/data/site.ts`.

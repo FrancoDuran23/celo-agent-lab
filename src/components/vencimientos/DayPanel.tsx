@@ -45,7 +45,7 @@ export function DayPanel({ selected, view, hoy, byDate, filtro, onSelect }: Prop
       </div>
 
       {selected && items.length ? (
-        <ul className="mt-4 border-b border-line">
+        <ul className="mt-4">
           {items.map((v) => (
             <li key={vencKey(v)} className="@container border-t border-line py-4">
               <p className="font-semibold text-ink">{v.titulo}</p>

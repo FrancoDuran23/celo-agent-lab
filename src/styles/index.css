@@ -21,14 +21,13 @@
   --line: #e1e6ee;
   --line-strong: #c4ccd8;
 
-  /* Marca: celeste institucional. --brand es la variante con contraste AA
-     sobre blanco (enlaces, botones); --celeste es el tono de marca puro,
-     sólo para superficies y detalles sin texto encima. */
-  --brand: #0b6fb8;
-  --brand-hover: #085a96;
+  /* Marca: azul del isologo de Rentas (#0068A3, AA sobre blanco: 6:1).
+     --celeste es el tono claro del logo, sólo para detalles sin texto. */
+  --brand: #0068a3;
+  --brand-hover: #00588c;
   --brand-ink: #ffffff;
-  --brand-soft: #e8f4fc;
-  --celeste: #4aa8e0;
+  --brand-soft: #e6f1f8;
+  --celeste: #2581c6;
   /* Bloques destacados claros */
   --band: #f1f8fd;
   --band-ink: #0b0f19;
@@ -59,11 +58,11 @@
   --ink-3: #9ba4b3;
   --line: #253041;
   --line-strong: #364459;
-  --brand: #6cc0f5;
-  --brand-hover: #9ad4f8;
-  --brand-ink: #04192a;
-  --brand-soft: #0f2a3d;
-  --celeste: #4aa8e0;
+  --brand: #5cb3ea;
+  --brand-hover: #8dcaf1;
+  --brand-ink: #031a2b;
+  --brand-soft: #0d2a3f;
+  --celeste: #2581c6;
   --band: #111c27;
   --band-ink: #eef2f7;
   --band-ink-2: #c5ccd7;
@@ -89,11 +88,11 @@
     --ink-3: #9ba4b3;
     --line: #253041;
     --line-strong: #364459;
-    --brand: #6cc0f5;
-    --brand-hover: #9ad4f8;
-    --brand-ink: #04192a;
-    --brand-soft: #0f2a3d;
-    --celeste: #4aa8e0;
+    --brand: #5cb3ea;
+    --brand-hover: #8dcaf1;
+    --brand-ink: #031a2b;
+    --brand-soft: #0d2a3f;
+    --celeste: #2581c6;
     --band: #111c27;
     --band-ink: #eef2f7;
     --band-ink-2: #c5ccd7;

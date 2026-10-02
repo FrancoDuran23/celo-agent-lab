@@ -5,7 +5,8 @@ import { IMPUESTOS } from "../data/impuestos";
 import type { ImpuestoSlug } from "../data/types";
 import { parseISODate, today } from "../lib/dates";
 import { useDocumentTitle } from "../lib/useDocumentTitle";
-import { PageIntro } from "../components/ui/primitives";
+import { PageIntro, Panel, SectionHeader } from "../components/ui/primitives";
+import { Mark } from "../components/vencimientos/bits";
 import { AnnounceProvider } from "../components/vencimientos/AddToCalendar";
 import { MonthCalendar } from "../components/vencimientos/MonthCalendar";
 import { DayPanel } from "../components/vencimientos/DayPanel";
@@ -14,7 +15,6 @@ import { NextDue } from "../components/vencimientos/NextDue";
 import { DeudaHelp, FechasNotice, ImpuestoFilter } from "../components/vencimientos/Extras";
 import { calendarioNombre } from "../components/vencimientos/ics";
 import {
-  DOT,
   type ImpuestoMeta,
   groupByDate,
   impuestoMeta,
@@ -99,58 +99,49 @@ export function VencimientosPage() {
   return (
     <AnnounceProvider>
       <PageIntro
-        eyebrow="Agenda fiscal"
-        title={
-          <>
-            Calendario de{" "}
-            <span className="font-serif font-normal tracking-normal text-brand italic">vencimientos</span>
-          </>
-        }
+        title="Calendario de vencimientos"
         description="Consultá cuándo vence cada impuesto provincial, filtrá por lo que pagás y sumá las fechas a tu calendario para que no se te pase ninguna."
-      >
-        <div className="grid gap-4 lg:grid-cols-[1.35fr_1fr] lg:gap-5">
-          <NextDue items={nextItems} hoy={hoy} filtro={filtroNombre} onShow={showInCalendar} />
-          <FechasNotice calendario={calendario} />
-        </div>
-      </PageIntro>
+        breadcrumbs={[{ label: "Vencimientos" }]}
+      />
 
-      <section aria-labelledby="calendario-titulo" className="container-page py-14 sm:py-20">
-        <div className="max-w-2xl">
-          <p className="eyebrow mb-3">{calendario}</p>
-          <h2 id="calendario-titulo" className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-            Todas las fechas,{" "}
-            <span className="font-serif font-normal tracking-normal text-brand italic">mes a mes.</span>
-          </h2>
-          <p className="mt-3 text-base leading-relaxed text-ink-3 sm:text-lg">
-            Elegí un día para ver qué vence. Si filtrás por impuesto, el calendario y la agenda se actualizan juntos.
-          </p>
-        </div>
+      <div className="container-page grid grid-cols-[minmax(0,1fr)] gap-6 pt-10 sm:pt-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start lg:gap-8">
+        <NextDue items={nextItems} hoy={hoy} filtro={filtroNombre} onShow={showInCalendar} />
+        <FechasNotice calendario={calendario} />
+      </div>
 
-        <div className="mt-8">
-          <ImpuestoFilter
-            impuestos={impuestos}
-            counts={counts}
-            total={all.length}
-            value={filtro}
-            onChange={setFiltro}
-          />
-        </div>
+      <section aria-labelledby="calendario-titulo" className="container-page pt-14 pb-14 sm:pt-16 sm:pb-16">
+        <SectionHeader
+          id="calendario-titulo"
+          title="Todas las fechas"
+          description="Elegí un día para ver qué vence. Si filtrás por impuesto, el calendario y la agenda se actualizan juntos."
+        />
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,27rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,29rem)_minmax(0,1fr)] xl:gap-12">
-          <div className="grid content-start gap-4 md:grid-cols-2 lg:grid-cols-1">
-            <div ref={calendarRef} className="scroll-mt-24 rounded-3xl bg-surface p-4 ring-1 ring-line sm:p-6">
-              <MonthCalendar
-                view={view}
-                onViewChange={changeView}
-                min={minMonth}
-                max={maxMonth}
-                hoy={hoy}
-                byDate={byDate}
-                selected={selected}
-                onSelect={selectDay}
-                focusRequest={focusRequest}
-              />
-              <Legend impuestos={filtro ? impuestos.filter((i) => i.slug === filtro) : impuestos} />
+        <ImpuestoFilter
+          className="mt-6"
+          impuestos={impuestos}
+          counts={counts}
+          total={all.length}
+          value={filtro}
+          onChange={setFiltro}
+        />
+
+        <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,28rem)_minmax(0,1fr)] xl:gap-12">
+          <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1fr)]">
+            <div ref={calendarRef} className="min-w-0 scroll-mt-24">
+              <Panel className="p-4 sm:p-5">
+                <MonthCalendar
+                  view={view}
+                  onViewChange={changeView}
+                  min={minMonth}
+                  max={maxMonth}
+                  hoy={hoy}
+                  byDate={byDate}
+                  selected={selected}
+                  onSelect={selectDay}
+                  focusRequest={focusRequest}
+                />
+                <Legend impuestos={filtro ? impuestos.filter((i) => i.slug === filtro) : impuestos} />
+              </Panel>
             </div>
             <DayPanel
               selected={selected}
@@ -173,25 +164,21 @@ export function VencimientosPage() {
 
 function Legend({ impuestos }: { impuestos: ImpuestoMeta[] }) {
   return (
-    <ul aria-label="Referencias" className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-line pt-4 text-xs text-ink-3">
+    <ul aria-label="Referencias" className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-line pt-4 text-sm text-ink-3">
       {impuestos.map((i) => (
         <li key={i.slug} className="inline-flex items-center gap-1.5">
-          <LegendDot className={DOT[i.color]} />
+          <Mark slug={i.slug} />
           {i.corto}
         </li>
       ))}
       <li className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="size-3 rounded-[4px] bg-brand-soft ring-1 ring-brand/50 ring-inset" />
+        <span aria-hidden="true" className="size-3.5 rounded-[4px] border-2 border-brand" />
         Hoy
       </li>
       <li className="inline-flex items-center gap-1.5">
-        <span aria-hidden="true" className="size-3 rounded-[4px] bg-night-900 dark:bg-crema-100" />
+        <span aria-hidden="true" className="size-3.5 rounded-[4px] bg-ink" />
         Día elegido
       </li>
     </ul>
   );
-}
-
-function LegendDot({ className }: { className: string }) {
-  return <span aria-hidden="true" className={`size-2 rounded-full ${className}`} />;
 }
