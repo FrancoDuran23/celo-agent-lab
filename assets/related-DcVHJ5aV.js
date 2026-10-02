@@ -1,0 +1,1 @@
+import{O as e}from"./index-CFvvyiUB.js";function t(t){return t.tramites.map(t=>e.find(e=>e.id===t)).filter(e=>!!e)}var n={online:`En línea`,presencial:`Presencial`,"online-y-presencial":`En línea o presencial`},r=e=>/^https?:/.test(e);export{r as n,t as r,n as t};
