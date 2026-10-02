@@ -38,11 +38,8 @@ export const LINKS = {
   automotorCapital: "https://rentasmunijujuy.gob.ar",
 } as const;
 
-/**
- * Prototipo de rediseño no oficial: muestra un aviso discreto.
- * Poner en false si el organismo lo adopta.
- */
-export const SHOW_PROTOTYPE_NOTICE = true;
+/** Aviso de "prototipo no oficial" en header y footer (desactivado a pedido). */
+export const SHOW_PROTOTYPE_NOTICE = false;
 
 export const SITE = {
   nombre: "Rentas Jujuy",

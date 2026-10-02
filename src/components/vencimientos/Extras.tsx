@@ -21,8 +21,8 @@ export function FechasNotice({ calendario, className }: { calendario: string; cl
     >
       {ilustrativo ? (
         <p>
-          Este calendario es parte de un prototipo: las fechas están armadas a partir del {calendario} (
-          {VENCIMIENTOS_INFO.norma}). Antes de pagar, confirmalas en el calendario oficial.
+          Las fechas son orientativas: están armadas a partir del {calendario} ({VENCIMIENTOS_INFO.norma}). Antes de
+          pagar, confirmalas en el calendario oficial.
         </p>
       ) : (
         <p>

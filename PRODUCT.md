@@ -43,8 +43,8 @@ The official provincial tax authority of Jujuy. Only the DPR can truthfully pres
 ## Brand Commitments
 
 - Names: "Dirección Provincial de Rentas" / "Rentas Jujuy"; dependency: Ministerio de Hacienda y Finanzas, Gobierno de Jujuy.
-- Unofficial prototype: keep a visible but discreet "propuesta de rediseño · prototipo no oficial" notice (toggle `SHOW_PROTOTYPE_NOTICE`). Never present the page as the real service.
-- **Logo (supplied by the user, oct. 2026):** Rentas' isologo, a blue gradient circle with a light arc on the left and a white "R", redrawn as SVG in `src/components/layout/Logo.tsx`. Colors sampled from the original: #2581C6 → **#0068A3** (brand) → #00588C.
+- The "propuesta de rediseño / prototipo no oficial" notice was removed at the user's request (toggle `SHOW_PROTOTYPE_NOTICE`, now false). Orientative data (vencimientos) must still say it is orientative.
+- **Logo (supplied by the user, oct. 2026):** Rentas' official isologo is reused as provided, not redrawn (`public/brand/`: background removed outside the circle only; the supplied image is cropped at top and bottom). Colors sampled from it: #2581C6 → **#0068A3** (brand) → #00588C.
 - Voice: clear, warm, public-service Spanish with voseo; no marketing fluff.
 - **Visual direction (user decision, oct. 2026): the category standard, played straight at top craft.** No world of its own: a very clean, easy-to-understand public-service portal with refined UX/UI. Craft bar: the clarity of GOV.UK, the familiarity of argentina.gob.ar, the polish of a top-tier product. Earlier own-world explorations (Siete Colores strata, aguayo, serif-italic accents) are discarded and must not return.
 - **Color and ground (user, oct. 2026):** Rentas' brand color is the logo's celeste-blue **#0068A3** on white (AA 6:1, used for links and primary buttons). The site is predominantly white (light), with a complete dark mode as well (light, dark and automatic). No dark hero bands, no earthy palette.

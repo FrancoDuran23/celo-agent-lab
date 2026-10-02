@@ -62,7 +62,7 @@ export function calendarioNombre(list: readonly Vencimiento[]): string {
 
 function description(nombreCalendario: string): string {
   const base = VENCIMIENTOS_INFO.ilustrativo
-    ? `Fecha orientativa de un prototipo de rediseño, basada en el ${nombreCalendario} (${VENCIMIENTOS_INFO.norma}).`
+    ? `Fecha orientativa basada en el ${nombreCalendario} (${VENCIMIENTOS_INFO.norma}).`
     : `Según el ${nombreCalendario} (${VENCIMIENTOS_INFO.norma}).`;
   return [
     base,
@@ -75,7 +75,7 @@ function vevent(v: Vencimiento, stamp: string, desc: string): string[] {
   const start = parseISODate(v.fecha);
   return [
     "BEGIN:VEVENT",
-    `UID:${compactDate(v.fecha)}-${slugify(`${v.impuesto} ${vencLabel(v)}`)}@vencimientos.rentas-jujuy.prototipo`,
+    `UID:${compactDate(v.fecha)}-${slugify(`${v.impuesto} ${vencLabel(v)}`)}@vencimientos.rentasjujuy.gob.ar`,
     `DTSTAMP:${stamp}`,
     `DTSTART;VALUE=DATE:${compactDate(v.fecha)}`,
     `DTEND;VALUE=DATE:${compactDate(toISO(addDays(start, 1)))}`,
@@ -98,7 +98,7 @@ export function buildICS(list: readonly Vencimiento[]): string {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Rentas Jujuy (prototipo)//Calendario de vencimientos//ES",
+    "PRODID:-//Rentas Jujuy//Calendario de vencimientos//ES",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     ...list.flatMap((v) => vevent(v, stamp, desc)),

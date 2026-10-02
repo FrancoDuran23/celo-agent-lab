@@ -59,5 +59,5 @@ Algunos datos siguen pendientes:
 
 - **Vencimientos**: son **orientativos**. Se armaron a partir de patrones del Calendario Impositivo 2026 (RG 1732/2025) y la interfaz lo aclara. Hay que reemplazarlos por el calendario oficial antes de publicar.
 - **Delegaciones y redes sociales**: se vieron sólo en fragmentos del sitio oficial. Hay que verificarlas antes de publicar.
-- **Logo**: isologo de Rentas redibujado en SVG a partir de la imagen oficial (`src/components/layout/Logo.tsx`). Los colores se tomaron del original y el azul #0068A3 es el color de marca del sitio.
-- **Aviso de prototipo**: el aviso "prototipo no oficial" se controla con `SHOW_PROTOTYPE_NOTICE` en `src/data/site.ts`.
+- **Logo**: se usa el isologo oficial de Rentas tal como fue aportado (`public/brand/`), sólo con el fondo blanco quitado para que funcione en modo oscuro. La imagen original viene recortada arriba y abajo; si se consigue la versión completa, basta con reemplazar esos archivos. El azul #0068A3 del logo es el color de marca del sitio.
+- **Aviso de prototipo**: está desactivado; se puede volver a mostrar con `SHOW_PROTOTYPE_NOTICE` en `src/data/site.ts`.
