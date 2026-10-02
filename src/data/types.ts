@@ -5,7 +5,7 @@ import type { IconName } from "../lib/icons";
  * objetos planos, para poder reemplazarlo por una API sin tocar la UI.
  */
 
-export type ImpuestoSlug = "inmobiliario" | "automotor" | "ingresos-brutos" | "sellos" | "tasas";
+export type ImpuestoSlug = "ingresos-brutos" | "inmobiliario" | "sellos" | "tasas" | "minerales";
 
 export type Perfil = "personas" | "empresas" | "profesionales" | "agentes";
 
@@ -76,7 +76,7 @@ export interface Norma {
   href?: string;
 }
 
-export type Region = "Valles" | "Quebrada" | "Puna" | "Yungas" | "Ramal";
+export type Region = "Valles" | "Quebrada" | "Puna" | "Ramal" | "CABA";
 
 export interface Oficina {
   nombre: string;

@@ -92,9 +92,13 @@ export function SiteHeader() {
           overHero && !transparent && "bg-bg/90",
         )}
       >
-        <div className="container-page flex h-16 items-center gap-4 lg:h-[4.5rem]">
+        <div className="container-page flex h-16 items-center gap-2 sm:gap-4 lg:h-[4.5rem]">
           <Link to="/" className="rounded-lg" aria-label="Rentas Jujuy — inicio">
-            <Logo tone={transparent ? "light" : "default"} />
+            {/* En móvil la bajada del logo pasa a dos líneas para que la fila no desborde a 360–390px. */}
+            <Logo
+              tone={transparent ? "light" : "default"}
+              className="max-sm:[&>span>span:last-child]:max-w-[9rem] max-sm:[&>span>span:last-child]:leading-[1.2] max-sm:[&>span>span:last-child]:whitespace-normal"
+            />
           </Link>
 
           <nav aria-label="Principal" className="ml-6 hidden flex-1 items-center gap-1 xl:flex">
@@ -122,7 +126,7 @@ export function SiteHeader() {
             )}
           </nav>
 
-          <div className="ml-auto flex items-center gap-1.5">
+          <div className="ml-auto flex items-center gap-1 sm:gap-1.5">
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
@@ -160,7 +164,9 @@ export function SiteHeader() {
               to={PORTAL.clave.href}
               variant={transparent ? "light" : "primary"}
               size="sm"
-              className="ml-1 hidden sm:inline-flex"
+              // max-sm:hidden (no "hidden sm:inline-flex"): la clase base del botón ya trae
+              // inline-flex y, sin tailwind-merge, ganaba sobre "hidden" y desbordaba en móvil.
+              className="ml-1 max-sm:hidden"
             >
               <LogIn aria-hidden="true" />
               {PORTAL.clave.cta}

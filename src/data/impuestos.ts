@@ -13,17 +13,17 @@ export const IMPUESTOS: Impuesto[] = [
     quienes:
       "Comercios, empresas, profesionales y prestadores de servicios que desarrollan su actividad en Jujuy, ya sea como contribuyentes locales o de Convenio Multilateral.",
     puntos: [
-      "Régimen General para contribuyentes locales, con DDJJ y anticipos mensuales.",
+      "Régimen Local: DDJJ y pago de anticipos mensuales con clave fiscal.",
       "Convenio Multilateral para quienes operan en más de una provincia (SIFERE WEB).",
-      "Régimen Simplificado para pequeños contribuyentes.",
-      "Alícuotas según actividad, fijadas por la Ley Impositiva vigente.",
+      "Régimen Simplificado: se paga junto con el Monotributo nacional (Monotributo Unificado).",
+      "Alícuotas según actividad, fijadas por la Ley Impositiva 2026 (Ley 6.492).",
     ],
-    tramites: ["iibb-inscripcion", "iibb-ddjj", "iibb-simplificado", "iibb-convenio", "constancia", "iibb-modificacion", "no-retencion"],
+    tramites: ["iibb-inscripcion", "iibb-ddjj", "iibb-simplificado", "iibb-convenio", "constancia", "no-retencion", "mis-retenciones", "traslado-mercaderias"],
     preguntas: [
       {
         pregunta: "¿Cuándo tengo que inscribirme?",
         respuesta:
-          "Antes de iniciar tu actividad. La inscripción se hace en línea con clave fiscal; si operás en varias provincias, se tramita por el sistema de Convenio Multilateral.",
+          "Antes de iniciar tu actividad. La inscripción se hace en línea con clave fiscal; si operás en varias provincias, corresponde el régimen de Convenio Multilateral.",
       },
       {
         pregunta: "¿Qué pasa si no tuve ingresos en un mes?",
@@ -31,7 +31,13 @@ export const IMPUESTOS: Impuesto[] = [
       },
       {
         pregunta: "¿Dónde consulto la alícuota de mi actividad?",
-        respuesta: "Las alícuotas están en la Ley Impositiva vigente, disponible en la sección Normativa.",
+        respuesta:
+          "Las alícuotas están en la Ley Impositiva vigente (sección Normativa). Las actividades se codifican según el Nomenclador de Actividades de la Provincia.",
+      },
+      {
+        pregunta: "Soy monotributista, ¿tengo que presentar DDJJ?",
+        respuesta:
+          "Si estás en el Monotributo Unificado, pagás un monto fijo según tu categoría junto con el Monotributo nacional y no presentás declaraciones juradas mensuales.",
       },
     ],
   },
@@ -47,54 +53,26 @@ export const IMPUESTOS: Impuesto[] = [
     quienes: "Titulares de dominio, usufructuarios y poseedores a título de dueño de inmuebles ubicados en Jujuy.",
     puntos: [
       "Se calcula sobre la valuación fiscal del inmueble.",
-      "Pago en cuotas o anual anticipado con bonificación.",
-      "Beneficios adicionales para contribuyentes cumplidores y pagos digitales.",
-      "Exenciones previstas por ley para casos específicos.",
+      "Pago en anticipos mensuales o en un pago anual anticipado.",
+      "Bonificaciones por buen cumplimiento, pago anual anticipado y pago digital.",
+      "Débito automático y exenciones para jubilados y otros casos previstos.",
     ],
-    tramites: ["inmobiliario-boleta", "inmobiliario-anual", "inmobiliario-valuacion", "libre-deuda", "exenciones"],
+    tramites: ["inmobiliario-pagar", "certificado-pago", "inmobiliario-debito", "inmobiliario-exencion", "consulta-exenciones", "plan-pagos"],
     preguntas: [
       {
         pregunta: "¿Qué dato necesito para generar la boleta?",
-        respuesta: "El número de padrón del inmueble, que figura en boletas anteriores o en tu escritura.",
+        respuesta:
+          "El número de padrón del inmueble (figura en boletas anteriores) o el CUIT del titular. No necesitás clave fiscal para consultar y pagar.",
       },
       {
         pregunta: "¿Conviene el pago anual?",
         respuesta:
-          "Si podés afrontarlo, sí: el pago anual anticipado tiene bonificaciones que se suman a los beneficios por buen cumplimiento y por pago digital.",
+          "Si podés afrontarlo, sí: en 2026 el pago anual anticipado sumó hasta un 30% de descuento (buen cumplimiento + pago anual + pago digital). Las condiciones se fijan cada año.",
       },
       {
-        pregunta: "Vendí mi inmueble, ¿qué hago?",
-        respuesta: "Asegurate de que la transferencia esté registrada para que el impuesto deje de emitirse a tu nombre.",
-      },
-    ],
-  },
-  {
-    slug: "automotor",
-    nombre: "Impuesto a los Automotores",
-    corto: "Automotor",
-    bajada: "Para titulares de autos, motos, camionetas y utilitarios radicados en Jujuy.",
-    descripcion:
-      "Grava a los vehículos radicados en la Provincia según su valuación. En algunos municipios el impuesto se administra y paga a nivel municipal: verificá dónde corresponde según la radicación de tu vehículo.",
-    icon: "car",
-    color: "rosa",
-    quienes: "Titulares registrales de vehículos automotores y motovehículos radicados en la Provincia.",
-    puntos: [
-      "Se calcula según la valuación del vehículo (modelo y año).",
-      "Pago en cuotas o anual con bonificación.",
-      "En algunos municipios se paga en el municipio de radicación.",
-      "Informá la venta para dejar de ser responsable del impuesto.",
-    ],
-    tramites: ["automotor-boleta", "automotor-radicacion", "libre-deuda", "plan-pagos"],
-    preguntas: [
-      {
-        pregunta: "¿Dónde pago la patente?",
+        pregunta: "Soy jubilado, ¿tengo algún beneficio?",
         respuesta:
-          "Depende del municipio de radicación del vehículo. Si tu municipio administra el impuesto, el pago se hace allí; en los demás casos, en Rentas.",
-      },
-      {
-        pregunta: "Vendí mi auto, ¿sigo pagando?",
-        respuesta:
-          "Hasta que se registre la transferencia o la denuncia de venta, el impuesto se sigue emitiendo a nombre del titular registral.",
+          "Jubilados y pensionados pueden solicitar la exención del impuesto por la web, si cumplen los requisitos previstos por la normativa.",
       },
     ],
   },
@@ -109,16 +87,17 @@ export const IMPUESTOS: Impuesto[] = [
     color: "salvia",
     quienes: "Las partes que otorgan o firman el instrumento alcanzado, y los agentes de recaudación designados.",
     puntos: [
-      "Alcanza contratos de locación, compraventas, mutuos y otros instrumentos.",
-      "Liquidación web con cálculo automático del impuesto.",
-      "Escribanos y entidades actúan como agentes de recaudación.",
-      "Alícuotas y montos fijos según la Ley Impositiva.",
+      "Alcanza locaciones, boletos de compraventa, pagarés, poderes, préstamos y otros instrumentos.",
+      "Liquidación y pago 100% web con clave fiscal.",
+      "Los Registros del Automotor perciben Sellos en operaciones con vehículos.",
+      "Alícuotas, exenciones y montos fijos según la Ley Impositiva.",
     ],
     tramites: ["sellos-liquidacion", "plan-pagos", "agentes-ddjj"],
     preguntas: [
       {
         pregunta: "¿Mi contrato de alquiler paga Sellos?",
-        respuesta: "Los contratos de locación están alcanzados. Podés calcular el monto exacto con la liquidación web.",
+        respuesta:
+          "Depende del tipo de contrato y de la normativa vigente: en 2026 se anunciaron exenciones para alquileres de vivienda y reducciones para comerciales. Verificalo en la liquidación web antes de pagar.",
       },
       {
         pregunta: "¿Cuánto tiempo tengo para pagar?",
@@ -137,15 +116,42 @@ export const IMPUESTOS: Impuesto[] = [
     color: "violeta",
     quienes: "Quienes inician actuaciones judiciales o solicitan servicios administrativos alcanzados.",
     puntos: [
-      "Liquidación en línea de la Tasa de Justicia.",
+      "Liquidación en línea de la Tasa de Justicia, inicial y final, sin clave fiscal.",
+      "Tasa retributiva para publicaciones en el Boletín Oficial.",
       "Montos según el tipo de actuación y la Ley Impositiva.",
-      "Guía de liquidación disponible para profesionales.",
     ],
-    tramites: ["tasa-justicia", "boleta"],
+    tramites: ["tasa-justicia", "tasa-boletin", "plan-pagos"],
     preguntas: [
       {
         pregunta: "¿Quién liquida la Tasa de Justicia?",
         respuesta: "Generalmente el profesional que inicia la actuación, en nombre de su cliente.",
+      },
+      {
+        pregunta: "¿Qué hago con el comprobante?",
+        respuesta: "El comprobante de pago se presenta en el expediente judicial junto con la primera presentación.",
+      },
+    ],
+  },
+  {
+    slug: "minerales",
+    nombre: "Derecho de Explotación de Minerales",
+    corto: "Minerales",
+    bajada: "Para productores mineros que explotan yacimientos en la Provincia.",
+    descripcion:
+      "Previsto en el Código Fiscal, alcanza la explotación de minerales en Jujuy. Los productores presentan su declaración jurada digital y pagan ante la Dirección Provincial de Rentas.",
+    icon: "mountain",
+    color: "rosa",
+    quienes: "Productores y empresas que explotan yacimientos minerales ubicados en la Provincia.",
+    puntos: [
+      "Declaración jurada digital con clave fiscal.",
+      "Regulado por el Código Fiscal de la Provincia.",
+      "Regímenes especiales de regularización cuando la normativa los habilita.",
+    ],
+    tramites: ["minerales-ddjj", "plan-pagos", "regularizacion-fiscal"],
+    preguntas: [
+      {
+        pregunta: "¿Cómo presento la declaración jurada?",
+        respuesta: "Ingresando con clave fiscal al portal de Rentas, en la sección de Derecho de Explotación de Minerales.",
       },
     ],
   },

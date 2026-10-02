@@ -12,18 +12,16 @@ interface ShaderCanvasProps {
   uniforms?: ShaderUniforms;
   /** El puntero mueve sutilmente el fondo (parallax). */
   interactive?: boolean;
-  fps?: number;
 }
 
 /**
  * Fondo decorativo animado con vgpu. Nunca bloquea el contenido:
  * el fallback se pinta primero y el canvas aparece con un fundido
  * cuando el primer cuadro está listo. Se pausa fuera de pantalla,
- * con la pestaña oculta y con prefers-reduced-motion.
+ * con la pestaña oculta y con prefers-reduced-motion (cuadro fijo).
  */
-export function ShaderCanvas({ shader, className, fallback, uniforms, interactive = false, fps }: ShaderCanvasProps) {
+export function ShaderCanvas({ shader, className, fallback, uniforms, interactive = false }: ShaderCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const handleRef = useRef<ShaderHandle | null>(null);
   const [ready, setReady] = useState(false);
   const uniformsKey = JSON.stringify(uniforms ?? {});
 
@@ -31,33 +29,39 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
     const canvas = canvasRef.current;
     if (!canvas || !canUseWebGPU()) return;
 
-    let cancelled = false;
-    let inView = true;
+    const controller = new AbortController();
+    const { signal } = controller;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
     const cleanups: Array<() => void> = [];
+    let handle: ShaderHandle | null = null;
+    let inView = true;
 
-    const sync = () => {
-      handleRef.current?.setPlaying(inView && !document.hidden && !reduced.matches);
-    };
+    const sync = () => handle?.setPlaying(inView && !document.hidden && !reduced.matches);
 
     import("./runtime")
       .then(({ mountShader }) =>
         mountShader({
           shader,
           canvas,
+          signal,
           uniforms: JSON.parse(uniformsKey) as ShaderUniforms,
-          fps,
           onFirstFrame: () => {
-            if (!cancelled) setReady(true);
+            if (!signal.aborted) setReady(true);
+          },
+          onLost: () => {
+            // El dispositivo se perdió: volvemos al fallback.
+            handle = null;
+            if (!signal.aborted) setReady(false);
+            document.documentElement.dataset.gpu = "off";
           },
         }),
       )
-      .then((handle) => {
-        if (cancelled) {
-          handle.dispose();
+      .then((h) => {
+        if (signal.aborted) {
+          h.dispose();
           return;
         }
-        handleRef.current = handle;
+        handle = h;
         document.documentElement.dataset.gpu = "on";
 
         const io = new IntersectionObserver(
@@ -65,7 +69,7 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
             inView = entry?.isIntersecting ?? true;
             sync();
           },
-          { rootMargin: "64px" },
+          { rootMargin: "256px" },
         );
         io.observe(canvas);
         cleanups.push(() => io.disconnect());
@@ -79,7 +83,7 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
           const onMove = (e: PointerEvent) => {
             const r = canvas.getBoundingClientRect();
             if (r.width === 0 || r.height === 0) return;
-            handle.setPointer((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
+            handle?.setPointer((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
           };
           window.addEventListener("pointermove", onMove, { passive: true });
           cleanups.push(() => window.removeEventListener("pointermove", onMove));
@@ -88,20 +92,21 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
         sync();
       })
       .catch((err: unknown) => {
+        if (signal.aborted) return; // desmontado antes de terminar: nada que reportar
         // Sin adaptador, compilación fallida, etc.: el fallback ya está en pantalla.
         document.documentElement.dataset.gpu = "off";
         console.warn("[ShaderCanvas] WebGPU no disponible, se usa el fondo estático.", err);
       });
 
     return () => {
-      cancelled = true;
+      controller.abort();
       cleanups.forEach((fn) => fn());
-      handleRef.current?.dispose();
-      handleRef.current = null;
+      handle?.dispose();
+      handle = null;
       setReady(false);
     };
     // uniformsKey cubre cambios de valor en `uniforms` sin depender de su identidad.
-  }, [shader, uniformsKey, interactive, fps]);
+  }, [shader, uniformsKey, interactive]);
 
   return (
     <div className={clsx("pointer-events-none overflow-hidden", className)} aria-hidden="true">
@@ -109,7 +114,7 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
       <canvas
         ref={canvasRef}
         className={clsx(
-          "absolute inset-0 block h-full w-full transition-opacity duration-1000 ease-out",
+          "absolute inset-0 block h-full w-full transition-opacity duration-1000 ease-out motion-reduce:transition-none",
           ready ? "opacity-100" : "opacity-0",
         )}
       />

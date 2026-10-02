@@ -8,7 +8,7 @@ import { ShaderCanvas } from "../../gpu/ShaderCanvas";
 export function CtaBand({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <section className={`relative isolate overflow-hidden rounded-3xl bg-night-900 text-crema-50 ${className}`}>
-      <ShaderCanvas shader="aguayo" className="absolute inset-0 -z-10" fallback={<AguayoFallback />} fps={30} />
+      <ShaderCanvas shader="aguayo" className="absolute inset-0 -z-10" fallback={<AguayoFallback />} />
       <div
         aria-hidden="true"
         className="absolute inset-0 -z-10 bg-[linear-gradient(100deg,rgb(7_15_28/0.88)_0%,rgb(7_15_28/0.6)_55%,rgb(7_15_28/0.25)_100%)]"

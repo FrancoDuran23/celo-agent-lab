@@ -9,7 +9,7 @@ import { QuebradaFallback } from "./QuebradaFallback";
 const SUGERENCIAS = [
   { label: "Libre deuda", q: "libre deuda" },
   { label: "Plan de pagos", q: "plan de pagos" },
-  { label: "Boleta Inmobiliario", q: "inmobiliario" },
+  { label: "Pagar Inmobiliario", q: "inmobiliario" },
   { label: "Ingresos Brutos", q: "ingresos brutos" },
 ];
 

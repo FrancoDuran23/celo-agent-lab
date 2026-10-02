@@ -47,7 +47,7 @@ export function PorPerfil() {
           description="Elegí tu perfil y te mostramos los trámites más usados."
         />
         <div className="mt-10 grid gap-6 lg:grid-cols-[19rem_1fr]">
-          <div role="tablist" aria-label="Perfil" aria-orientation="vertical" className="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible">
+          <div role="tablist" aria-label="Perfil" aria-orientation="vertical" className="flex min-w-0 gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible">
             {PERFILES.map((p, i) => {
               const selected = p.id === active;
               const P = p.icon;

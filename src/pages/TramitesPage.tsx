@@ -40,7 +40,11 @@ export function TramitesPage() {
 
   const results = useMemo(() => {
     let list = searchTramites(TRAMITES, q);
-    if (impuesto) list = list.filter((t) => t.impuesto === impuesto);
+    if (impuesto) {
+      // Un impuesto incluye sus trámites propios y los generales que le aplican (planes, libre deuda…).
+      const relacionados = new Set(IMPUESTOS.find((i) => i.slug === impuesto)?.tramites ?? []);
+      list = list.filter((t) => t.impuesto === impuesto || relacionados.has(t.id));
+    }
     if (perfil) list = list.filter((t) => t.perfiles.includes(perfil));
     if (soloOnline) list = list.filter((t) => t.canal !== "presencial");
     return list;

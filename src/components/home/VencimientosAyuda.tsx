@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { ArrowRight, CalendarClock } from "lucide-react";
 import clsx from "clsx";
-import { VENCIMIENTOS } from "../../data/vencimientos";
+import { VENCIMIENTOS, VENCIMIENTOS_INFO } from "../../data/vencimientos";
 import { IMPUESTOS } from "../../data/impuestos";
 import { CANALES } from "../../data/contacto";
 import { daysBetween, parseISODate, relativeDays, today } from "../../lib/dates";
@@ -80,6 +80,15 @@ export function VencimientosAyuda() {
               No hay vencimientos cargados para las próximas semanas.
             </p>
           )}
+          {VENCIMIENTOS_INFO.ilustrativo ? (
+            <p className="mt-4 text-xs leading-relaxed text-ink-3">
+              Fechas orientativas basadas en el Calendario Impositivo 2026 ({VENCIMIENTOS_INFO.norma}). Confirmalas en el{" "}
+              <a href={VENCIMIENTOS_INFO.oficial} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink">
+                calendario oficial
+              </a>
+              .
+            </p>
+          ) : null}
         </Card>
 
         {/* Canales de ayuda */}
