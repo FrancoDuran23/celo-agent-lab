@@ -278,7 +278,7 @@ Este sistema no tiene mundo propio: es el canon de un portal de servicios públi
 
 La densidad es la de una herramienta (modo Operate): listas con filetes de 1px, títulos que hablan solos, enlaces subrayados, números tabulares y nada que compita con la tarea. Todo lo que el sistema descarta es tan importante como lo que usa: no hay eyebrows, ni grillas de tarjetas iguales con ícono, ni sombras decorativas, ni glow, ni bandas oscuras de hero. Tampoco vuelven las exploraciones de mundo propio que se descartaron (estratos de Siete Colores, aguayo, acentos en serif itálica).
 
-La única atmósfera es un velo de luz celeste, apenas visible, renderizado con vgpu (WebGPU) detrás del hero de inicio. Es un detalle al servicio del canon, nunca identidad: si no hay WebGPU, la página es exactamente igual sobre fondo liso.
+La única atmósfera es luz celeste que deriva despacio: detrás del hero de inicio (shader de vgpu, con un velo CSS equivalente donde no hay WebGPU) y, más tenue y sólo en CSS, en la cabecera de cada página interna. El movimiento es leve y suave a pedido del usuario ("para darle profesionalidad"): se nota si se mira, no compite con la tarea. Es un detalle al servicio del canon, nunca identidad.
 
 **Key Characteristics:**
 - Blanco primero, tinta #0b0f19, un solo azul de marca (#0068a3) y colores sólo para estado.
@@ -318,7 +318,7 @@ Las claves `dark-*` del frontmatter son los mismos roles en modo oscuro. Se apli
 - **Amarillo foco** (`focus` #ffd21f con `focus-ink` #0b0f19, iguales en ambos modos): es sólo el indicador de foco y el skip link. No tiene otro uso.
 
 ### Reservados
-`--celeste` (#2581c6) es el celeste claro del isologo. Está declarado y mapeado a Tailwind, pero hoy ningún componente lo usa. Da 4,17:1 sobre blanco, así que, si se usa, es sólo para detalles sin texto. `--band`, `--band-ink`, `--band-ink-2` y `--visited` también están declarados y no tienen uso; no les asignes un rol sin decidirlo antes.
+`--celeste` (#2581c6) es el celeste claro del isologo. Está declarado y mapeado a Tailwind, pero hoy ningún componente lo usa. Da 4,17:1 sobre blanco, así que, si se usa, es sólo para detalles sin texto. `--visited` también está declarado y no tiene uso; no le asignes un rol sin decidirlo antes. Los tokens del velo (`--veil-1`, `--veil-2`, `--veil-band`) son celestes translúcidos: claro `rgb(37 129 198 / .16, .11, .10)`, oscuro `rgb(40 110 170 / .24, .15, .16)`. Sólo los usa el velo de luz.
 
 **La regla del azul único.** El azul de marca marca lo que se puede tocar (enlaces, botón primario) y lo que está activo (pestaña de navegación, hoy). No se usa como fondo de bandas, títulos ni decoración.
 
@@ -375,7 +375,7 @@ El sistema es plano. La profundidad se arma con tres recursos: filetes de 1px (`
 
 **La regla de la sombra que flota.** La sombra sólo aparece en lo que está por encima de la página (menús y diálogos). Paneles, avisos, botones y tarjetas son planos: se separan con borde o con fondo tonal.
 
-**La regla del sin glow.** No hay brillos, halos, degradés de color ni sombras de color. El velo vgpu del hero es la única luz del sistema.
+**La regla del sin glow.** No hay brillos, halos, degradés de color ni sombras de color. El velo de luz (hero y cabeceras de página) es la única luz del sistema.
 
 ## Shapes
 
@@ -434,7 +434,7 @@ Son sobrios y firmes: peso 600, sin sombra ni gradiente, y sólo cambian de colo
 - **Placeholder:** `ink-3`. El cursor de texto es `brand`.
 
 ### Navigation
-- **Barra institucional:** banda `surface-2` con filete inferior, de 36px de alto mínimo y 0.8rem en `ink-2`. A la izquierda dice "Gobierno de Jujuy · Ministerio de Hacienda y Finanzas". A la derecha (md o más) están la línea gratuita 0800 (tabular, 600), Turnos web, Noticias y Centro de ayuda, con subrayado en hover.
+- **Barra institucional:** banda `surface-2` con filete inferior, de 36px de alto mínimo y 0.8rem en `ink-2`. A la izquierda dice "Gobierno de Jujuy · Ministerio de Hacienda y Finanzas". Entre md y lg muestra sólo la línea gratuita 0800 (tabular, 600, sin cortes); desde lg suma Turnos web, Noticias y Centro de ayuda. Los enlaces van siempre subrayados (suave, pleno en hover). En pantallas de menos de 480px de alto se oculta y el header deja de ser fijo.
 - **Header:** es fijo, de 64px de alto (72px desde lg). Contiene el logo, la navegación principal (Trámites, Impuestos, Vencimientos, Atención y Normativa), la búsqueda, el tema y el botón primario.
 - **Enlace de navegación:** 0.95rem en 500 y `ink-2`, con un borde inferior de 3px transparente. En hover el borde pasa a `line-strong` y el texto a `ink`; activo, a `brand` con texto `ink`.
 - **Desplegable (Impuestos):** panel de 22rem con radio inferior de 12px, sombra pop y padding de 0.5rem. Cada ítem tiene el nombre en 600 (`brand` en hover) y una descripción en 0.875rem `ink-3`, y al final va "Todos los impuestos". Se cierra con Esc, al hacer clic afuera, al perder el foco o al navegar.
@@ -449,21 +449,24 @@ Es un `dialog` modal nativo que se abre con "/" o Ctrl/⌘+K. El panel tiene 42r
 ### Logo
 Es el isologo oficial aportado por Rentas, usado tal cual (PNG de 96px y de 180px para 2x, mostrado a 40×40px y con `alt` vacío porque el enlace lleva la etiqueta "Rentas Jujuy, ir al inicio"). A su lado van "Rentas Jujuy" a 1.05rem en 700 `ink` y "Dirección Provincial de Rentas" a 0.78rem `ink-3` (desde 420px). Aparece en el header y en el footer. `theme-color` es #0068a3.
 
-### Velo de luz (vgpu) — componente distintivo
-Es un shader WebGPU propio (`src/shaders/luz.wgsl`) que se renderiza con vgpu sólo detrás del hero de inicio. Arma un degradé vertical casi plano y le suma un velo de ruido fbm simplex de muy baja frecuencia, que deriva lento (tiempo × 0,03). El velo se concentra a la derecha, lejos del texto (máscara `smoothstep(0.15, 0.95, x)`), y lleva un grano de 0,006 para evitar el banding. Los colores llegan como uniforms según el tema, así el cambio de tema no recrea el canvas:
+### Velo de luz en movimiento — componente distintivo
+**Hero de inicio (vgpu).** Un shader WebGPU propio (`src/shaders/luz.wgsl`) dibuja tres masas de luz suaves que derivan por trayectorias de Lissajous con ciclos de 26 a 47 s. Se mueven con dirección (se lee como luz que se desplaza, no como humo) a unos 10–20 px/s en el pico. En pantallas apaisadas las masas viven a la derecha, lejos del texto; en verticales (aspecto < 0,8) hay una grande arriba a la derecha y otra más tenue abajo a la izquierda, con el velo limitado a 0,65. Un término de ruido simplex de una sola octava les quita la forma de círculo. Todo es periódico en 1200 s, así el reloj se envuelve sin saltos. El grano (0,004) es fijo en el píxel. Los colores llegan como uniforms según el tema, así el cambio de tema no recrea el canvas:
 
-| Tema | Arriba | Abajo | Velo | Intensidad |
+| Tema | Arriba | Abajo | Luz | Intensidad |
 |---|---|---|---|---|
-| Claro | #ffffff | #f4f9fd | #c7e3f7 | 0,75 |
-| Oscuro | #0d1117 | #0f141b | #121c26 | 0,45 |
+| Claro | #ffffff | #f4f9fd | #c7e3f7 | 0,85 |
+| Oscuro | #0d1117 | #10171f | #16304a | 0,7 |
 
-- **Carga:** vgpu se importa en forma dinámica y queda fuera del bundle inicial. No se descarga si `navigator.gpu` no existe o si está activo el ahorro de datos. Usa un solo dispositivo `low-power`, un solo `frameLoop` a 45 fps y un DPR entre 1 y 1,5.
-- **Entrada:** primero se pinta el respaldo y el canvas aparece con un fundido de opacidad de 1000ms cuando el primer cuadro está listo. Con movimiento reducido no hay transición.
-- **Pausa:** se pausa fuera de pantalla (con un margen de 256px), con la pestaña oculta y con `prefers-reduced-motion`. En ese último caso queda un cuadro fijo (t = 12s) y no se escucha el puntero.
-- **Puntero:** sin movimiento reducido, el velo se corre como máximo un 2,5% del ancho siguiendo al puntero, con suavizado.
-- **Respaldo:** sin WebGPU, o si se pierde el dispositivo, queda el fondo liso `bg`. Es decorativo: `aria-hidden` y sin eventos de puntero.
+- **Contraste:** en claro el fondo nunca baja de luminancia 0,74 detrás de los enlaces (medido ≥ 0,81, el azul queda ≥ 4,5:1). En oscuro el núcleo queda entre #12263a y #132a40 (1,2:1 contra el fondo, sin brillo).
+- **Costo:** vgpu se importa en forma dinámica y queda fuera del bundle inicial. Un solo dispositivo `low-power` y un solo `frameLoop`, a 30 fps (24 en táctiles o angostas) y a 0,75x de resolución (0,5x en móvil); el navegador escala la luz con filtrado bilineal.
+- **Cuándo no hay shader:** sin `navigator.gpu`, con ahorro de datos o con un adaptador de software (SwiftShader frenaba toda la página): se queda el velo CSS. `?gpu=forzar` salta el chequeo del adaptador para pruebas.
+- **Entrada:** primero se pinta el velo CSS y el canvas aparece con un fundido de 1000ms cuando el primer cuadro está listo; desde ahí el velo CSS de abajo queda en pausa.
+- **Pausa:** fuera de pantalla (margen de 256px), con la pestaña oculta y con `prefers-reduced-motion` (cuadro fijo en t = 0).
+- **Puntero:** sólo con mouse (`hover: hover` y `pointer: fine`), corre las masas unos píxeles con suavizado.
 
-**La regla del velo invisible.** El velo tiene que pasar casi inadvertido. Si alguien lo nota antes que el buscador, sobra intensidad. Vive sólo en el hero de inicio, nunca detrás de texto que dependa de él y nunca como identidad.
+**Velo CSS (`.veil`, `.veil-hero`, `.veil-band`).** Dos degradés radiales (`--veil-1`, `--veil-2`) en pseudoelementos que se mueven sólo con `transform` (26 y 33 s, ida y vuelta, ±14%), así corre en el compositor sin repintar. `.veil-hero` es el respaldo del shader en inicio; `.veil-band` es una sola masa a la derecha en la cabecera de cada página interna (`PageIntro`), lejos del título. Con `prefers-reduced-motion` no se anima.
+
+**La regla de la luz que no compite.** Se nota si se la mira, nunca antes que el buscador. Vive sólo en el hero de inicio y en las cabeceras de página; nunca detrás de contenido denso (listas, contactos, footer) y nunca como identidad. El texto cumple AA sobre cualquier cuadro.
 
 ### Movimiento
 - **Colores:** 150ms en botones, enlaces, navegación, chips y celdas (100ms en las opciones del buscador).
@@ -497,5 +500,5 @@ Es un shader WebGPU propio (`src/shaders/luz.wgsl`) que se renderiza con vgpu s�
 - **Don't** uses las variantes de botón `inverse` e `inverse-outline`: son un resto de la banda azul descartada y no tienen uso.
 - **Don't** redibujes, recolorees ni encuadres de otra forma el isologo oficial, y no lo pongas sobre fondos de color.
 - **Don't** sumes una segunda familia tipográfica, ni itálicas o versalitas de acento.
-- **Don't** lleves el velo vgpu fuera del hero de inicio, ni le subas la intensidad, ni lo hagas imprescindible: la página tiene que verse igual sin WebGPU.
+- **Don't** lleves el velo de luz fuera del hero de inicio y de las cabeceras de página, ni le subas la intensidad por encima del piso de contraste, ni lo hagas imprescindible.
 - **Don't** animes nada que no sea un cambio de estado o la aparición de un menú o diálogo, y nunca sin su versión con movimiento reducido.

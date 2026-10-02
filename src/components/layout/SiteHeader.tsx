@@ -40,8 +40,8 @@ export function SiteHeader() {
     // Con barra de desplazamiento clásica, se reserva su lugar para que nada salte.
     if (window.innerWidth > root.clientWidth) root.style.scrollbarGutter = "stable";
     root.style.overflow = "hidden";
-    // El foco con teclado igual puede mover la página bloqueada (por el scroll-padding
-    // global y el header fijo): al cerrar sin navegar, vuelve a donde estaba.
+    // El foco con teclado igual puede mover la página bloqueada: al cerrar sin
+    // navegar, vuelve a donde estaba.
     const y = window.scrollY;
     const entrada = history.state;
 
@@ -134,7 +134,8 @@ export function SiteHeader() {
         ref={headerRef}
         className="sticky top-0 z-40 border-b border-line bg-bg md:bg-bg/85 md:backdrop-blur-sm [@media(max-height:480px)]:relative"
       >
-        <div className="container-page flex h-16 items-center gap-3 sm:gap-6 lg:h-[4.5rem] lg:gap-4 xl:gap-6">
+        {/* Bajo 360px (22.5rem), menos aire y el botón del menú corrido 6px hacia el margen: así entran los tres controles de 44px. */}
+        <div className="container-page flex h-16 items-center gap-3 max-[22.5rem]:gap-2 sm:gap-6 lg:h-[4.5rem] lg:gap-4 xl:gap-6">
           <Link to="/" className="shrink-0 rounded-md" aria-label="Rentas Jujuy, ir al inicio" onClick={() => setMenuOpen(false)}>
             <Logo />
           </Link>
@@ -166,7 +167,7 @@ export function SiteHeader() {
             </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-1 sm:gap-2">
+          <div className="ml-auto flex items-center gap-1 max-[22.5rem]:gap-0 sm:gap-2">
             <button
               type="button"
               onClick={openSearch}
@@ -193,7 +194,7 @@ export function SiteHeader() {
             <button
               ref={toggleRef}
               type="button"
-              className="inline-flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2 lg:hidden coarse:size-11"
+              className="inline-flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2 max-[22.5rem]:-mr-1.5 lg:hidden coarse:size-11"
               aria-expanded={menuOpen}
               aria-controls="menu-movil"
               aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}

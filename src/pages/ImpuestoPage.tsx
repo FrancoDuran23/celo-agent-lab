@@ -155,7 +155,7 @@ function Bloque({
   children: ReactNode;
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-titulo`} className="min-w-0 scroll-mt-6">
+    <section id={id} aria-labelledby={`${id}-titulo`} className="min-w-0 scroll-mt-26">
       <SectionHeader id={`${id}-titulo`} title={title} description={description} action={action} />
       <div className="mt-5">{children}</div>
     </section>

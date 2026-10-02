@@ -158,12 +158,20 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
+  }
+  /*
+   * Lo que se desplaza hasta la vista (anclas, foco, scrollIntoView) queda
+   * debajo del header fijo. Va en el contenido y no como scroll-padding del
+   * documento: así el foco en el propio header no mueve la página.
+   * Un scroll-mt-* propio lo reemplaza (es el margen total).
+   */
+  main :where(*) {
+    scroll-margin-top: 5rem;
   }
   /* Celulares apaisados: el header deja de ser fijo, no hace falta el margen. */
   @media (max-height: 480px) {
-    html {
-      scroll-padding-top: 1rem;
+    main :where(*) {
+      scroll-margin-top: 1rem;
     }
   }
   @media (prefers-reduced-motion: reduce) {

@@ -8,6 +8,15 @@ import { TRAMITES } from "../../data/tramites";
 import { IMPUESTOS } from "../../data/impuestos";
 import { SmartLink } from "../ui/primitives";
 
+/**
+ * Redes en pantallas táctiles: objetivo de 44px (la "X" sola mide 11px de
+ * ancho). El alto lo da min-h; el ancho, un ::before de 44px centrado, para
+ * que la "X" no quede corrida respecto de las otras redes (mismo patrón que
+ * Seguinos).
+ */
+const redesLink =
+  "link coarse:relative coarse:inline-flex coarse:min-h-11 coarse:items-center coarse:before:absolute coarse:before:inset-y-0 coarse:before:left-1/2 coarse:before:w-11 coarse:before:-translate-x-1/2";
+
 export function SiteFooter() {
   const frecuentes = TRAMITES.filter((t) => t.destacado).slice(0, 5);
   const casaCentral = OFICINAS.find((o) => o.casaCentral);
@@ -26,11 +35,7 @@ export function SiteFooter() {
             <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1" aria-label="Redes sociales">
               {REDES.map((r) => (
                 <li key={r.href}>
-                  {/* En pantallas táctiles, 44px de objetivo (la "X" sola mide 11px de ancho). */}
-                  <SmartLink
-                    to={r.href}
-                    className="link coarse:inline-flex coarse:min-h-11 coarse:min-w-11 coarse:items-center coarse:justify-center"
-                  >
+                  <SmartLink to={r.href} className={redesLink}>
                     {r.nombre}
                     {r.nombre === "X" ? <span className="sr-only"> (Twitter)</span> : null}
                   </SmartLink>
