@@ -72,6 +72,9 @@ export function VencimientosPage() {
 
   const [view, setView] = useState(() => startOfMonth(hoy));
   const [selected, setSelected] = useState<string | null>(() => {
+    // Debajo de md todo va apilado: la tarjeta de arriba y el comienzo de la agenda ya muestran el próximo
+    // vencimiento, así que se arranca sin día elegido para no repetirlo una tercera vez en el detalle del día.
+    if (!window.matchMedia("(min-width: 48rem)").matches) return null;
     const first = items.find((v) => v.fecha >= hoyISO)?.fecha;
     return first && sameMonth(parseISODate(first), hoy) ? first : null;
   });
@@ -126,9 +129,11 @@ export function VencimientosPage() {
         />
 
         <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] xl:grid-cols-[minmax(0,28rem)_minmax(0,1fr)] xl:gap-12">
-          <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-4 md:grid-cols-2 lg:grid-cols-[minmax(0,1fr)]">
-            <div ref={calendarRef} className="min-w-0 scroll-mt-24">
-              <Panel className="p-4 sm:p-5">
+          {/* Desde sm, calendario y detalle del día lado a lado (tablet, celular apaisado); el calendario nunca
+              baja de 21.5rem para que las celdas tengan 42px o más. Desde lg pasan a la columna angosta. */}
+          <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-4 sm:grid-cols-[minmax(21.5rem,1.2fr)_minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)]">
+            <div ref={calendarRef} className="min-w-0">
+              <Panel className="p-3 sm:p-4 lg:p-5">
                 <MonthCalendar
                   view={view}
                   onViewChange={changeView}

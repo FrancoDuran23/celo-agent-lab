@@ -15,7 +15,8 @@ export function SiteFooter() {
 
   return (
     <footer className="mt-auto border-t border-line bg-surface-2 text-[0.95rem] text-ink-2">
-      <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr] lg:gap-12">
+      {/* Dos columnas hasta xl: a 1024px, cuatro dejaban "Atención" en ~214px y partían teléfono y correo. */}
+      <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:gap-12 xl:grid-cols-[1.3fr_1fr_1fr_1.2fr]">
         <div>
           <Link to="/" aria-label="Rentas Jujuy, ir al inicio" className="inline-flex rounded-md">
             <Logo />
@@ -25,8 +26,13 @@ export function SiteFooter() {
             <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1" aria-label="Redes sociales">
               {REDES.map((r) => (
                 <li key={r.href}>
-                  <SmartLink to={r.href} className="link">
+                  {/* En pantallas táctiles, 44px de objetivo (la "X" sola mide 11px de ancho). */}
+                  <SmartLink
+                    to={r.href}
+                    className="link coarse:inline-flex coarse:min-h-11 coarse:min-w-11 coarse:items-center coarse:justify-center"
+                  >
                     {r.nombre}
+                    {r.nombre === "X" ? <span className="sr-only"> (Twitter)</span> : null}
                   </SmartLink>
                 </li>
               ))}
@@ -72,12 +78,12 @@ export function SiteFooter() {
         <FooterNav title="Atención">
           <li>
             <a href={CONTACTO.telefono.href} className="link">
-              Línea gratuita <span className="tabular">{CONTACTO.telefono.valor}</span>
+              Línea gratuita <span className="tabular whitespace-nowrap">{CONTACTO.telefono.valor}</span>
             </a>
           </li>
           <li>
             <SmartLink to={CONTACTO.whatsapp.href} className="link">
-              WhatsApp <span className="tabular">{CONTACTO.whatsapp.valor}</span>
+              WhatsApp <span className="tabular whitespace-nowrap">{CONTACTO.whatsapp.valor}</span>
             </SmartLink>
           </li>
           <li>
@@ -115,17 +121,18 @@ export function SiteFooter() {
               </p>
             ) : null}
           </div>
+          {/* En pantallas táctiles, objetivos de 44px de alto sin mover nada (py/-my). */}
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <Link to="/ayuda" className="link">
+            <Link to="/ayuda" className="link coarse:-my-3 coarse:py-3">
               Centro de ayuda
             </Link>
-            <Link to="/noticias" className="link">
+            <Link to="/noticias" className="link coarse:-my-3 coarse:py-3">
               Noticias
             </Link>
             <button
               type="button"
               onClick={() => window.scrollTo({ top: 0 })}
-              className="inline-flex items-center gap-1 font-semibold text-ink-2 hover:text-ink"
+              className="inline-flex items-center gap-1 font-semibold text-ink-2 hover:text-ink coarse:-my-3 coarse:py-3"
             >
               <ArrowUp className="size-4" aria-hidden="true" />
               Volver arriba
@@ -141,7 +148,8 @@ function FooterNav({ title, children }: { title: string; children: ReactNode }) 
   return (
     <nav aria-label={title}>
       <h2 className="text-sm font-bold text-ink">{title}</h2>
-      <ul className="mt-3 grid gap-2">{children}</ul>
+      {/* En pantallas táctiles los enlaces ocupan la fila (36px de alto) y el espacio entre ellos pasa al relleno. */}
+      <ul className="mt-3 grid gap-2 coarse:mt-1.5 coarse:gap-0 coarse:[&_a]:block coarse:[&_a]:py-1.5">{children}</ul>
     </nav>
   );
 }

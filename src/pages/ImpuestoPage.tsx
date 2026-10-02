@@ -47,14 +47,15 @@ function ImpuestoDetalle({ imp }: { imp: Impuesto }) {
         breadcrumbs={[{ label: "Impuestos", to: "/impuestos" }, { label: imp.nombre }]}
       >
         <p className="prose-measure text-ink-3">{imp.descripcion}</p>
-        <div className="mt-6 flex flex-wrap gap-3">
+        {/* Apilados en el celular, a todo el ancho (no de anchos dispares). */}
+        <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap">
           {tramites.length ? (
-            <a href="#tramites" className={buttonClass({ variant: "primary" })}>
+            <a href="#tramites" className={buttonClass({ variant: "primary", className: "w-full sm:w-auto" })}>
               <ListChecks aria-hidden="true" />
               Ver trámites
             </a>
           ) : null}
-          <ButtonLink to="/vencimientos" variant="secondary">
+          <ButtonLink to="/vencimientos" variant="secondary" className="w-full sm:w-auto">
             <CalendarDays aria-hidden="true" />
             Calendario de vencimientos
           </ButtonLink>
@@ -122,9 +123,11 @@ function ImpuestoDetalle({ imp }: { imp: Impuesto }) {
             <p className="prose-measure mt-1 text-ink-2">
               Consultá los canales de atención de Rentas o sacá un turno para que te atiendan en persona.
             </p>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <ButtonLink to="/atencion">Ir a Atención</ButtonLink>
-              <ButtonLink to={PORTAL.turnos.href} variant="secondary">
+            <div className="mt-5 grid gap-3 sm:flex sm:flex-wrap">
+              <ButtonLink to="/atencion" className="w-full sm:w-auto">
+                Ir a Atención
+              </ButtonLink>
+              <ButtonLink to={PORTAL.turnos.href} variant="secondary" className="w-full sm:w-auto">
                 Sacar turno
                 <ArrowUpRight aria-hidden="true" />
               </ButtonLink>
@@ -190,9 +193,11 @@ function ImpuestoNoEncontrado({ slug }: { slug?: string }) {
         ]}
       >
         {automotor ? null : (
-          <div className="flex flex-wrap gap-3">
-            <ButtonLink to="/impuestos">Ver todos los impuestos</ButtonLink>
-            <ButtonLink to="/" variant="secondary">
+          <div className="grid gap-3 sm:flex sm:flex-wrap">
+            <ButtonLink to="/impuestos" className="w-full sm:w-auto">
+              Ver todos los impuestos
+            </ButtonLink>
+            <ButtonLink to="/" variant="secondary" className="w-full sm:w-auto">
               Volver al inicio
             </ButtonLink>
           </div>

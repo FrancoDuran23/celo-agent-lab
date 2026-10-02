@@ -87,14 +87,16 @@ export function NextDue({
         ))}
       </ul>
 
-      <div className="mt-6 flex flex-wrap gap-3">
+      {/* Apilados en el celular, a todo el ancho (no de anchos dispares). */}
+      <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap">
         <AddToCalendarButton
           items={items}
           variant="secondary"
           size="md"
           srContext={`${items.length === 1 ? "el vencimiento" : `los ${items.length} vencimientos`} del ${formatLong(first.fecha)}`}
+          className="w-full sm:w-auto"
         />
-        <Button variant="subtle" onClick={() => onShow(first.fecha)}>
+        <Button variant="subtle" onClick={() => onShow(first.fecha)} className="w-full sm:w-auto">
           Ver en el calendario
         </Button>
       </div>

@@ -18,7 +18,8 @@ const variants: Record<Variant, string> = {
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-3.5 text-sm",
+  /** 36px con mouse; 44px en pantallas táctiles. */
+  sm: "h-9 px-3.5 text-sm coarse:h-11",
   md: "h-11 px-5 text-[0.95rem]",
   lg: "h-12 px-6 text-base",
 };
@@ -32,6 +33,27 @@ interface CommonProps {
 
 export function buttonClass({ variant = "primary", size = "md", className }: Omit<CommonProps, "children">) {
   return clsx(base, variants[variant], sizes[size], className);
+}
+
+/**
+ * Fila de chips de filtro. En pantallas chicas es una sola fila con
+ * desplazamiento horizontal que llega a los bordes de la pantalla (así los
+ * filtros no empujan los resultados fuera de la vista), con un fundido a la
+ * derecha que avisa que hay más. Desde md vuelve a ser una fila que se parte.
+ * El py/-my deja lugar al anillo de foco, que el overflow recortaría.
+ * `relative`: los textos sr-only (absolutos) de los chips quedan contenidos en
+ * la fila; si no, escapan del recorte y ensanchan la página.
+ */
+export const chipRowClass =
+  "relative flex gap-2 md:flex-wrap max-md:-mx-4 max-md:-my-1.5 max-md:flex-nowrap max-md:overflow-x-auto max-md:px-4 max-md:py-1.5 max-md:pr-6 max-md:scroll-px-8 max-md:[scrollbar-width:none] max-md:[mask-image:linear-gradient(to_left,transparent,#000_1.5rem)] max-md:[&::-webkit-scrollbar]:hidden sm:max-md:-mx-6 sm:max-md:px-6 sm:max-md:pr-8";
+
+/** Chip de filtro (botón con aria-pressed): 36px con mouse, 44px táctil. */
+export function chipClass(active: boolean, className?: string) {
+  return clsx(
+    "inline-flex h-9 shrink-0 items-center rounded-full px-3.5 text-sm font-medium whitespace-nowrap transition-colors coarse:h-11",
+    active ? "bg-ink text-bg" : "bg-surface text-ink-2 ring-1 ring-line-strong ring-inset hover:bg-surface-2 hover:text-ink",
+    className,
+  );
 }
 
 export function Button({

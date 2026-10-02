@@ -72,9 +72,14 @@ function Redes() {
       />
       <ul className="mt-6 border-b border-line" aria-label="Redes sociales">
         {REDES.map((r) => (
-          <li key={r.href} className="flex flex-wrap items-baseline gap-x-2 border-t border-line py-3">
-            <SmartLink to={r.href} className="link font-semibold">
+          // En táctil el enlace mide 44×44px (la "X" sola son 11px); el py menor compensa la altura de la fila.
+          <li key={r.href} className="flex flex-wrap items-baseline gap-x-2 border-t border-line py-3 coarse:py-1">
+            <SmartLink
+              to={r.href}
+              className="link font-semibold coarse:inline-flex coarse:min-h-11 coarse:min-w-11 coarse:items-center coarse:justify-center"
+            >
               {r.nombre}
+              {r.nombre === "X" ? <span className="sr-only"> (Twitter)</span> : null}
             </SmartLink>
             <span className="text-sm text-ink-3">{r.usuario}</span>
           </li>

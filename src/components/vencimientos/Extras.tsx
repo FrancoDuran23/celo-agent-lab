@@ -97,7 +97,7 @@ function Chip({
       aria-pressed={active}
       onClick={onClick}
       className={clsx(
-        "inline-flex h-9 items-center gap-2 rounded-full px-3.5 text-sm font-medium transition-colors",
+        "inline-flex h-9 items-center gap-2 rounded-full px-3.5 text-sm font-medium transition-colors coarse:h-11",
         active ? "bg-ink text-bg" : "bg-surface text-ink-2 ring-1 ring-line-strong ring-inset hover:bg-surface-2 hover:text-ink",
       )}
     >
@@ -127,9 +127,11 @@ export function DeudaHelp() {
             ayudamos por teléfono, WhatsApp o en una oficina.
           </p>
         </div>
-        <div className="flex flex-wrap gap-3">
-          <ButtonLink to="/tramites?q=plan">Ver planes de pago</ButtonLink>
-          <ButtonLink to="/atencion" variant="secondary">
+        <div className="grid gap-3 sm:flex sm:flex-wrap">
+          <ButtonLink to="/tramites?q=plan" className="w-full sm:w-auto">
+            Ver planes de pago
+          </ButtonLink>
+          <ButtonLink to="/atencion" variant="secondary" className="w-full sm:w-auto">
             Hablar con un asesor
           </ButtonLink>
         </div>

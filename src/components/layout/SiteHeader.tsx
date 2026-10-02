@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import clsx from "clsx";
 import { ChevronDown, LogIn, Menu, Moon, Search, Sun, X } from "lucide-react";
@@ -9,13 +9,55 @@ import { useResolvedTheme, useTheme } from "../../lib/theme";
 import { ButtonLink } from "../ui/Button";
 import { SearchDialog } from "../search/SearchDialog";
 
+/** Enlaces de la barra institucional: siempre subrayados, con un subrayado suave. */
+const barLink = "underline decoration-ink-3/50 underline-offset-2 hover:decoration-current";
+
 export function SiteHeader() {
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   // Cerrar el menú móvil al navegar.
   useEffect(() => setMenuOpen(false), [pathname]);
+
+  const openSearch = () => {
+    setMenuOpen(false);
+    setSearchOpen(true);
+  };
+
+  // Menú móvil abierto = modal: la página no se desplaza debajo, todo lo que
+  // no es el header queda inerte (el foco no sale a contenido tapado), Esc lo
+  // cierra devolviendo el foco al botón, y se cierra solo al pasar a escritorio.
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!menuOpen || !header?.parentElement) return;
+    const root = document.documentElement;
+    // El buscador (<dialog>) queda fuera: se abre desde el menú.
+    const fondo = Array.from(header.parentElement.children).filter((el) => el !== header && el.tagName !== "DIALOG");
+    fondo.forEach((el) => el.toggleAttribute("inert", true));
+    // Con barra de desplazamiento clásica, se reserva su lugar para que nada salte.
+    if (window.innerWidth > root.clientWidth) root.style.scrollbarGutter = "stable";
+    root.style.overflow = "hidden";
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setMenuOpen(false);
+      toggleRef.current?.focus();
+    };
+    const escritorio = matchMedia("(min-width: 64rem)");
+    const onResize = () => escritorio.matches && setMenuOpen(false);
+    document.addEventListener("keydown", onKey);
+    escritorio.addEventListener("change", onResize);
+    return () => {
+      fondo.forEach((el) => el.removeAttribute("inert"));
+      root.style.overflow = "";
+      root.style.scrollbarGutter = "";
+      document.removeEventListener("keydown", onKey);
+      escritorio.removeEventListener("change", onResize);
+    };
+  }, [menuOpen]);
 
   // Atajo global: "/" o Ctrl/⌘+K abre el buscador.
   useEffect(() => {
@@ -24,6 +66,7 @@ export function SiteHeader() {
       const typing = el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable);
       if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || (e.key === "/" && !typing)) {
         e.preventDefault();
+        setMenuOpen(false);
         setSearchOpen(true);
       }
     };
@@ -47,28 +90,32 @@ export function SiteHeader() {
         </aside>
       ) : null}
 
-      {/* Barra institucional */}
-      <section aria-label="Barra institucional" className="border-b border-line bg-surface-2 text-[0.8rem] text-ink-2">
+      {/* Barra institucional (en pantallas bajas, como un celular apaisado, se oculta para ganar alto) */}
+      <section
+        aria-label="Barra institucional"
+        className="border-b border-line bg-surface-2 text-[0.8rem] text-ink-2 [@media(max-height:480px)]:hidden"
+      >
         <div className="container-page flex min-h-9 items-center justify-between gap-4 py-1.5">
           <p className="truncate">Gobierno de Jujuy · Ministerio de Hacienda y Finanzas</p>
-          <ul className="hidden items-center gap-5 md:flex">
+          {/* Entre md y lg sólo entra el teléfono; la lista completa, desde lg. Nunca en dos líneas. */}
+          <ul className="hidden items-center gap-5 whitespace-nowrap md:flex">
             <li>
-              <a href={CONTACTO.telefono.href} className="hover:underline">
+              <a href={CONTACTO.telefono.href} className={barLink}>
                 Línea gratuita <span className="font-semibold tabular">{CONTACTO.telefono.valor}</span>
               </a>
             </li>
-            <li>
-              <a href={PORTAL.turnos.href} target="_blank" rel="noopener noreferrer" className="hover:underline">
+            <li className="max-lg:hidden">
+              <a href={PORTAL.turnos.href} target="_blank" rel="noopener noreferrer" className={barLink}>
                 Turnos web<span className="sr-only"> (se abre en una pestaña nueva)</span>
               </a>
             </li>
-            <li>
-              <Link to="/noticias" className="hover:underline">
+            <li className="max-lg:hidden">
+              <Link to="/noticias" className={barLink}>
                 Noticias
               </Link>
             </li>
-            <li>
-              <Link to="/ayuda" className="hover:underline">
+            <li className="max-lg:hidden">
+              <Link to="/ayuda" className={barLink}>
                 Centro de ayuda
               </Link>
             </li>
@@ -76,14 +123,19 @@ export function SiteHeader() {
         </div>
       </section>
 
-      <header className="sticky top-0 z-40 border-b border-line bg-bg/95 backdrop-blur-sm supports-[backdrop-filter]:bg-bg/85">
-        <div className="container-page flex h-16 items-center gap-3 sm:gap-6 lg:h-[4.5rem]">
-          <Link to="/" className="shrink-0 rounded-md" aria-label="Rentas Jujuy, ir al inicio">
+      {/* Opaco en celulares (el desenfoque deja una mancha detrás del logo) y no fijo en pantallas bajas. */}
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-40 border-b border-line bg-bg md:bg-bg/85 md:backdrop-blur-sm [@media(max-height:480px)]:relative"
+      >
+        <div className="container-page flex h-16 items-center gap-3 sm:gap-6 lg:h-[4.5rem] lg:gap-4 xl:gap-6">
+          <Link to="/" className="shrink-0 rounded-md" aria-label="Rentas Jujuy, ir al inicio" onClick={() => setMenuOpen(false)}>
             <Logo />
           </Link>
 
-          <nav aria-label="Principal" className="hidden h-full flex-1 items-stretch xl:flex">
-            <ul className="flex items-stretch gap-1">
+          {/* Desde lg, en línea; entre lg y xl, con menos aire para que entre a 1024px con barra de scroll. */}
+          <nav aria-label="Principal" className="hidden h-full flex-1 items-stretch lg:flex">
+            <ul className="flex items-stretch xl:gap-1">
               {NAV.map((item) => (
                 <li key={item.to} className="flex">
                   {item.children ? (
@@ -93,7 +145,7 @@ export function SiteHeader() {
                       to={item.to}
                       className={({ isActive }) =>
                         clsx(
-                          "flex items-center border-b-[3px] px-2.5 text-[0.95rem] font-medium transition-colors 2xl:px-3",
+                          "flex items-center border-b-[3px] px-2 text-[0.95rem] font-medium transition-colors xl:px-2.5 2xl:px-3",
                           isActive
                             ? "border-brand text-ink"
                             : "border-transparent text-ink-2 hover:border-line-strong hover:text-ink",
@@ -111,8 +163,8 @@ export function SiteHeader() {
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
             <button
               type="button"
-              onClick={() => setSearchOpen(true)}
-              className="hidden h-10 w-56 items-center gap-2 rounded-lg border border-line-strong bg-surface pr-2 pl-3 text-left text-sm text-ink-3 transition-colors hover:border-ink-3 md:flex xl:hidden"
+              onClick={openSearch}
+              className="hidden h-10 w-56 items-center gap-2 rounded-lg border border-line-strong bg-surface pr-2 pl-3 text-left text-sm text-ink-3 transition-colors hover:border-ink-3 md:flex lg:hidden"
             >
               <Search className="size-4 shrink-0" aria-hidden="true" />
               <span className="flex-1">Buscar trámite</span>
@@ -120,8 +172,8 @@ export function SiteHeader() {
             </button>
             <button
               type="button"
-              onClick={() => setSearchOpen(true)}
-              className="inline-flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-surface-2 md:hidden xl:inline-flex"
+              onClick={openSearch}
+              className="inline-flex size-10 items-center justify-center rounded-lg text-ink-2 hover:bg-surface-2 md:hidden lg:inline-flex coarse:size-11"
               aria-label="Buscar trámite"
             >
               <Search className="size-5" aria-hidden="true" />
@@ -129,12 +181,13 @@ export function SiteHeader() {
             <ThemeToggle />
             <ButtonLink to={PORTAL.clave.href} size="sm" className="max-sm:hidden">
               <LogIn aria-hidden="true" />
-              <span className="lg:hidden">{PORTAL.clave.cta}</span>
-              <span className="max-lg:hidden">{PORTAL.clave.ctaLargo}</span>
+              <span className="xl:hidden">{PORTAL.clave.cta}</span>
+              <span className="max-xl:hidden">{PORTAL.clave.ctaLargo}</span>
             </ButtonLink>
             <button
+              ref={toggleRef}
               type="button"
-              className="inline-flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2 xl:hidden"
+              className="inline-flex size-10 items-center justify-center rounded-lg text-ink hover:bg-surface-2 lg:hidden coarse:size-11"
               aria-expanded={menuOpen}
               aria-controls="menu-movil"
               aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
@@ -145,7 +198,7 @@ export function SiteHeader() {
           </div>
         </div>
 
-        {menuOpen ? <MobileMenu onSearch={() => setSearchOpen(true)} /> : null}
+        {menuOpen ? <MobileMenu onSearch={openSearch} onClose={() => setMenuOpen(false)} /> : null}
       </header>
 
       <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
@@ -166,7 +219,12 @@ function NavDropdown({ item }: { item: (typeof NAV)[number] }) {
     const onDown = (e: PointerEvent) => {
       if (!ref.current?.contains(e.target as Node)) setOpen(false);
     };
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    // Esc cierra; si el foco estaba en el panel, vuelve al botón (el panel desaparece).
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      if (ref.current?.contains(document.activeElement)) ref.current.querySelector("button")?.focus();
+    };
     document.addEventListener("pointerdown", onDown);
     document.addEventListener("keydown", onKey);
     return () => {
@@ -189,7 +247,7 @@ function NavDropdown({ item }: { item: (typeof NAV)[number] }) {
         aria-controls="menu-impuestos"
         onClick={() => setOpen((o) => !o)}
         className={clsx(
-          "flex items-center gap-1 border-b-[3px] px-2.5 text-[0.95rem] font-medium transition-colors 2xl:px-3",
+          "flex items-center gap-1 border-b-[3px] px-2 text-[0.95rem] font-medium transition-colors xl:px-2.5 2xl:px-3",
           active || open ? "border-brand text-ink" : "border-transparent text-ink-2 hover:border-line-strong hover:text-ink",
         )}
       >
@@ -221,10 +279,31 @@ function NavDropdown({ item }: { item: (typeof NAV)[number] }) {
   );
 }
 
-function MobileMenu({ onSearch }: { onSearch: () => void }) {
+function MobileMenu({ onSearch, onClose }: { onSearch: () => void; onClose: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  // El panel va desde el borde inferior del header (que baja si se ve la barra
+  // institucional) hasta el final de la pantalla, y se desplaza por dentro.
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const medir = () => el.style.setProperty("--menu-top", `${el.getBoundingClientRect().top}px`);
+    medir();
+    window.addEventListener("resize", medir);
+    return () => window.removeEventListener("resize", medir);
+  }, []);
+
   return (
-    <div id="menu-movil" className="border-t border-line bg-bg xl:hidden">
-      <nav aria-label="Menú" className="container-page max-h-[calc(100dvh-4rem)] overflow-y-auto pt-4 pb-8">
+    <div
+      ref={ref}
+      id="menu-movil"
+      // Cualquier enlace o botón cierra el menú, también el de la página actual.
+      onClick={(e) => {
+        if ((e.target as Element).closest("a, button")) onClose();
+      }}
+      className="absolute inset-x-0 top-full max-h-[calc(100dvh-var(--menu-top,4rem))] overflow-y-auto overscroll-contain border-y border-line bg-bg lg:hidden"
+    >
+      <nav aria-label="Menú" className="container-page pt-4 pb-8">
         <button
           type="button"
           onClick={onSearch}
@@ -251,7 +330,12 @@ function MobileMenu({ onSearch }: { onSearch: () => void }) {
                     <li key={c.to}>
                       <NavLink
                         to={c.to}
-                        className={({ isActive }) => clsx("block py-1.5", isActive ? "font-semibold text-brand" : "text-ink-2")}
+                        className={({ isActive }) =>
+                          clsx(
+                            "block py-1.5 coarse:flex coarse:min-h-11 coarse:items-center coarse:py-0",
+                            isActive ? "font-semibold text-brand" : "text-ink-2",
+                          )
+                        }
                       >
                         {c.label}
                       </NavLink>
@@ -303,7 +387,7 @@ function ThemeToggle() {
       onClick={toggle}
       aria-label={label}
       title={label}
-      className="inline-flex size-10 items-center justify-center rounded-lg text-ink-2 transition-colors hover:bg-surface-2"
+      className="inline-flex size-10 items-center justify-center rounded-lg text-ink-2 transition-colors hover:bg-surface-2 coarse:size-11"
     >
       <IconC className="size-[1.15rem]" aria-hidden="true" />
     </button>

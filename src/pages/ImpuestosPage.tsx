@@ -17,9 +17,13 @@ export function ImpuestosPage() {
         description="Conocé quiénes pagan cada impuesto, qué tenés que tener en cuenta y qué trámites podés hacer en línea."
         breadcrumbs={[{ label: "Impuestos" }]}
       >
-        <a href="#orientacion" className="link inline-flex items-center gap-1 font-semibold">
-          ¿No sabés qué impuesto te corresponde?
-          <ArrowDown className="size-4" aria-hidden="true" />
+        {/* Enlace en línea: si se parte en dos líneas, la flecha queda pegada a la última palabra. */}
+        <a href="#orientacion" className="link font-semibold">
+          ¿No sabés qué impuesto te{" "}
+          <span className="whitespace-nowrap">
+            corresponde?
+            <ArrowDown className="ml-1 inline size-4 align-[-2px]" aria-hidden="true" />
+          </span>
         </a>
       </PageIntro>
 

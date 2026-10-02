@@ -1,9 +1,8 @@
 import { useEffect, useMemo, type ReactNode } from "react";
 import { useLocation, useSearchParams } from "react-router";
-import clsx from "clsx";
 import { NOTICIAS } from "../data/noticias";
 import { useDocumentTitle } from "../lib/useDocumentTitle";
-import { Button } from "../components/ui/Button";
+import { Button, chipClass, chipRowClass } from "../components/ui/Button";
 import { PageIntro } from "../components/ui/primitives";
 import { NoticiaDestacada } from "../components/noticias/NoticiaDestacada";
 import { NoticiaItem } from "../components/noticias/NoticiaItem";
@@ -65,7 +64,7 @@ export function NoticiasPage() {
             <h2 id="filtro-titulo" className="mb-3 font-semibold text-ink">
               Filtrar por categoría
             </h2>
-            <div role="group" aria-labelledby="filtro-titulo" className="flex flex-wrap gap-2">
+            <div role="group" aria-labelledby="filtro-titulo" className={chipRowClass}>
               <FilterChip active={!activa && !invalida} count={NOTICIAS.length} onClick={() => elegir(null)}>
                 Todas
               </FilterChip>
@@ -91,7 +90,6 @@ export function NoticiasPage() {
               <>
                 <span className="font-semibold text-ink tabular">{plural(lista.length)}</span>
                 {activa ? <> en {activa.nombre}</> : null}
-                {lista.length > 1 ? <span className="text-ink-3"> · de la más reciente a la más antigua</span> : null}
               </>
             )}
           </p>
@@ -166,17 +164,9 @@ function FilterChip({
   children: ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={clsx(
-        "inline-flex h-9 items-center gap-2 rounded-full px-3.5 text-sm font-medium whitespace-nowrap transition-colors",
-        active ? "bg-ink text-bg" : "bg-surface text-ink-2 ring-1 ring-line-strong ring-inset hover:bg-surface-2",
-      )}
-    >
+    <button type="button" aria-pressed={active} onClick={onClick} className={chipClass(active, "gap-2")}>
       {children}
-      <span className={clsx("text-xs tabular", active ? "text-bg/75" : "text-ink-3")}>
+      <span className={active ? "text-xs text-bg/75 tabular" : "text-xs text-ink-3 tabular"}>
         <span className="sr-only">(</span>
         {count}
         <span className="sr-only">)</span>

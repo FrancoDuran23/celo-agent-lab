@@ -38,6 +38,12 @@ interface Props {
 }
 
 /**
+ * Celdas cuadradas, pero nunca más altas que 48px debajo de lg: en una tablet
+ * o un celular apaisado la celda se ensancha y el mes entra en la pantalla.
+ */
+const cellShape = "aspect-square max-h-12 lg:max-h-none";
+
+/**
  * Grilla mensual (lunes a domingo) con el patrón de teclado de un
  * selector de fechas: flechas por día/semana, Inicio/Fin de semana y
  * RePág/AvPág por mes. Un solo día es tabulable a la vez.
@@ -125,21 +131,30 @@ export function MonthCalendar({ view, onViewChange, min, max, hoy, byDate, selec
     if (!sameMonth(month, view)) onViewChange(month);
   };
 
+  // 36px con mouse, 44px en pantallas táctiles.
   const navBtn =
-    "inline-flex size-9 items-center justify-center rounded-lg bg-surface text-ink ring-1 ring-line-strong ring-inset transition-colors hover:bg-surface-2 aria-disabled:cursor-not-allowed aria-disabled:text-ink-3 aria-disabled:opacity-50 aria-disabled:hover:bg-surface";
+    "inline-flex size-9 items-center justify-center rounded-lg bg-surface text-ink ring-1 ring-line-strong ring-inset transition-colors hover:bg-surface-2 aria-disabled:cursor-not-allowed aria-disabled:text-ink-3 aria-disabled:opacity-50 aria-disabled:hover:bg-surface coarse:size-11";
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-3">
-        <h3 id={headingId} aria-live="polite" className="text-lg font-bold text-ink sm:text-xl">
+      {/* Debajo de lg el panel es angosto (celular o al lado del detalle del día): título y controles más
+          compactos para que "Septiembre 2026" entre en una línea aunque aparezca "Hoy" y la grilla no salte
+          al cambiar de mes. Si aun así se parte (pantallas de 320px), las dos líneas entran en los 44px de
+          los botones táctiles. */}
+      <div className="flex items-center justify-between gap-2 lg:gap-3">
+        <h3
+          id={headingId}
+          aria-live="polite"
+          className="min-w-0 text-base font-bold text-ink max-lg:leading-tight lg:text-xl"
+        >
           {monthName(view)} <span className="font-normal text-ink-3 tabular">{view.getFullYear()}</span>
         </h3>
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1 lg:gap-1.5">
           {!sameMonth(view, hoy) && startOfMonth(hoy) >= startOfMonth(min) && startOfMonth(hoy) <= startOfMonth(max) ? (
             <button
               type="button"
               onClick={() => go(startOfMonth(hoy))}
-              className={buttonClass({ variant: "secondary", size: "sm" })}
+              className={buttonClass({ variant: "secondary", size: "sm", className: "max-lg:px-3" })}
             >
               Hoy
             </button>
@@ -175,7 +190,7 @@ export function MonthCalendar({ view, onViewChange, min, max, hoy, byDate, selec
         role="grid"
         aria-labelledby={headingId}
         aria-describedby={hintId}
-        className="mt-4 w-full table-fixed border-separate border-spacing-0.5 sm:border-spacing-1"
+        className="mt-4 w-full table-fixed border-separate border-spacing-px sm:border-spacing-0.5 lg:border-spacing-1"
       >
         <thead>
           <tr>
@@ -194,7 +209,7 @@ export function MonthCalendar({ view, onViewChange, min, max, hoy, byDate, selec
                 if (!sameMonth(d, view)) {
                   return (
                     <td key={iso} role="gridcell" className="p-0">
-                      <span aria-hidden="true" className="block aspect-square w-full" />
+                      <span aria-hidden="true" className={clsx("block w-full", cellShape)} />
                     </td>
                   );
                 }
@@ -224,7 +239,8 @@ export function MonthCalendar({ view, onViewChange, min, max, hoy, byDate, selec
                       onFocus={() => setFocusISO(iso)}
                       onKeyDown={(e) => onKeyDown(e, d)}
                       className={clsx(
-                        "relative flex aspect-square w-full items-center justify-center rounded-lg border-2 text-sm tabular transition-colors duration-150 sm:text-[0.95rem]",
+                        "relative flex w-full items-center justify-center rounded-lg border-2 text-sm tabular transition-colors duration-150 sm:text-[0.95rem]",
+                        cellShape,
                         isToday ? "border-brand" : "border-transparent",
                         isSelected
                           ? "bg-ink font-bold text-bg"

@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 import { Link, useSearchParams } from "react-router";
 import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import clsx from "clsx";
@@ -7,7 +8,7 @@ import { IMPUESTOS } from "../data/impuestos";
 import type { Perfil, Tramite } from "../data/types";
 import { searchTramites } from "../lib/search";
 import { useDocumentTitle } from "../lib/useDocumentTitle";
-import { Button, buttonClass } from "../components/ui/Button";
+import { Button, buttonClass, chipClass } from "../components/ui/Button";
 import { Badge, LinkList, PageIntro } from "../components/ui/primitives";
 
 const PERFILES: { id: Perfil; label: string }[] = [
@@ -60,6 +61,16 @@ export function TramitesPage() {
   const hasFilters = Boolean(q || filtrosActivos);
   const impuestoNombre = (slug: string) => IMPUESTOS.find((i) => i.slug === slug)?.corto ?? "General";
 
+  // En móvil el panel abierto tapa los resultados: lo cerramos y llevamos la
+  // vista (y el foco, que estaba en un botón que se oculta) al encabezado con
+  // el conteo. flushSync: el panel ya tiene que estar oculto al medir.
+  const verResultados = () => {
+    flushSync(() => setFiltrosAbiertos(false));
+    const titulo = document.getElementById("resultados-titulo");
+    titulo?.focus({ preventScroll: true });
+    titulo?.scrollIntoView({ block: "start" });
+  };
+
   return (
     <>
       <PageIntro
@@ -81,6 +92,8 @@ export function TramitesPage() {
               type="search"
               value={q}
               onChange={(e) => update("q", e.target.value)}
+              // Al escribir, los resultados tienen que quedar a la vista.
+              onFocus={() => setFiltrosAbiertos(false)}
               placeholder="Por ejemplo: libre deuda"
               autoComplete="off"
               className="h-12 w-full min-w-0 rounded-lg border border-ink-3 bg-surface pr-3 pl-11 text-base text-ink placeholder:text-ink-3 sm:h-13 sm:text-lg"
@@ -115,7 +128,7 @@ export function TramitesPage() {
           <div
             id="tramites-filtros"
             className={clsx(
-              "mt-5 border-b border-line pb-6 lg:mt-0 lg:block lg:border-b-0 lg:pb-0",
+              "mt-5 border-b border-line lg:mt-0 lg:block lg:border-b-0",
               filtrosAbiertos ? "block" : "hidden",
             )}
           >
@@ -166,13 +179,27 @@ export function TramitesPage() {
                 </label>
               </fieldset>
             </div>
+
+            {/* Acción fija al pie del panel (sólo móvil): cierra los filtros y muestra los resultados. */}
+            <div className="sticky bottom-0 z-10 mt-6 border-t border-line bg-bg py-3 lg:hidden">
+              <Button variant={results.length ? "primary" : "secondary"} onClick={verResultados} className="w-full">
+                {results.length
+                  ? `Ver ${results.length} ${results.length === 1 ? "trámite" : "trámites"}`
+                  : "Sin resultados: ver sugerencias"}
+              </Button>
+            </div>
           </div>
         </aside>
 
         {/* Resultados */}
         <section aria-labelledby="resultados-titulo" className="min-w-0">
           <div className="flex min-h-9 flex-wrap items-center justify-between gap-x-4 gap-y-2">
-            <h2 id="resultados-titulo" className="text-lg font-bold text-ink [overflow-wrap:anywhere]" aria-live="polite">
+            <h2
+              id="resultados-titulo"
+              tabIndex={-1}
+              className="text-lg font-bold text-ink [overflow-wrap:anywhere]"
+              aria-live="polite"
+            >
               <span className="tabular">{results.length}</span> {results.length === 1 ? "trámite" : "trámites"}
               {q.trim() ? (
                 <span className="font-normal text-ink-3">
@@ -200,7 +227,8 @@ export function TramitesPage() {
                 meta: (
                   <>
                     <Badge>{impuestoNombre(t.impuesto)}</Badge>
-                    <Badge tone={t.canal === "presencial" ? "warn" : "ok"}>{CANAL_LABEL[t.canal]}</Badge>
+                    {/* Canal es una categoría, no un estado: azul si se puede hacer en línea, neutro si no. */}
+                    <Badge tone={t.canal === "presencial" ? "neutral" : "info"}>{CANAL_LABEL[t.canal]}</Badge>
                     {t.requiereClave ? <Badge tone="info">Clave fiscal</Badge> : null}
                   </>
                 ),
@@ -255,15 +283,7 @@ function FilterChip({
   children: ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={clsx(
-        "inline-flex h-9 items-center rounded-full px-3.5 text-sm font-medium transition-colors",
-        active ? "bg-ink text-bg" : "bg-surface text-ink-2 ring-1 ring-line-strong ring-inset hover:bg-surface-2 hover:text-ink",
-      )}
-    >
+    <button type="button" aria-pressed={active} onClick={onClick} className={chipClass(active)}>
       {children}
     </button>
   );

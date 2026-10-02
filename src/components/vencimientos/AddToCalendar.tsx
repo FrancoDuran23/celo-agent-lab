@@ -85,7 +85,9 @@ export function AddToCalendarButton({
       className={
         appearance === "link"
           ? clsx(
-              "inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-brand underline-offset-[0.18em] hover:underline disabled:opacity-50 [&_svg]:size-4",
+              // En pantallas táctiles, un ::after invisible lleva el área de toque a 44px de alto sin cambiar el
+              // aspecto. Quien lo usa deja 12px libres arriba y abajo para que no pise otros controles.
+              "relative inline-flex items-center gap-1.5 rounded-md text-sm font-semibold text-brand underline-offset-[0.18em] hover:underline disabled:opacity-50 [&_svg]:size-4 coarse:after:absolute coarse:after:inset-x-0 coarse:after:-inset-y-3",
               status === "done" && "!text-ok",
               className,
             )

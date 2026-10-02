@@ -6,7 +6,8 @@ export function Layout() {
   return (
     <div className="flex min-h-dvh flex-col">
       <SiteHeader />
-      <main id="contenido" tabIndex={-1} className="flex-1 outline-none">
+      {/* Destino del enlace "Saltar al contenido": recibe el foco sin marco alrededor de toda la página. */}
+      <main id="contenido" tabIndex={-1} className="flex-1 outline-none focus-visible:shadow-none">
         <Outlet />
       </main>
       <SiteFooter />

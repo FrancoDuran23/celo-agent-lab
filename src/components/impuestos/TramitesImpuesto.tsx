@@ -15,7 +15,8 @@ export function TramitesImpuesto({ tramites }: { tramites: Tramite[] }) {
         description: t.descripcion,
         meta: (
           <>
-            <Badge tone={t.canal === "presencial" ? "warn" : "ok"}>{CANAL_LABEL[t.canal]}</Badge>
+            {/* Canal = categoría, no estado: azul si se puede hacer en línea, neutro si es solo presencial. */}
+            <Badge tone={t.canal === "presencial" ? "neutral" : "info"}>{CANAL_LABEL[t.canal]}</Badge>
             {t.requiereClave ? <Badge tone="info">Clave fiscal</Badge> : null}
             {t.impuesto === "general" ? <Badge>Para todos los impuestos</Badge> : null}
           </>

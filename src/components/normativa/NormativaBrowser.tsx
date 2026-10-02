@@ -1,9 +1,9 @@
-import { useId, useMemo, type ReactNode } from "react";
+import { useId, useMemo, useRef, type ReactNode } from "react";
 import { useSearchParams } from "react-router";
 import { ArrowUpRight, Search, X } from "lucide-react";
 import clsx from "clsx";
 import type { Norma } from "../../data/types";
-import { Button } from "../ui/Button";
+import { Button, chipClass, chipRowClass } from "../ui/Button";
 import { SmartLink } from "../ui/primitives";
 import { Highlight } from "./bits";
 import {
@@ -39,6 +39,17 @@ export function NormativaBrowser({ normas }: { normas: Norma[] }) {
     setParams(next, { replace: true, preventScrollReset: true });
   };
   const clearAll = () => setParams(new URLSearchParams(), { replace: true, preventScrollReset: true });
+
+  // Tras tocar un chip, el conteo tiene que quedar a la vista: si quedó debajo
+  // del borde inferior de la pantalla, lo acercamos lo justo.
+  const statusRef = useRef<HTMLParagraphElement>(null);
+  const filtrar = (key: string, value: string | null) => {
+    update(key, value);
+    requestAnimationFrame(() => {
+      const el = statusRef.current;
+      if (el && el.getBoundingClientRect().bottom > window.innerHeight) el.scrollIntoView({ block: "nearest" });
+    });
+  };
 
   const terms = useMemo(() => queryTerms(q), [q]);
 
@@ -82,7 +93,7 @@ export function NormativaBrowser({ normas }: { normas: Norma[] }) {
             aria-describedby={hintId}
             autoComplete="off"
             spellCheck={false}
-            className="h-12 w-full min-w-0 rounded-lg border-2 border-line-strong bg-surface pr-4 pl-11 text-base text-ink transition-colors placeholder:text-ink-3 hover:border-ink-3"
+            className="h-12 w-full min-w-0 rounded-lg border border-ink-3 bg-surface pr-3 pl-11 text-base text-ink placeholder:text-ink-3 sm:h-13 sm:text-lg"
           />
         </div>
       </form>
@@ -90,8 +101,8 @@ export function NormativaBrowser({ normas }: { normas: Norma[] }) {
       <div className="mt-6 grid gap-5">
         <fieldset className="min-w-0">
           <legend className="mb-2 text-sm font-semibold text-ink">Tipo de norma</legend>
-          <div className="flex flex-wrap gap-2">
-            <Chip active={!tipo} count={sumTipo} onClick={() => update("tipo", null)}>
+          <div className={chipRowClass}>
+            <Chip active={!tipo} count={sumTipo} onClick={() => filtrar("tipo", null)}>
               Todos
             </Chip>
             {TIPOS.map((t) => (
@@ -99,7 +110,7 @@ export function NormativaBrowser({ normas }: { normas: Norma[] }) {
                 key={t.id}
                 active={tipo?.id === t.id}
                 count={tipoCounts.get(t.tipo) ?? 0}
-                onClick={() => update("tipo", tipo?.id === t.id ? null : t.id)}
+                onClick={() => filtrar("tipo", tipo?.id === t.id ? null : t.id)}
               >
                 {t.label}
               </Chip>
@@ -108,8 +119,8 @@ export function NormativaBrowser({ normas }: { normas: Norma[] }) {
         </fieldset>
         <fieldset className="min-w-0">
           <legend className="mb-2 text-sm font-semibold text-ink">Tema</legend>
-          <div className="flex flex-wrap gap-2">
-            <Chip active={!tema} count={sumTema} onClick={() => update("tema", null)}>
+          <div className={chipRowClass}>
+            <Chip active={!tema} count={sumTema} onClick={() => filtrar("tema", null)}>
               Todos
             </Chip>
             {TEMAS.map((t) => (
@@ -117,7 +128,7 @@ export function NormativaBrowser({ normas }: { normas: Norma[] }) {
                 key={t.id}
                 active={tema?.id === t.id}
                 count={temaCounts.get(t.id) ?? 0}
-                onClick={() => update("tema", tema?.id === t.id ? null : t.id)}
+                onClick={() => filtrar("tema", tema?.id === t.id ? null : t.id)}
               >
                 {t.label}
               </Chip>
@@ -127,7 +138,7 @@ export function NormativaBrowser({ normas }: { normas: Norma[] }) {
       </div>
 
       <div className="mt-8 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        <p role="status" aria-live="polite" aria-atomic="true" className="text-ink-2">
+        <p ref={statusRef} role="status" aria-live="polite" aria-atomic="true" className="text-ink-2">
           <span className="font-semibold text-ink tabular">{results.length}</span>{" "}
           {results.length === 1 ? "norma" : "normas"}
           {hasFilters ? (
@@ -142,7 +153,10 @@ export function NormativaBrowser({ normas }: { normas: Norma[] }) {
               para “<span className="text-ink [overflow-wrap:anywhere]">{q.trim()}</span>”
             </>
           ) : null}
-          {results.length > 1 ? <span className="text-ink-3"> · de la más reciente a la más antigua</span> : null}
+          {/* El orden ya lo dice el caption de la tabla; en móvil la frase partía la línea. */}
+          {results.length > 1 ? (
+            <span className="text-ink-3 max-sm:hidden"> · de la más reciente a la más antigua</span>
+          ) : null}
         </p>
         {hasFilters ? (
           <Button variant="secondary" size="sm" onClick={clearAll}>
@@ -233,7 +247,8 @@ function NormaRow({ norma: n, terms }: { norma: Norma; terms: string[] }) {
       </td>
       <td role="cell" className={clsx(TD, "mt-1 text-sm md:mt-0 md:pr-0 md:text-[0.95rem]")}>
         {n.href ? (
-          <SmartLink to={n.href} className="link whitespace-nowrap font-semibold">
+          // En táctil, el área de toque llega a 44px de alto sin mover el texto (py compensado con -my).
+          <SmartLink to={n.href} className="link whitespace-nowrap font-semibold coarse:-my-3 coarse:inline-block coarse:py-3">
             <span className="sr-only">{normaLabel(n)} en el </span>
             Sitio oficial
             <ArrowUpRight className="ml-1 inline size-4 align-[-2px]" aria-hidden="true" />
@@ -258,15 +273,7 @@ function Chip({
   children: ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={clsx(
-        "inline-flex h-9 shrink-0 items-center gap-2 rounded-full px-3.5 text-sm font-medium whitespace-nowrap transition-colors",
-        active ? "bg-ink text-bg" : "bg-surface text-ink-2 ring-1 ring-line-strong ring-inset hover:bg-surface-2",
-      )}
-    >
+    <button type="button" aria-pressed={active} onClick={onClick} className={chipClass(active, "gap-2")}>
       {children}
       <span className={clsx("text-xs tabular", active ? "text-bg/75" : "text-ink-3")}>
         <span className="sr-only">(</span>

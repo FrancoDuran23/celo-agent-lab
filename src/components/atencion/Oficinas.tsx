@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { OFICINAS, PORTAL } from "../../data/contacto";
 import { LINKS } from "../../data/site";
 import type { Oficina, Region } from "../../data/types";
-import { ButtonLink } from "../ui/Button";
+import { ButtonLink, chipClass } from "../ui/Button";
 import { SectionHeader, SmartLink } from "../ui/primitives";
 import { mapsHref, REGION_META, REGION_ORDER, splitPhone, telHref } from "./utils";
 
@@ -253,15 +253,7 @@ function RegionChip({
   children: ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={clsx(
-        "inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium transition-colors",
-        active ? "bg-ink text-bg" : "bg-surface text-ink-2 ring-1 ring-line-strong ring-inset hover:bg-surface-2",
-      )}
-    >
+    <button type="button" aria-pressed={active} onClick={onClick} className={chipClass(active, "gap-1.5")}>
       {children}
       <span className={clsx("tabular", active ? "opacity-75" : "text-ink-3")}>
         <span className="sr-only"> (</span>

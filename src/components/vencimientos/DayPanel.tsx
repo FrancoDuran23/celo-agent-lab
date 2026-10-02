@@ -28,9 +28,9 @@ export function DayPanel({ selected, view, hoy, byDate, filtro, onSelect }: Prop
   const dias = selected ? daysBetween(hoy, parseISODate(selected)) : 0;
 
   return (
-    <Panel className="flex h-full flex-col p-5 sm:p-6">
+    <Panel className="flex h-full flex-col p-5 lg:p-6">
       <div aria-live="polite" aria-atomic="true">
-        <h3 className="text-lg font-bold text-ink">
+        <h3 className="text-base font-bold text-ink lg:text-lg">
           {selected ? capitalize(formatLong(selected)) : `${monthName(view)} ${view.getFullYear()}`}
         </h3>
         <p className="mt-0.5 text-sm text-ink-3 tabular">
@@ -50,7 +50,8 @@ export function DayPanel({ selected, view, hoy, byDate, filtro, onSelect }: Prop
             <li key={vencKey(v)} className="@container border-t border-line py-4">
               <p className="font-semibold text-ink">{v.titulo}</p>
               {v.detalle ? <p className="text-sm text-ink-3">{v.detalle}</p> : null}
-              <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+              {/* gap-y-3: si el enlace baja de línea, su área táctil de 44px no pisa la del impuesto. */}
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-3">
                 <ImpuestoTag slug={v.impuesto} />
                 {dias >= 0 ? (
                   <AddToCalendarButton
@@ -97,7 +98,7 @@ export function DayPanel({ selected, view, hoy, byDate, filtro, onSelect }: Prop
                       onClick={() => onSelect(iso)}
                       aria-label={`${capitalize(formatLong(iso))}, ${pluralVenc(list.length)}`}
                       className={clsx(
-                        "inline-flex h-9 items-center gap-2 rounded-lg bg-surface px-3 text-sm ring-1 ring-line-strong ring-inset transition-colors hover:bg-surface-2",
+                        "inline-flex h-9 items-center gap-2 rounded-lg bg-surface px-3 text-sm ring-1 ring-line-strong ring-inset transition-colors hover:bg-surface-2 coarse:h-11",
                         past ? "text-ink-3" : "text-ink",
                       )}
                     >

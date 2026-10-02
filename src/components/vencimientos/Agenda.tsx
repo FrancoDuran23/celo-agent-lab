@@ -108,14 +108,17 @@ function MonthGroup({
                 </p>
                 <ul className="mt-2 space-y-3">
                   {list.map((v) => (
-                    <li key={vencKey(v)} className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                    <li key={vencKey(v)} className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                       <div className="min-w-0 flex-1">
                         <p className={clsx("font-semibold", past ? "text-ink-2" : "text-ink")}>{v.titulo}</p>
-                        <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-3">
+                        {/* En el celular, detalle e impuesto en líneas separadas: el "·" nunca queda colgando. */}
+                        <p className="mt-0.5 flex flex-col items-start gap-1 text-sm text-ink-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-2">
                           {v.detalle ? (
                             <>
                               <span>{v.detalle}</span>
-                              <span aria-hidden="true">·</span>
+                              <span aria-hidden="true" className="max-sm:hidden">
+                                ·
+                              </span>
                             </>
                           ) : null}
                           <ImpuestoTag slug={v.impuesto} />
