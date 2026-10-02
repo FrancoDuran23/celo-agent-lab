@@ -9,8 +9,6 @@ export type ImpuestoSlug = "ingresos-brutos" | "inmobiliario" | "sellos" | "tasa
 
 export type Perfil = "personas" | "empresas" | "profesionales" | "agentes";
 
-export type PaletteColor = "terracota" | "ocre" | "rosa" | "salvia" | "violeta" | "night";
-
 export interface Tramite {
   id: string;
   titulo: string;
@@ -41,7 +39,6 @@ export interface Impuesto {
   bajada: string;
   descripcion: string;
   icon: IconName;
-  color: PaletteColor;
   quienes: string;
   puntos: string[];
   /** ids de Tramite relacionados. */

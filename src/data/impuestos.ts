@@ -9,7 +9,6 @@ export const IMPUESTOS: Impuesto[] = [
     descripcion:
       "Grava el ejercicio habitual de actividades con fines de lucro en la Provincia. Se liquida sobre los ingresos brutos devengados y se paga mediante anticipos mensuales con declaración jurada.",
     icon: "store",
-    color: "terracota",
     quienes:
       "Comercios, empresas, profesionales y prestadores de servicios que desarrollan su actividad en Jujuy, ya sea como contribuyentes locales o de Convenio Multilateral.",
     puntos: [
@@ -49,7 +48,6 @@ export const IMPUESTOS: Impuesto[] = [
     descripcion:
       "Se aplica sobre los inmuebles ubicados en la Provincia y se calcula a partir de su valuación fiscal. Podés pagarlo en cuotas o en un único pago anual anticipado con bonificaciones.",
     icon: "house",
-    color: "ocre",
     quienes: "Titulares de dominio, usufructuarios y poseedores a título de dueño de inmuebles ubicados en Jujuy.",
     puntos: [
       "Se calcula sobre la valuación fiscal del inmueble.",
@@ -84,7 +82,6 @@ export const IMPUESTOS: Impuesto[] = [
     descripcion:
       "Grava los actos, contratos y operaciones de carácter oneroso formalizados en instrumentos públicos o privados en Jujuy, o que produzcan efectos en ella. Se liquida y paga en línea.",
     icon: "stamp",
-    color: "salvia",
     quienes: "Las partes que otorgan o firman el instrumento alcanzado, y los agentes de recaudación designados.",
     puntos: [
       "Alcanza locaciones, boletos de compraventa, pagarés, poderes, préstamos y otros instrumentos.",
@@ -113,7 +110,6 @@ export const IMPUESTOS: Impuesto[] = [
     descripcion:
       "Las tasas retribuyen servicios que presta el Estado provincial. La Tasa de Justicia se paga al iniciar actuaciones ante el Poder Judicial y se liquida en línea.",
     icon: "gavel",
-    color: "violeta",
     quienes: "Quienes inician actuaciones judiciales o solicitan servicios administrativos alcanzados.",
     puntos: [
       "Liquidación en línea de la Tasa de Justicia, inicial y final, sin clave fiscal.",
@@ -140,7 +136,6 @@ export const IMPUESTOS: Impuesto[] = [
     descripcion:
       "Previsto en el Código Fiscal, alcanza la explotación de minerales en Jujuy. Los productores presentan su declaración jurada digital y pagan ante la Dirección Provincial de Rentas.",
     icon: "mountain",
-    color: "rosa",
     quienes: "Productores y empresas que explotan yacimientos minerales ubicados en la Provincia.",
     puntos: [
       "Declaración jurada digital con clave fiscal.",
