@@ -21,14 +21,18 @@
   --line: #e1e6ee;
   --line-strong: #c4ccd8;
 
-  --brand: #1a56c4;
-  --brand-hover: #12419b;
+  /* Marca: celeste institucional. --brand es la variante con contraste AA
+     sobre blanco (enlaces, botones); --celeste es el tono de marca puro,
+     sólo para superficies y detalles sin texto encima. */
+  --brand: #0b6fb8;
+  --brand-hover: #085a96;
   --brand-ink: #ffffff;
-  --brand-soft: #eaf1fd;
-  /* Banda del buscador (fallback del shader y fondo de bloques destacados) */
-  --band: #0e3a86;
-  --band-ink: #ffffff;
-  --band-ink-2: #d5e2fa;
+  --brand-soft: #e8f4fc;
+  --celeste: #4aa8e0;
+  /* Bloques destacados claros */
+  --band: #f1f8fd;
+  --band-ink: #0b0f19;
+  --band-ink-2: #333a47;
 
   --ok: #12733a;
   --ok-soft: #e7f4ec;
@@ -55,13 +59,14 @@
   --ink-3: #9ba4b3;
   --line: #253041;
   --line-strong: #364459;
-  --brand: #7eabff;
-  --brand-hover: #a7c5ff;
-  --brand-ink: #08142b;
-  --brand-soft: #16284a;
-  --band: #0b2c66;
-  --band-ink: #ffffff;
-  --band-ink-2: #c9d8f5;
+  --brand: #6cc0f5;
+  --brand-hover: #9ad4f8;
+  --brand-ink: #04192a;
+  --brand-soft: #0f2a3d;
+  --celeste: #4aa8e0;
+  --band: #111c27;
+  --band-ink: #eef2f7;
+  --band-ink-2: #c5ccd7;
   --ok: #6fd39a;
   --ok-soft: #12291c;
   --warn: #f2bb5c;
@@ -84,13 +89,14 @@
     --ink-3: #9ba4b3;
     --line: #253041;
     --line-strong: #364459;
-    --brand: #7eabff;
-    --brand-hover: #a7c5ff;
-    --brand-ink: #08142b;
-    --brand-soft: #16284a;
-    --band: #0b2c66;
-    --band-ink: #ffffff;
-    --band-ink-2: #c9d8f5;
+    --brand: #6cc0f5;
+    --brand-hover: #9ad4f8;
+    --brand-ink: #04192a;
+    --brand-soft: #0f2a3d;
+    --celeste: #4aa8e0;
+    --band: #111c27;
+    --band-ink: #eef2f7;
+    --band-ink-2: #c5ccd7;
     --ok: #6fd39a;
     --ok-soft: #12291c;
     --warn: #f2bb5c;
@@ -129,6 +135,7 @@
   --color-brand-hover: var(--brand-hover);
   --color-brand-ink: var(--brand-ink);
   --color-brand-soft: var(--brand-soft);
+  --color-celeste: var(--celeste);
   --color-band: var(--band);
   --color-band-ink: var(--band-ink);
   --color-band-ink-2: var(--band-ink-2);

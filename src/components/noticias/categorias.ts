@@ -1,31 +1,13 @@
-import type { Noticia, PaletteColor } from "../../data/types";
+import type { Noticia } from "../../data/types";
+import { formatMonth, parseISODate } from "../../lib/dates";
 import { normalize } from "../../lib/search";
 
 /*
- * Helpers de presentación para las noticias: color por categoría, slug de
- * categoría para la URL (?categoria=) y un enlace interno relacionado.
- * Las categorías salen de los datos; las que no estén mapeadas acá reciben
- * un color estable derivado de su nombre y no muestran enlace relacionado.
+ * Helpers de presentación para las noticias: slug de categoría para la URL
+ * (?categoria=), un enlace interno relacionado y el agrupado por mes.
+ * Las categorías salen de los datos; las que no estén mapeadas acá no
+ * muestran enlace relacionado.
  */
-
-export const PALETTE_HEX: Record<PaletteColor, string> = {
-  terracota: "#c4532f",
-  ocre: "#e0a63b",
-  rosa: "#d9877f",
-  salvia: "#7f9a62",
-  violeta: "#6a4c93",
-  night: "#2a4470",
-};
-
-const COLORS = Object.keys(PALETTE_HEX) as PaletteColor[];
-
-const PREFERIDOS: Record<string, PaletteColor> = {
-  "planes de pago": "terracota",
-  vencimientos: "ocre",
-  beneficios: "salvia",
-  inmobiliario: "violeta",
-  atencion: "rosa",
-};
 
 /** Rutas internas que existen en el sitio, para dar un próximo paso. */
 const RELACIONADOS: Record<string, { label: string; to: string }> = {
@@ -34,20 +16,6 @@ const RELACIONADOS: Record<string, { label: string; to: string }> = {
   inmobiliario: { label: "Ver Impuesto Inmobiliario", to: "/impuestos/inmobiliario" },
   atencion: { label: "Ver canales de atención", to: "/atencion" },
 };
-
-/** FNV-1a de 32 bits: hash estable y barato para semillas visuales. */
-export function hashString(s: string): number {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  return h >>> 0;
-}
-
-export function categoriaColor(categoria: string): PaletteColor {
-  return PREFERIDOS[normalize(categoria)] ?? COLORS[hashString(normalize(categoria)) % COLORS.length]!;
-}
 
 export function categoriaRelacionada(categoria: string): { label: string; to: string } | undefined {
   return RELACIONADOS[normalize(categoria)];
@@ -63,7 +31,6 @@ export function slugCategoria(categoria: string): string {
 export interface CategoriaResumen {
   nombre: string;
   slug: string;
-  color: PaletteColor;
   cantidad: number;
 }
 
@@ -74,7 +41,7 @@ export function categoriasDe(noticias: Noticia[]): CategoriaResumen[] {
     const slug = slugCategoria(n.categoria);
     const prev = map.get(slug);
     if (prev) prev.cantidad++;
-    else map.set(slug, { nombre: n.categoria, slug, color: categoriaColor(n.categoria), cantidad: 1 });
+    else map.set(slug, { nombre: n.categoria, slug, cantidad: 1 });
   }
   return [...map.values()].sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
 }
@@ -82,6 +49,30 @@ export function categoriasDe(noticias: Noticia[]): CategoriaResumen[] {
 /** Más recientes primero; a igual fecha, por título. */
 export function ordenarPorFecha(noticias: Noticia[]): Noticia[] {
   return [...noticias].sort((a, b) => b.fecha.localeCompare(a.fecha) || a.titulo.localeCompare(b.titulo, "es"));
+}
+
+export interface Mes {
+  /** "YYYY-MM" */
+  clave: string;
+  /** "Septiembre de 2026" */
+  titulo: string;
+  items: Noticia[];
+}
+
+/** Agrupa por "YYYY-MM" (la lista ya viene ordenada por fecha desc). */
+export function agruparPorMes(lista: Noticia[]): Mes[] {
+  const meses: Mes[] = [];
+  for (const n of lista) {
+    const clave = n.fecha.slice(0, 7);
+    let mes = meses.at(-1);
+    if (!mes || mes.clave !== clave) {
+      const nombre = formatMonth(parseISODate(`${clave}-01`));
+      mes = { clave, titulo: nombre.charAt(0).toLocaleUpperCase("es") + nombre.slice(1), items: [] };
+      meses.push(mes);
+    }
+    mes.items.push(n);
+  }
+  return meses;
 }
 
 /** "https://www.rentasjujuy.gob.ar/..." → "rentasjujuy.gob.ar". */
@@ -92,5 +83,3 @@ export function hostDe(href: string): string {
     return "el sitio oficial";
   }
 }
-
-export const NEW_TAB_NOTE = " (se abre en una pestaña nueva)";

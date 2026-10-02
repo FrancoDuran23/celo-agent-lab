@@ -38,7 +38,7 @@ export function SiteHeader() {
       </a>
 
       {SHOW_PROTOTYPE_NOTICE ? (
-        <div className="bg-ink px-4 py-1.5 text-center text-xs text-bg">
+        <div className="border-b border-line bg-brand-soft px-4 py-1.5 text-center text-xs text-ink-2">
           Propuesta de rediseño, prototipo no oficial. Los trámites se hacen en el{" "}
           <a href={PORTAL.sitioOficial} className="font-semibold underline underline-offset-2">
             sitio oficial

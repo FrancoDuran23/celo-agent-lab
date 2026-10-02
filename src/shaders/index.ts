@@ -16,7 +16,11 @@ interface ShaderDef {
 
 export const SHADERS = {
   /** Banda del buscador: luz ambiental sutil sobre el azul institucional. */
-  luz: { source: luz, defaults: { intensity: 1, grain: 0.012, maxLuminance: 0.12 }, startTime: 12 },
+  luz: {
+    source: luz,
+    defaults: { amount: 0.75, grain: 0.006, top: [1, 1, 1], bottom: [0.957, 0.976, 0.992], glow: [0.78, 0.89, 0.97] },
+    startTime: 12,
+  },
   /** Hero: estratos del Cerro de los Siete Colores bajo cielo nocturno. */
   quebrada: { source: quebrada, defaults: { intensity: 1, textShade: 0.6, grain: 0.035 }, startTime: 7.5 },
   /** Franjas CTA: motivo de aguayo andino, bajo contraste. */

@@ -1,50 +1,14 @@
 import { useEffect, useMemo, type ReactNode } from "react";
 import { useLocation, useSearchParams } from "react-router";
-import { Newspaper, X } from "lucide-react";
 import clsx from "clsx";
 import { NOTICIAS } from "../data/noticias";
-import type { Noticia, PaletteColor } from "../data/types";
-import { formatMonth, parseISODate } from "../lib/dates";
 import { useDocumentTitle } from "../lib/useDocumentTitle";
 import { Button } from "../components/ui/Button";
 import { PageIntro } from "../components/ui/primitives";
-import { NoticiaCard } from "../components/noticias/NoticiaCard";
 import { NoticiaDestacada } from "../components/noticias/NoticiaDestacada";
+import { NoticiaItem } from "../components/noticias/NoticiaItem";
 import { Seguinos } from "../components/noticias/Seguinos";
-import { categoriasDe, ordenarPorFecha, slugCategoria } from "../components/noticias/categorias";
-
-const DOT: Record<PaletteColor, string> = {
-  terracota: "bg-terracota-500",
-  ocre: "bg-ocre-500",
-  rosa: "bg-rosa-500",
-  salvia: "bg-salvia-500",
-  violeta: "bg-violeta-500",
-  night: "bg-night-600",
-};
-
-interface Mes {
-  clave: string;
-  nombre: string;
-  anio: string;
-  items: Noticia[];
-}
-
-/** Agrupa por "YYYY-MM" (la lista ya viene ordenada por fecha desc). */
-function agruparPorMes(lista: Noticia[]): Mes[] {
-  const meses: Mes[] = [];
-  for (const n of lista) {
-    const clave = n.fecha.slice(0, 7);
-    let mes = meses.at(-1);
-    if (!mes || mes.clave !== clave) {
-      // formatMonth → "septiembre de 2026"; acá se muestra "Septiembre 2026".
-      const [nombre = "", anio = clave.slice(0, 4)] = formatMonth(parseISODate(`${clave}-01`)).split(" de ");
-      mes = { clave, nombre: nombre.charAt(0).toUpperCase() + nombre.slice(1), anio, items: [] };
-      meses.push(mes);
-    }
-    mes.items.push(n);
-  }
-  return meses;
-}
+import { agruparPorMes, categoriasDe, ordenarPorFecha, slugCategoria } from "../components/noticias/categorias";
 
 const plural = (n: number) => (n === 1 ? "1 noticia" : `${n} noticias`);
 
@@ -87,20 +51,20 @@ export function NoticiasPage() {
   return (
     <>
       <PageIntro
-        eyebrow="Novedades"
-        title={
-          <>
-            Noticias{" "}
-            <span className="font-serif font-normal tracking-normal text-brand italic">de Rentas.</span>
-          </>
-        }
+        title="Noticias"
+        breadcrumbs={[{ label: "Noticias" }]}
         description="Prórrogas, planes de pago, beneficios y novedades de atención de la Dirección Provincial de Rentas, de la más reciente a la más antigua."
-      >
+      />
+
+      <div className="container-page grid grid-cols-[minmax(0,1fr)] gap-8 py-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-14 xl:grid-cols-[minmax(0,1fr)_18rem]">
         {categorias.length > 1 ? (
-          <div>
-            <p id="filtro-titulo" className="eyebrow mb-3">
+          <aside
+            aria-labelledby="filtro-titulo"
+            className="min-w-0 lg:sticky lg:top-28 lg:col-start-2 lg:row-start-1 lg:self-start"
+          >
+            <h2 id="filtro-titulo" className="mb-3 font-semibold text-ink">
               Filtrar por categoría
-            </p>
+            </h2>
             <div role="group" aria-labelledby="filtro-titulo" className="flex flex-wrap gap-2">
               <FilterChip active={!activa && !invalida} count={NOTICIAS.length} onClick={() => elegir(null)}>
                 Todas
@@ -112,103 +76,77 @@ export function NoticiasPage() {
                   count={c.cantidad}
                   onClick={() => elegir(c.slug)}
                 >
-                  <span aria-hidden="true" className={clsx("size-2 shrink-0 rounded-full", DOT[c.color])} />
                   {c.nombre}
                 </FilterChip>
               ))}
             </div>
-          </div>
+          </aside>
         ) : null}
-      </PageIntro>
 
-      <div className="container-page py-12 sm:py-16">
-        <p className="sr-only" aria-live="polite">
-          {activa ? `${plural(lista.length)} en ${activa.nombre}.` : invalida ? "No hay noticias en esa categoría." : ""}
-        </p>
-
-        {invalida || !destacada ? (
-          <div className="rounded-3xl border border-dashed border-line-strong px-6 py-16 text-center">
-            <Newspaper className="mx-auto size-10 text-ink-3" aria-hidden="true" />
-            <p className="mt-4 text-lg font-semibold text-ink">
-              {invalida ? `No encontramos noticias en “${pedida}”.` : "Todavía no hay noticias publicadas."}
-            </p>
+        <div className="min-w-0 lg:col-start-1 lg:row-start-1">
+          <p role="status" aria-live="polite" aria-atomic="true" className="mb-6 text-ink-2">
             {invalida ? (
+              "No hay noticias en esa categoría."
+            ) : (
               <>
-                <p className="mt-1 text-ink-3">Puede que la categoría haya cambiado de nombre. Elegí otra arriba.</p>
-                <Button variant="secondary" className="mt-6" onClick={() => elegir(null)}>
-                  <X aria-hidden="true" />
-                  Ver todas las noticias
-                </Button>
+                <span className="font-semibold text-ink tabular">{plural(lista.length)}</span>
+                {activa ? <> en {activa.nombre}</> : null}
+                {lista.length > 1 ? <span className="text-ink-3"> · de la más reciente a la más antigua</span> : null}
               </>
-            ) : null}
-          </div>
-        ) : (
-          <>
-            <NoticiaDestacada
-              key={destacada.slug}
-              noticia={destacada}
-              etiqueta={activa ? `Lo más reciente en ${activa.nombre}` : "Lo más reciente"}
-              highlighted={objetivo === destacada.slug}
-            />
+            )}
+          </p>
 
-            {meses.length ? (
-              <section aria-labelledby="archivo-titulo" className="mt-16 sm:mt-20">
-                <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-line pb-5">
-                  <div>
-                    <p className="eyebrow mb-2">Archivo</p>
-                    <h2 id="archivo-titulo" className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-                      {activa ? `Más sobre ${activa.nombre}` : "Noticias anteriores"}
+          {invalida || !destacada ? (
+            <div className="border-y border-line py-10">
+              <h2 className="text-xl font-bold text-ink">
+                {invalida ? (
+                  <>
+                    No encontramos noticias en “<span className="[overflow-wrap:anywhere]">{pedida}</span>”
+                  </>
+                ) : (
+                  "Todavía no hay noticias publicadas"
+                )}
+              </h2>
+              {invalida ? (
+                <>
+                  <p className="mt-2 text-ink-2">Puede que la categoría haya cambiado de nombre. Elegí otra de la lista.</p>
+                  <Button variant="secondary" className="mt-5" onClick={() => elegir(null)}>
+                    Ver todas las noticias
+                  </Button>
+                </>
+              ) : null}
+            </div>
+          ) : (
+            <>
+              <NoticiaDestacada key={destacada.slug} noticia={destacada} highlighted={objetivo === destacada.slug} />
+
+              {meses.map((mes) => (
+                <section key={mes.clave} aria-labelledby={`mes-${mes.clave}`} className="mt-12 sm:mt-14">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <h2 id={`mes-${mes.clave}`} className="text-xl font-bold text-ink sm:text-2xl">
+                      {mes.titulo}
                     </h2>
+                    <p className="text-sm text-ink-3 tabular">{plural(mes.items.length)}</p>
                   </div>
-                  <p className="text-sm text-ink-3 tabular">{plural(resto.length)}</p>
-                </div>
+                  <ul className="mt-3 border-b border-line">
+                    {mes.items.map((n) => (
+                      <NoticiaItem key={n.slug} noticia={n} highlighted={objetivo === n.slug} />
+                    ))}
+                  </ul>
+                </section>
+              ))}
 
-                <ol className="relative mt-10 ml-1 border-l border-line pl-6 sm:ml-2 sm:pl-10">
-                  {meses.map((mes) => (
-                    <li
-                      key={mes.clave}
-                      className="grid gap-5 pb-14 last:pb-2 lg:grid-cols-[11rem_minmax(0,1fr)] lg:gap-10"
-                    >
-                      <div className="relative lg:sticky lg:top-28 lg:self-start lg:pt-1">
-                        <span
-                          aria-hidden="true"
-                          className="absolute top-3 -left-[calc(1.5rem+5.5px)] size-2.5 rounded-full bg-brand ring-4 ring-bg sm:-left-[calc(2.5rem+5.5px)]"
-                        />
-                        <h3 className="flex items-baseline gap-3 lg:flex-col lg:gap-1">
-                          <span className="font-serif text-3xl leading-none text-ink italic sm:text-4xl">
-                            {mes.nombre}
-                          </span>{" "}
-                          <span className="font-mono text-sm tracking-[0.14em] text-ink-3 tabular">{mes.anio}</span>
-                        </h3>
-                        <p className="mt-1 text-sm text-ink-3 lg:mt-3">{plural(mes.items.length)}</p>
-                      </div>
-                      <ul className="grid gap-4">
-                        {mes.items.map((n) => (
-                          <li key={n.slug}>
-                            <NoticiaCard
-                              id={n.slug}
-                              noticia={n}
-                              layout="row"
-                              headingAs="h4"
-                              highlighted={objetivo === n.slug}
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ol>
-              </section>
-            ) : activa ? (
-              <div className="mt-10 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-surface-2/70 px-5 py-4 ring-1 ring-line">
-                <p className="text-ink-2">Por ahora es la única noticia en {activa.nombre}.</p>
-                <Button variant="ghost" size="sm" onClick={() => elegir(null)}>
-                  Ver todas las noticias
-                </Button>
-              </div>
-            ) : null}
-          </>
-        )}
+              {!meses.length && activa ? (
+                <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-surface-2 px-5 py-4">
+                  <p className="text-ink-2">Por ahora es la única noticia en {activa.nombre}.</p>
+                  <Button variant="secondary" size="sm" onClick={() => elegir(null)}>
+                    Ver todas las noticias
+                  </Button>
+                </div>
+              ) : null}
+            </>
+          )}
+        </div>
       </div>
 
       <Seguinos />
@@ -233,19 +171,12 @@ function FilterChip({
       aria-pressed={active}
       onClick={onClick}
       className={clsx(
-        "inline-flex h-10 items-center gap-2 rounded-full pr-2 pl-3.5 text-sm font-medium transition-colors",
-        active
-          ? "bg-night-900 text-crema-50 dark:bg-crema-100 dark:text-night-900"
-          : "bg-surface text-ink-2 ring-1 ring-line hover:bg-surface-2 hover:text-ink",
+        "inline-flex h-9 items-center gap-2 rounded-full px-3.5 text-sm font-medium whitespace-nowrap transition-colors",
+        active ? "bg-ink text-bg" : "bg-surface text-ink-2 ring-1 ring-line-strong ring-inset hover:bg-surface-2",
       )}
     >
       {children}
-      <span
-        className={clsx(
-          "inline-flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-xs tabular",
-          active ? "bg-white/15 dark:bg-night-900/10" : "bg-surface-2 text-ink-3",
-        )}
-      >
+      <span className={clsx("text-xs tabular", active ? "text-bg/75" : "text-ink-3")}>
         <span className="sr-only">(</span>
         {count}
         <span className="sr-only">)</span>

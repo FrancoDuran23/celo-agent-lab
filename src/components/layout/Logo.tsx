@@ -8,8 +8,8 @@ import clsx from "clsx";
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" className={clsx("shrink-0", className)} aria-hidden="true">
-      <rect width="32" height="32" rx="7" className="fill-brand" />
-      <text x="16" y="22.5" textAnchor="middle" fontSize="18" fontWeight="800" className="fill-brand-ink" fontFamily="inherit">
+      <rect width="32" height="32" rx="7" className="fill-celeste" />
+      <text x="16" y="22.5" textAnchor="middle" fontSize="18" fontWeight="800" className="fill-white" fontFamily="inherit">
         R
       </text>
     </svg>

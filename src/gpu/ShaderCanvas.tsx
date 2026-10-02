@@ -22,8 +22,12 @@ interface ShaderCanvasProps {
  */
 export function ShaderCanvas({ shader, className, fallback, uniforms, interactive = false }: ShaderCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const handleRef = useRef<ShaderHandle | null>(null);
   const [ready, setReady] = useState(false);
   const uniformsKey = JSON.stringify(uniforms ?? {});
+  // Últimos uniforms: el montaje toma los vigentes; los cambios van por setUniforms.
+  const uniformsKeyRef = useRef(uniformsKey);
+  uniformsKeyRef.current = uniformsKey;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -44,13 +48,14 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
           shader,
           canvas,
           signal,
-          uniforms: JSON.parse(uniformsKey) as ShaderUniforms,
+          uniforms: JSON.parse(uniformsKeyRef.current) as ShaderUniforms,
           onFirstFrame: () => {
             if (!signal.aborted) setReady(true);
           },
           onLost: () => {
             // El dispositivo se perdió: volvemos al fallback.
             handle = null;
+            handleRef.current = null;
             if (!signal.aborted) setReady(false);
             document.documentElement.dataset.gpu = "off";
           },
@@ -62,6 +67,9 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
           return;
         }
         handle = h;
+        handleRef.current = h;
+        // Por si los uniforms cambiaron mientras se montaba.
+        h.setUniforms(JSON.parse(uniformsKeyRef.current) as ShaderUniforms);
         document.documentElement.dataset.gpu = "on";
 
         const io = new IntersectionObserver(
@@ -103,10 +111,15 @@ export function ShaderCanvas({ shader, className, fallback, uniforms, interactiv
       cleanups.forEach((fn) => fn());
       handle?.dispose();
       handle = null;
+      handleRef.current = null;
       setReady(false);
     };
-    // uniformsKey cubre cambios de valor en `uniforms` sin depender de su identidad.
-  }, [shader, uniformsKey, interactive]);
+  }, [shader, interactive]);
+
+  // Cambios de uniforms (p. ej. el tema) sin remontar el shader.
+  useEffect(() => {
+    handleRef.current?.setUniforms(JSON.parse(uniformsKey) as ShaderUniforms);
+  }, [uniformsKey]);
 
   return (
     <div className={clsx("pointer-events-none overflow-hidden", className)} aria-hidden="true">

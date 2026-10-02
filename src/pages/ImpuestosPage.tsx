@@ -1,9 +1,10 @@
-import { ArrowDown, FileQuestion } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { IMPUESTOS } from "../data/impuestos";
+import { LINKS } from "../data/site";
 import { useDocumentTitle } from "../lib/useDocumentTitle";
-import { PageIntro } from "../components/ui/primitives";
+import { Notice, PageIntro, SmartLink } from "../components/ui/primitives";
 import { ButtonLink } from "../components/ui/Button";
-import { ImpuestoCard } from "../components/impuestos/ImpuestoCard";
+import { ImpuestosIndice } from "../components/impuestos/ImpuestosIndice";
 import { Orientacion } from "../components/impuestos/Orientacion";
 
 export function ImpuestosPage() {
@@ -12,53 +13,43 @@ export function ImpuestosPage() {
   return (
     <>
       <PageIntro
-        eyebrow="Impuestos provinciales"
-        title={
-          <>
-            Los impuestos de Jujuy,{" "}
-            <span className="font-serif font-normal tracking-normal text-brand italic">explicados simple.</span>
-          </>
-        }
+        title="Impuestos provinciales"
         description="Conocé quiénes pagan cada impuesto, qué tenés que tener en cuenta y qué trámites podés hacer en línea."
+        breadcrumbs={[{ label: "Impuestos" }]}
       >
-        <a
-          href="#orientacion"
-          className="group inline-flex items-center gap-2 rounded-full bg-surface py-2 pr-4 pl-2 text-sm font-medium text-ink-2 ring-1 ring-line transition-colors hover:text-ink hover:ring-line-strong"
-        >
-          <span className="inline-flex size-7 items-center justify-center rounded-full bg-accent-soft text-warn">
-            <FileQuestion className="size-4" aria-hidden="true" />
-          </span>
+        <a href="#orientacion" className="link inline-flex items-center gap-1 font-semibold">
           ¿No sabés qué impuesto te corresponde?
-          <ArrowDown
-            className="size-4 text-ink-3 transition-transform group-hover:translate-y-0.5"
-            aria-hidden="true"
-          />
+          <ArrowDown className="size-4" aria-hidden="true" />
         </a>
       </PageIntro>
 
-      <div className="container-page py-12 sm:py-16">
+      <div className="container-page py-10 sm:py-14">
         {IMPUESTOS.length ? (
-          <ul className="grid gap-5" aria-label="Impuestos provinciales">
-            {IMPUESTOS.map((imp, i) => (
-              <li key={imp.slug} className="animate-rise" style={{ animationDelay: `${i * 60}ms` }}>
-                <ImpuestoCard imp={imp} />
-              </li>
-            ))}
-          </ul>
+          <ImpuestosIndice />
         ) : (
-          <div className="rounded-3xl border border-dashed border-line-strong px-6 py-16 text-center">
+          <div className="border-t border-line pt-6">
             <p className="text-lg font-semibold text-ink">Todavía no hay impuestos cargados.</p>
             <p className="mt-1 text-ink-3">Mientras tanto, podés buscar lo que necesitás en la guía de trámites.</p>
-            <ButtonLink to="/tramites" variant="secondary" className="mt-6">
+            <ButtonLink to="/tramites" variant="secondary" className="mt-5">
               Ir a trámites
             </ButtonLink>
           </div>
         )}
+
+        {/* El Impuesto Automotor no es provincial: lo administra cada municipio. */}
+        <Notice tone="info" title="¿Buscás la patente del auto o la moto?" className="mt-8 max-w-3xl">
+          <p>
+            El Impuesto Automotor es municipal: se paga en el municipio donde está radicado el vehículo, no en Rentas de
+            la Provincia.{" "}
+            <SmartLink to={LINKS.automotorCapital} className="link font-semibold whitespace-nowrap">
+              Vehículos de la Capital
+              <ArrowUpRight className="ml-0.5 inline size-4 align-[-2px]" aria-hidden="true" />
+            </SmartLink>
+          </p>
+        </Notice>
       </div>
 
-      <div className="container-page pb-20 sm:pb-24">
-        <Orientacion id="orientacion" />
-      </div>
+      <Orientacion id="orientacion" />
     </>
   );
 }

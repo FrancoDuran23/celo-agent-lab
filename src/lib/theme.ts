@@ -43,3 +43,27 @@ export function useTheme() {
 
   return { pref, setPref, cycle };
 }
+
+/** Tema efectivo ("light" | "dark"), combinando la preferencia guardada y la del sistema. */
+export function useResolvedTheme(): "light" | "dark" {
+  const resolve = () => {
+    const forced = document.documentElement.dataset.theme;
+    if (forced === "light" || forced === "dark") return forced;
+    return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  };
+  const [theme, setTheme] = useState<"light" | "dark">(resolve);
+
+  useEffect(() => {
+    const update = () => setTheme(resolve());
+    const mq = matchMedia("(prefers-color-scheme: dark)");
+    mq.addEventListener("change", update);
+    const mo = new MutationObserver(update);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => {
+      mq.removeEventListener("change", update);
+      mo.disconnect();
+    };
+  }, []);
+
+  return theme;
+}

@@ -46,7 +46,8 @@ The official provincial tax authority of Jujuy. Only the DPR can truthfully pres
 - Unofficial prototype: keep a visible but discreet "propuesta de rediseño · prototipo no oficial" notice (toggle `SHOW_PROTOTYPE_NOTICE`). Do not reproduce official logos or present the page as the real service.
 - Voice: clear, warm, public-service Spanish with voseo; no marketing fluff.
 - **Visual direction (user decision, oct. 2026): the category standard, played straight at top craft.** No world of its own: a very clean, easy-to-understand public-service portal with refined UX/UI. Craft bar: the clarity of GOV.UK, the familiarity of argentina.gob.ar, the polish of a top-tier product. Earlier own-world explorations (Siete Colores strata, aguayo, serif-italic accents) are discarded and must not return.
-- vgpu stays (mandatory) as a subtle accent in service of the canon, never as identity.
+- **Color and ground (user, oct. 2026):** Rentas' brand color is **celeste / light blue on white**. The site is predominantly white (light), with a complete dark mode as well (light, dark and automatic). No dark hero bands, no earthy palette.
+- vgpu stays (mandatory) as a very faint accent in service of the canon (a pale celeste light veil on the white home header), never as identity.
 
 ## Evidence on Hand
 

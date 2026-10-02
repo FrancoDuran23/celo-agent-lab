@@ -29,7 +29,7 @@ export function AtencionPage() {
           <span id="en-esta-pagina" className="text-ink-3">
             En esta página:
           </span>
-          <ul className="contents">
+          <ul className="flex flex-wrap gap-x-5 gap-y-2">
             {EN_ESTA_PAGINA.map((s) => (
               <li key={s.id}>
                 <a href={`#${s.id}`} className="link font-semibold">

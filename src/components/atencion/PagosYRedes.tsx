@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
-import { ArrowUpRight, AtSign, Globe, Receipt, Smartphone, Store } from "lucide-react";
+import { Receipt, Smartphone, Store } from "lucide-react";
 import { MEDIOS_DE_PAGO, PORTAL, REDES } from "../../data/contacto";
 import { LINKS } from "../../data/site";
 import { ButtonLink } from "../ui/Button";
-import { NEW_TAB } from "./utils";
+import { ArrowLink, SectionHeader, SmartLink } from "../ui/primitives";
 
 export function PagosYRedes({ id }: { id: string }) {
   return (
-    <div className="container-page grid gap-4 py-20 sm:py-24 lg:grid-cols-[1.6fr_1fr]">
+    <div className="container-page grid grid-cols-[minmax(0,1fr)] gap-12 py-14 sm:py-16 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-16">
       <MediosDePago id={id} />
       {REDES.length ? <Redes /> : null}
     </div>
@@ -18,83 +18,40 @@ export function PagosYRedes({ id }: { id: string }) {
 
 function MediosDePago({ id }: { id: string }) {
   return (
-    <section
-      id={id}
-      aria-labelledby={`${id}-titulo`}
-      className="relative scroll-mt-24 overflow-hidden rounded-3xl bg-surface p-6 ring-1 ring-line sm:p-8 lg:p-10"
-    >
-      <p className="eyebrow mb-3">Medios de pago</p>
-      <h2 id={`${id}-titulo`} className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-        Pagá{" "}
-        <span className="font-serif font-normal tracking-normal text-brand italic">como te quede cómodo.</span>
-      </h2>
-      <p className="mt-3 max-w-xl text-lg leading-relaxed text-ink-3">
-        Pagá en línea desde el celular o la compu, o de forma presencial en las bocas de cobro habilitadas.
-      </p>
+    <section id={id} aria-labelledby={`${id}-titulo`} className="min-w-0">
+      <SectionHeader
+        id={`${id}-titulo`}
+        title="Medios de pago"
+        description="Pagá en línea desde el celular o la compu, o de forma presencial en las bocas de cobro habilitadas."
+      />
 
-      <div className="mt-8 grid gap-6 sm:grid-cols-2">
-        <Grupo
-          titulo="En línea"
-          icon={<Smartphone className="size-5" aria-hidden="true" />}
-          tint="tint-salvia"
-          items={MEDIOS_DE_PAGO.digitales}
-        />
-        <Grupo
-          titulo="Presenciales"
-          icon={<Store className="size-5" aria-hidden="true" />}
-          tint="tint-ocre"
-          items={MEDIOS_DE_PAGO.presenciales}
-        />
+      <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-x-10 gap-y-8 sm:grid-cols-[repeat(2,minmax(0,1fr))]">
+        <Grupo titulo="En línea" icon={<Smartphone aria-hidden="true" />} items={MEDIOS_DE_PAGO.digitales} />
+        <Grupo titulo="Presenciales" icon={<Store aria-hidden="true" />} items={MEDIOS_DE_PAGO.presenciales} />
       </div>
 
-      <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-line pt-6">
+      <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
         <ButtonLink to={LINKS.pagar}>
           <Receipt aria-hidden="true" />
           Pagar en línea
-          <span className="sr-only">{NEW_TAB}</span>
         </ButtonLink>
-        <a
-          href={LINKS.mediosDePago}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group inline-flex items-center gap-1.5 rounded-full text-sm font-semibold text-brand hover:underline"
-        >
-          Medios y lugares de pago
-          <ArrowUpRight
-            className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            aria-hidden="true"
-          />
-          <span className="sr-only">{NEW_TAB}</span>
-        </a>
+        <ArrowLink to={LINKS.mediosDePago}>Medios y lugares de pago</ArrowLink>
       </div>
     </section>
   );
 }
 
-function Grupo({
-  titulo,
-  icon,
-  tint,
-  items,
-}: {
-  titulo: string;
-  icon: ReactNode;
-  tint: string;
-  items: readonly string[];
-}) {
+function Grupo({ titulo, icon, items }: { titulo: string; icon: ReactNode; items: readonly string[] }) {
   if (!items.length) return null;
   return (
-    <div>
-      <h3 className="flex items-center gap-3 font-semibold text-ink">
-        <span className={`inline-flex size-9 items-center justify-center rounded-lg ${tint}`}>{icon}</span>
+    <div className="min-w-0">
+      <h3 className="flex items-center gap-2 text-lg font-semibold text-ink [&_svg]:size-5 [&_svg]:shrink-0 [&_svg]:text-ink-3">
+        {icon}
         {titulo}
       </h3>
-      <ul className="mt-4 flex flex-wrap gap-2">
+      <ul className="mt-3 border-b border-line">
         {items.map((m) => (
-          <li
-            key={m}
-            className="rounded-full bg-surface-2 px-3 py-1.5 text-sm font-medium text-ink-2 ring-1 ring-line ring-inset"
-          >
+          <li key={m} className="border-t border-line py-2.5 text-ink-2">
             {m}
           </li>
         ))}
@@ -107,97 +64,28 @@ function Grupo({
 
 function Redes() {
   return (
-    <section
-      aria-labelledby="redes-titulo"
-      className="relative flex flex-col overflow-hidden rounded-3xl bg-surface p-6 ring-1 ring-line sm:p-8 lg:p-10"
-    >
-      <p className="eyebrow mb-3">Redes oficiales</p>
-      <h2 id="redes-titulo" className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-        Seguinos.
-      </h2>
-      <p className="mt-3 text-lg leading-relaxed text-ink-3">
-        Las cuentas oficiales de la Dirección Provincial de Rentas.
-      </p>
-      <ul className="mt-8 mb-8 grid gap-2.5" aria-label="Redes sociales">
+    <section aria-labelledby="redes-titulo" className="min-w-0">
+      <SectionHeader
+        id="redes-titulo"
+        title="Redes oficiales"
+        description="Las cuentas oficiales de la Dirección Provincial de Rentas."
+      />
+      <ul className="mt-6 border-b border-line" aria-label="Redes sociales">
         {REDES.map((r) => (
-          <li key={r.href}>
-            <a
-              href={r.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-3 rounded-full bg-surface-2/70 py-2 pr-4 pl-2 ring-1 ring-line transition-colors hover:bg-surface-2 hover:ring-line-strong"
-            >
-              <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-surface text-ink ring-1 ring-line">
-                <RedGlyph nombre={r.nombre} />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="font-semibold text-ink">{r.nombre}</span>{" "}
-                <span className="text-sm text-ink-3">{r.usuario}</span>
-              </span>
-              <ArrowUpRight
-                className="size-4 shrink-0 text-ink-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                aria-hidden="true"
-              />
-              <span className="sr-only">{NEW_TAB}</span>
-            </a>
+          <li key={r.href} className="flex flex-wrap items-baseline gap-x-2 border-t border-line py-3">
+            <SmartLink to={r.href} className="link font-semibold">
+              {r.nombre}
+            </SmartLink>
+            <span className="text-sm text-ink-3">{r.usuario}</span>
           </li>
         ))}
       </ul>
-      <p className="mt-auto flex items-center gap-2 border-t border-line pt-6 text-sm text-ink-3">
-        <Globe className="size-4 shrink-0" aria-hidden="true" />
-        <span>
-          Sitio oficial:{" "}
-          <a
-            href={PORTAL.sitioOficial}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-ink-2 underline decoration-line-strong underline-offset-4 hover:text-brand hover:decoration-brand"
-          >
-            {PORTAL.sitioOficial.replace(/^https?:\/\//, "")}
-            <span className="sr-only">{NEW_TAB}</span>
-          </a>
-        </span>
+      <p className="mt-4 text-sm text-ink-3">
+        Sitio oficial:{" "}
+        <SmartLink to={PORTAL.sitioOficial} className="link [overflow-wrap:anywhere]">
+          {PORTAL.sitioOficial.replace(/^https?:\/\//, "")}
+        </SmartLink>
       </p>
     </section>
   );
-}
-
-/** Glifos simples y monocromos (lucide ya no incluye marcas). */
-function RedGlyph({ nombre }: { nombre: string }) {
-  const common = {
-    viewBox: "0 0 24 24",
-    className: "size-[1.15rem]",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    "aria-hidden": true,
-  };
-  switch (nombre.toLowerCase()) {
-    case "instagram":
-      return (
-        <svg {...common}>
-          <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
-          <circle cx="12" cy="12" r="4" />
-          <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" />
-        </svg>
-      );
-    case "facebook":
-      return (
-        <svg {...common}>
-          <path d="M14.5 8.5H16V5h-2.2C11.6 5 10.5 6.4 10.5 8.6V10.5H8.5v3h2V20h3v-6.5h2.2l.4-3h-2.6V9.3c0-.5.3-.8 1-.8Z" />
-        </svg>
-      );
-    case "x":
-    case "twitter":
-      return (
-        <svg {...common}>
-          <path d="M5 4.5h3.6L19 19.5h-3.6Z" />
-          <path d="M18.6 4.5 12.9 11M11.1 13l-5.7 6.5" />
-        </svg>
-      );
-    default:
-      return <AtSign className="size-4" aria-hidden="true" />;
-  }
 }

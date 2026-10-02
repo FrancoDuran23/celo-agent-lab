@@ -1,93 +1,66 @@
 import { Link } from "react-router";
-import { ArrowRight, CalendarClock } from "lucide-react";
-import clsx from "clsx";
-import { VENCIMIENTOS } from "../../data/vencimientos";
+import { VENCIMIENTOS, VENCIMIENTOS_INFO } from "../../data/vencimientos";
 import type { Impuesto } from "../../data/types";
-import { daysBetween, formatLong, parseISODate, relativeDays, today } from "../../lib/dates";
+import { daysBetween, parseISODate, relativeDays, today } from "../../lib/dates";
+import { Badge, SmartLink } from "../ui/primitives";
 
-const MONTH = new Intl.DateTimeFormat("es-AR", { month: "short" });
+const MES = new Intl.DateTimeFormat("es-AR", { month: "short" });
 
-/** Próximos vencimientos del impuesto, o un estado vacío que lleva al calendario. */
+/** Próximos vencimientos del impuesto (mismo formato que la portada), o un estado vacío que lleva al calendario. */
 export function VencimientosImpuesto({ imp }: { imp: Impuesto }) {
   const hoy = today();
-  const proximos = VENCIMIENTOS.filter(
-    (v) => v.impuesto === imp.slug && daysBetween(hoy, parseISODate(v.fecha)) >= 0,
-  )
+  const proximos = VENCIMIENTOS.filter((v) => v.impuesto === imp.slug && daysBetween(hoy, parseISODate(v.fecha)) >= 0)
     .sort((a, b) => a.fecha.localeCompare(b.fecha))
     .slice(0, 5);
 
   if (!proximos.length) {
     return (
-      <div className="flex flex-col items-start gap-5 rounded-2xl border border-dashed border-line-strong bg-surface/60 p-6 sm:flex-row sm:items-center sm:p-7">
-        <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-ink-3 ring-1 ring-line">
-          <CalendarClock className="size-6" aria-hidden="true" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="font-semibold text-ink">No hay vencimientos próximos cargados para este impuesto.</p>
-          <p className="mt-1 text-sm leading-relaxed text-ink-3">
-            Revisá el calendario general para ver todas las fechas del año.
-          </p>
-        </div>
-        <Link
-          to="/vencimientos"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-sm font-medium text-ink ring-1 ring-line-strong transition-colors hover:bg-surface-2"
-        >
-          Ver calendario <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
+      <div className="border-t border-line pt-4">
+        <p className="font-semibold text-ink">No hay vencimientos próximos cargados para este impuesto.</p>
+        <p className="mt-1 text-ink-3">
+          Revisá el{" "}
+          <Link to="/vencimientos" className="link">
+            calendario de vencimientos
+          </Link>{" "}
+          para ver todas las fechas del año.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl bg-surface ring-1 ring-line">
-      <ol className="divide-y divide-line">
+    <>
+      <ol className="border-b border-line">
         {proximos.map((v) => {
           const d = parseISODate(v.fecha);
           const dias = daysBetween(hoy, d);
-          const pronto = dias <= 7;
           return (
-            <li key={v.fecha + v.titulo} className="flex items-center gap-4 p-4 sm:px-6">
-              <div
-                aria-hidden="true"
-                className={clsx(
-                  "flex size-14 shrink-0 flex-col items-center justify-center rounded-xl ring-1",
-                  pronto ? "bg-brand-soft text-brand ring-brand/20" : "bg-surface-2 text-ink ring-line",
-                )}
-              >
-                <span className="text-xl leading-none font-semibold tabular">{d.getDate()}</span>
-                <span className="mt-0.5 text-[0.68rem] font-medium tracking-wide uppercase">
-                  {MONTH.format(d).replace(".", "")}
+            <li key={v.fecha + v.titulo} className="flex items-center gap-4 border-t border-line py-3.5">
+              <time dateTime={v.fecha} className="w-14 shrink-0 text-center leading-none">
+                <span className="block text-2xl font-bold tabular text-ink">{d.getDate()}</span>
+                <span className="mt-1 block text-xs font-semibold text-ink-3 uppercase">
+                  {MES.format(d).replace(".", "")}
                 </span>
-              </div>
+              </time>
               <div className="min-w-0 flex-1">
-                <p className="font-medium text-ink">{v.titulo}</p>
-                <p className="mt-0.5 text-sm text-ink-3">
-                  <time dateTime={v.fecha} className="inline-block first-letter:uppercase">
-                    {formatLong(v.fecha)}
-                  </time>
-                  {v.detalle ? ` · ${v.detalle}` : ""}
-                </p>
+                <p className="font-semibold text-ink">{v.titulo}</p>
+                {v.detalle ? <p className="text-sm text-ink-3">{v.detalle}</p> : null}
               </div>
-              <span
-                className={clsx(
-                  "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium",
-                  pronto ? "bg-brand text-brand-ink" : "bg-surface-2 text-ink-2",
-                )}
-              >
+              <Badge tone={dias <= 7 ? "warn" : "neutral"} className="shrink-0">
                 {relativeDays(v.fecha, hoy)}
-              </span>
+              </Badge>
             </li>
           );
         })}
       </ol>
-      <div className="border-t border-line px-4 py-3 sm:px-6">
-        <Link
-          to="/vencimientos"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:underline"
-        >
-          Ver el calendario completo <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
-      </div>
-    </div>
+      {VENCIMIENTOS_INFO.ilustrativo ? (
+        <p className="mt-3 text-sm text-ink-3">
+          Fechas orientativas basadas en el Calendario Impositivo 2026 ({VENCIMIENTOS_INFO.norma}).{" "}
+          <SmartLink to={VENCIMIENTOS_INFO.oficial} className="link">
+            Ver el calendario oficial
+          </SmartLink>
+        </p>
+      ) : null}
+    </>
   );
 }

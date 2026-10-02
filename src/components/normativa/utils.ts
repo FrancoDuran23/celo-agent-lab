@@ -1,6 +1,5 @@
-import type { Norma, PaletteColor } from "../../data/types";
+import type { Norma } from "../../data/types";
 import { IMPUESTOS } from "../../data/impuestos";
-import type { IconName } from "../../lib/icons";
 import { normalize } from "../../lib/search";
 
 export type TipoNorma = Norma["tipo"];
@@ -15,48 +14,25 @@ export interface TipoInfo {
   id: string;
   tipo: TipoNorma;
   label: string;
-  color: PaletteColor;
   /** Términos extra para el buscador ("rg", "codigo fiscal"…). */
   claves: string;
 }
 
 export const TIPOS: TipoInfo[] = [
-  { id: "codigo", tipo: "Código", label: "Código", color: "terracota", claves: "codigo fiscal" },
-  { id: "ley", tipo: "Ley", label: "Ley", color: "ocre", claves: "ley leyes" },
-  { id: "decreto", tipo: "Decreto", label: "Decreto", color: "violeta", claves: "decreto decretos" },
-  { id: "resolucion", tipo: "Resolución General", label: "Resolución General", color: "night", claves: "resolucion general resoluciones rg" },
+  { id: "codigo", tipo: "Código", label: "Código", claves: "codigo fiscal" },
+  { id: "ley", tipo: "Ley", label: "Ley", claves: "ley leyes" },
+  { id: "decreto", tipo: "Decreto", label: "Decreto", claves: "decreto decretos" },
+  { id: "resolucion", tipo: "Resolución General", label: "Resolución General", claves: "resolucion general resoluciones rg" },
 ];
 
 export const tipoInfo = (tipo: TipoNorma): TipoInfo => TIPOS.find((t) => t.tipo === tipo) ?? TIPOS[TIPOS.length - 1]!;
 
-/** Clases completas (Tailwind no detecta clases armadas por concatenación). */
-export const TINT: Record<PaletteColor, string> = {
-  terracota: "tint-terracota",
-  ocre: "tint-ocre",
-  rosa: "tint-rosa",
-  salvia: "tint-salvia",
-  violeta: "tint-violeta",
-  night: "tint-night",
-};
-
-export const DOT: Record<PaletteColor, string> = {
-  terracota: "bg-terracota-500",
-  ocre: "bg-ocre-500",
-  rosa: "bg-rosa-500",
-  salvia: "bg-salvia-500",
-  violeta: "bg-violeta-500",
-  night: "bg-night-600 dark:bg-[#a4bde8]",
-};
-
-/** Estratos del Cerro de los Siete Colores, para franjas decorativas. */
-export const STRATA: Record<PaletteColor, string> = {
-  terracota: "#c4532f, #d9714e, #e0a63b",
-  ocre: "#e0a63b, #f0cc85, #d9877f",
-  rosa: "#d9877f, #e0a63b, #c4532f",
-  salvia: "#7f9a62, #a8bb8a, #e0a63b",
-  violeta: "#6a4c93, #d9877f, #e0a63b",
-  night: "#2a4470, #6a4c93, #d9877f",
-};
+/** Acepta el id ("ley") o el nombre ("Ley", "Resolución General"), sin distinguir mayúsculas ni tildes. */
+export function tipoDeParam(param: string): TipoInfo | undefined {
+  const p = normalize(param);
+  if (!p) return undefined;
+  return TIPOS.find((t) => t.id === p || normalize(t.tipo) === p);
+}
 
 /* ------------------------------------------------------------------ */
 /* Temas                                                               */
@@ -65,17 +41,22 @@ export const STRATA: Record<PaletteColor, string> = {
 export interface TemaInfo {
   id: TemaNorma;
   label: string;
-  icon: IconName;
 }
 
 export const TEMAS: TemaInfo[] = [
-  ...IMPUESTOS.map((i) => ({ id: i.slug, label: i.corto, icon: i.icon }) satisfies TemaInfo),
-  { id: "general", label: "General", icon: "landmark" },
-  { id: "procedimiento", label: "Procedimiento", icon: "list" },
+  ...IMPUESTOS.map((i) => ({ id: i.slug, label: i.corto }) satisfies TemaInfo),
+  { id: "general", label: "General" },
+  { id: "procedimiento", label: "Procedimiento" },
 ];
 
-export const temaInfo = (tema: TemaNorma): TemaInfo =>
-  TEMAS.find((t) => t.id === tema) ?? { id: tema, label: tema, icon: "file" };
+export const temaInfo = (tema: TemaNorma): TemaInfo => TEMAS.find((t) => t.id === tema) ?? { id: tema, label: tema };
+
+/** Acepta el id ("inmobiliario") o la etiqueta, sin distinguir mayúsculas ni tildes. */
+export function temaDeParam(param: string): TemaInfo | undefined {
+  const p = normalize(param);
+  if (!p) return undefined;
+  return TEMAS.find((t) => t.id === p || normalize(t.label) === p);
+}
 
 /* ------------------------------------------------------------------ */
 /* Orden, búsqueda y formato                                           */
